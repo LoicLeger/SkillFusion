@@ -10,7 +10,8 @@
 	import ModalOpinion from '../Modal/ModalOpinion.svelte';
 	import { authStore, getAuth } from '$lib/services/localstorage.service.svelte';
 	import ModalValidator from '../Modal/ModalValidator.svelte';
-	import type { IModal, ITextArea } from '$lib/@types/html';
+	import type { IModal } from '$lib/@types/html';
+	import { goto } from '$app/navigation';
 
 	let cours: ICours | null = $state(null);
 	let user: IUserLocalStorage | null = $state(null);
@@ -130,7 +131,7 @@
 	async function saveCours() {
 		const data = {
 			title: editData.title,
-			slug: editData.title.replaceAll(' ', '-'),
+			slug: editData.title.toLowerCase().replaceAll(' ', '-'),
 			littleSummary: editData.littleSummary,
 			difficulty: editData.difficulty,
 			summary: cours?.summary ?? '',
@@ -148,21 +149,19 @@
 			notifications: cours?.notifications?.map((n: any) => n.id) ?? []
 		};
 
-		console.log('data envoyée:', data);  
+		console.log('data envoyée:', data);
 		const response = await api('api/cours/' + cours?.id, 'PATCH', data);
 		console.log('api/cours/' + cours?.id);
-		
+
 		if (response.status === 200) {
-			const refresh = await api('api/cours?slug=' + cours?.slug);
-			cours = refresh.data;
-			modifier = false;
+			goto('/cours/' + data.slug);
 		}
 	}
 
 	function handleModify() {
 		modifier = !modifier;
+		getCours();
 	}
-
 
 	function addLearningObjective() {
 		const data = { title: 'Nouvel objectif', coursId: cours?.id };
@@ -174,7 +173,6 @@
 	async function updateTool(toolId: number, newName: string) {
 		await api('api/tools/' + toolId, 'PATCH', { name: newName });
 	}
-
 </script>
 
 <div class="back-cours">
@@ -291,7 +289,7 @@
 						<p class="label">Difficulté</p>
 						{#if modifier}
 							<div class="section">
-								<input type="range" min="0" max="5" bind:value={editData.difficulty} />
+								<input type="range" min="0" max="4" bind:value={editData.difficulty} />
 								<span class="difficulty-value">{editData.difficulty}</span>
 							</div>
 						{:else}
