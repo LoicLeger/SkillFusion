@@ -10,6 +10,12 @@
 
     --color-notification-not-seen: #ecd7b2;
 
+    --color-font-delete-button:#a93226;
+    --color-background-delete-button:#fdedec;
+
+    --color-font-modify-button:#1d4e89;
+    --color-background-modify-button:#ebf2fa;
+
 }
 body{
     min-height: 100vh;

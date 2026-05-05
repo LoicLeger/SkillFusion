@@ -1,18 +1,20 @@
 <script lang="ts">
-	// ── Données en dur ──────────────────────────────────────────
+
 	import api from '$lib/services/api.service';
 	import { onMount } from 'svelte';
-	import type { ICategory, ICours, IRole, IUser } from '$lib/@types/types';
+	import type { IBadge, ICategory, ICours, IRole, IUser } from '$lib/@types/types';
 	import '../../../../app.css';
 	import ModalValidator from '../Modal/ModalValidator.svelte';
 	import type { IModal } from '$lib/@types/html';
+	import Badge from '../Badge/Badge.svelte';
+	import ArticleDashBoard from './Article/ArticleDashBoard.svelte';
 
 
 	let users: IUser[] = $state([]);
 	let roles: IRole[] = $state([]);
 	let cours: ICours[] = $state([]);
 	let categories: ICategory[] = $state([]);
-	
+	let badges : IBadge[]=$state([])
 
 	onMount(async () => {
 		// Fetch tous les roles
@@ -30,14 +32,10 @@
 		// Fetch toutes les categories
 		const responseCategories = await api('api/categories');
 		categories = responseCategories.data;
-	});
 
-	const badges = [
-		{ nom: 'Première réalisation', icone: '⭐', couleur: 'amber' },
-		{ nom: 'Cours terminé', icone: '✓', couleur: 'green' },
-		{ nom: 'En progression', icone: '↑', couleur: 'blue' },
-		{ nom: 'Expert bricoleur', icone: '🏆', couleur: 'amber' }
-	];
+		const responseBagde=await api("api/badges")
+		badges=responseBagde.data
+	});
 
 
 	// ── Filtres ─────────────────────────────────────────────────
@@ -297,17 +295,10 @@
 			</div>
 
 			<div class="panel__list">
-				{#each filteredBadges as b}
-					<div class="list-row list-row--badge">
-						<div class="badge-icon badge-icon--{b.couleur}">
-							{b.icone}
-						</div>
-						<p class="list-row__title">{b.nom}</p>
-						<div class="list-row__actions">
-							<button class="action-btn action-btn--edit">Modifier</button>
-							<button class="action-btn action-btn--delete">Supprimer</button>
-						</div>
-					</div>
+				{#each filteredBadges as badge}
+				<ArticleDashBoard>
+					<Badge badge={badge} --color={badge.color}/>
+				</ArticleDashBoard>
 				{/each}
 
 				{#if filteredBadges.length === 0}
@@ -423,16 +414,6 @@
 		cursor: pointer;
 	}
 
-	.dashboard__role-pill {
-		background: var(--pink-l);
-		color: var(--pink-d);
-		border: 0.5px solid var(--pink-m);
-		font-size: 11px;
-		font-weight: 600;
-		padding: 3px 10px;
-		border-radius: 100px;
-		letter-spacing: 0.04em;
-	}
 
 	/* ── Grid 2x2 ────────────────────────────────────────────── */
 	.dashboard__grid {
@@ -627,107 +608,11 @@
 		flex-shrink: 0;
 	}
 
-	.list-row--badge {
-		gap: 12px;
-	}
-
 	.list-row__actions {
 		display: flex;
 		gap: 6px;
 		flex-shrink: 0;
 	}
-
-	/* ── Badges ──────────────────────────────────────────────── */
-	.badge {
-		display: flex;
-		justify-content: start;
-		border-radius: 100px;
-		font-size: 11px;
-		font-weight: 600;
-		white-space: nowrap;
-	}
-
-	.badge--blue {
-		background: var(--blue-l);
-		color: var(--blue);
-		border: 0.5px solid var(--blue-m);
-	}
-	.badge--amber {
-		background: var(--amber-l);
-		color: #ba7517;
-		border: 0.5px solid var(--amber-m);
-	}
-	.badge--green {
-		background: var(--green-l);
-		color: var(--green-d);
-		border: 0.5px solid var(--green-m);
-	}
-	.badge--pink {
-		background: var(--pink-l);
-		color: var(--pink-d);
-		border: 0.5px solid var(--pink-m);
-	}
-
-	/* Badges catégories */
-	.badge--cat {
-		font-size: 11px;
-	}
-	.badge--plomb {
-		background: var(--blue-l);
-		color: var(--blue);
-		border: 0.5px solid var(--blue-m);
-	}
-	.badge--elec {
-		background: var(--amber-l);
-		color: #ba7517;
-		border: 0.5px solid var(--amber-m);
-	}
-	.badge--menu {
-		background: var(--green-l);
-		color: var(--green-d);
-		border: 0.5px solid var(--green-m);
-	}
-	.badge--chauf {
-		background: var(--pur-l);
-		color: var(--pur-d);
-		border: 0.5px solid #d7bde2;
-	}
-	.badge--carr {
-		background: var(--pink-l);
-		color: var(--pink-d);
-		border: 0.5px solid var(--pink-m);
-	}
-	.badge--peint {
-		background: #f5f5f4;
-		color: #57534e;
-		border: 0.5px solid #d6d3d1;
-	}
-
-	/* ── Badge icône ─────────────────────────────────────────── */
-	.badge-icon {
-		width: 34px;
-		height: 34px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 14px;
-		flex-shrink: 0;
-	}
-
-	.badge-icon--amber {
-		background: var(--amber-l);
-		border: 2px solid var(--amber);
-	}
-	.badge-icon--green {
-		background: var(--green-l);
-		border: 2px solid #27ae60;
-	}
-	.badge-icon--blue {
-		background: var(--blue-l);
-		border: 2px solid var(--blue);
-	}
-
 	/* ── Boutons action ──────────────────────────────────────── */
 	.btn-add {
 		width: 28px;
