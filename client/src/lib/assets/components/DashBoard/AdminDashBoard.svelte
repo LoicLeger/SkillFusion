@@ -6,6 +6,7 @@
 	import '../../../../app.css';
 	import ModalValidator from '../Modal/ModalValidator.svelte';
 	import type { IModal } from '$lib/@types/html';
+	import { refreshAll } from '$app/navigation';
 
 	let users: IUser[] = $state([]);
 	let roles: IRole[] = $state([]);
@@ -21,7 +22,7 @@
 		const responseUsers = await api('api/users');
 		users = responseUsers.data;
 
-		// Fetch tous les cours ou une liste paginée
+		// Fetch tous les cours
 		const responseCours = await api('api/cours');
 		cours = responseCours.data;
 
@@ -37,10 +38,6 @@
 		{ nom: 'Expert bricoleur', icone: '🏆', couleur: 'amber' }
 	];
 
-	function capitalizeFirst(str: string): string {
-		if (!str) return '';
-		return str[0].toUpperCase() + str.slice(1);
-	}
 
 	// ── Filtres ─────────────────────────────────────────────────
 	let searchUsers = $state('');
@@ -73,18 +70,35 @@
 		categories.filter((c) => !searchCats || c.name.toLowerCase().includes(searchCats.toLowerCase()))
 	);
 
-	// ── Rôle badge config ────────────────────────────────────────
 
 	let errorMessage = $state('');
 	let successMessage = $state('');
 
 	let userToDelete = $state<number | null>(null);
+	let categoryToDelete =$state<number | null>(null);
 
-	function askDeleteUser(userId: number) {
-		userToDelete = userId;
+	async function confirmDeleteCategory() {
+	if(!categoryToDelete)return;
+		const response = await api(`api/categories/${categoryToDelete}`, "DELETE");
+		
+		if (response.status === 204 || response.status ===200){
+			categories = categories.filter((c) => c.id !== categoryToDelete);
+			successMessage = 'La catégorie a été supprimé avec succès';
+			errorMessage='';
+			setTimeout(()=>(successMessage='', 5000))
+		}else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		categoryToDelete = null;
+		let refreshCourses =  await api('api/cours')
+		cours = refreshCourses.data
+		cancelDeleteCategory();
+
 	}
 
-	async function confirmDelete() {
+	async function confirmDeleteUser() {
 		if (!userToDelete) return;
 
 		const response = await api(`api/users/${userToDelete}`, 'DELETE');
@@ -100,19 +114,34 @@
 			setTimeout(() => (errorMessage = ''), 5000);
 		}
 		userToDelete = null;
-		cancelDelete();
+		cancelDeleteUser();
 	}
 
-	function cancelDelete() {
-		const modal = document.getElementById('ModalValidator') as IModal;
+	function cancelDeleteUser() {
+		const modal = document.getElementById('modalDeleteUser') as IModal;
 		if (modal) {
 			modal.close();
 		}
 	}
 
-	function openModalDelete(userId: number) {
+	function openModalDeleteUser(userId: number) {
 		userToDelete = userId;
-		const modal = document.getElementById('ModalValidator') as IModal;
+		const modal = document.getElementById('modalDeleteUser') as IModal;
+		if (modal) {
+			modal.show();
+		}
+	}
+
+	function cancelDeleteCategory() {
+		const modal = document.getElementById('modalDeleteCategory') as IModal;
+		if (modal) {
+			modal.close();
+		}
+	}
+
+	function openModalDeleteCategory(CategoryId: number) {
+		categoryToDelete = CategoryId;
+		const modal = document.getElementById('modalDeleteCategory') as IModal;
 		if (modal) {
 			modal.show();
 		}
@@ -203,7 +232,7 @@
 									<option value={r.name}>{r.frName}</option>
 								{/each}
 							</select>
-							<button class="delete-btn delete-btn--edit" onclick={() => openModalDelete(user.id)}>
+							<button class="delete-btn delete-btn--edit" onclick={() => openModalDeleteUser(user.id)}>
 								x</button
 							>
 						</span>
@@ -305,7 +334,7 @@
 						<span class="badge badge--cat" style="color:{cat.textColor}">{cat.name}</span>
 						<div class="list-row__actions">
 							<button class="action-btn action-btn--edit">Modifier</button>
-							<button class="action-btn action-btn--delete">Supprimer</button>
+							<button class="action-btn action-btn--delete" onclick={() => openModalDeleteCategory(cat.id)}>Supprimer</button>
 						</div>
 					</div>
 				{/each}
@@ -317,9 +346,16 @@
 		</div>
 	</div>
 	<ModalValidator
+		id="modalDeleteUser"
 		message="Êtes-vous sûr de vouloir supprimer cet utilisateur ?"
-		cancel={cancelDelete}
-		confirm={confirmDelete}
+		cancel={cancelDeleteUser}
+		confirm={confirmDeleteUser}
+	/>
+	<ModalValidator
+		id="modalDeleteCategory"
+		message="Êtes-vous sûr de vouloir supprimer cette catégorie ?"
+		cancel={cancelDeleteCategory}
+		confirm={confirmDeleteCategory}
 	/>
 </div>
 
