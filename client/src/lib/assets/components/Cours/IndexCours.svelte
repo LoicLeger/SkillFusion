@@ -134,24 +134,14 @@
 			slug: editData.title.toLowerCase().replaceAll(' ', '-'),
 			littleSummary: editData.littleSummary,
 			difficulty: editData.difficulty,
-			summary: cours?.summary ?? '',
-			visibility: cours?.visibility ?? false,
-			numberPage: cours?.numberPage ?? 0,
 			authorId: cours?.authorId,
 			categoryId: cours?.categoryId,
 			tools: cours?.tools.map((t) => t.tools.id) ?? [],
 			learningObjectives: cours?.learningObjectives.map((o) => o.objectif.id) ?? [],
 			content: cours?.content.map((c) => c.id) ?? [],
-			enrollments: cours?.enrollments?.map((e: any) => e.id) ?? [],
-			activations: cours?.activations?.map((a: any) => a.id) ?? [],
-			comments: cours?.comments?.map((c: any) => c.id) ?? [],
-			opinions: cours?.opinions?.map((o: any) => o.id) ?? [],
-			notifications: cours?.notifications?.map((n: any) => n.id) ?? []
 		};
 
-		console.log('data envoyée:', data);
 		const response = await api('api/cours/' + cours?.id, 'PATCH', data);
-		console.log('api/cours/' + cours?.id);
 
 		if (response.status === 200) {
 			goto('/cours/' + data.slug);
