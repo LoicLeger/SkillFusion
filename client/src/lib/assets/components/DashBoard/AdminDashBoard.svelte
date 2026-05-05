@@ -6,6 +6,7 @@
 	import '../../../../app.css';
 	import ModalValidator from '../Modal/ModalValidator.svelte';
 	import type { IModal } from '$lib/@types/html';
+	import { goto } from '$app/navigation';
 	import Badge from '../Badge/Badge.svelte';
 	import ArticleDashBoard from './Article/ArticleDashBoard.svelte';
 
@@ -172,6 +173,11 @@
 			setTimeout(() => (errorMessage = ''), 5000);
 		}
 	}
+
+	// Navigation vers détail utilisateur
+	function goToUser(id: number) {
+		goto(`/profil?id=${id}`);
+	}
 </script>
 
 <div class="dashboard">
@@ -218,9 +224,18 @@
 			<div class="panel__list">
 				{#each filteredUsers as user}
 					<div class="table-row">
-						<span class="table-row__cell">{user.lastname}</span>
-						<span class="table-row__cell">{user.firstname}</span>
-						<span class="table-row__cell table-row__cell--pseudo">{user.pseudo}</span>
+						<span class="table-row__cell click" onclick={() => goToUser(user.id)}>
+							{user.lastname}
+						</span>
+						<span class="table-row__cell click" onclick={() => goToUser(user.id)}>
+							{user.firstname}
+						</span>
+						<span
+							class="table-row__cell table-row__cell--pseudo click"
+							onclick={() => goToUser(user.id)}
+						>
+							{user.pseudo}
+						</span>
 						<span class="badge">
 							<select
 								class="role-user"
@@ -414,6 +429,15 @@
 		cursor: pointer;
 	}
 
+
+	.click {
+		cursor: pointer;
+		transition: color 0.15s;
+	}
+
+	.click:hover {
+		color: var(--blue);
+	}
 
 	/* ── Grid 2x2 ────────────────────────────────────────────── */
 	.dashboard__grid {
