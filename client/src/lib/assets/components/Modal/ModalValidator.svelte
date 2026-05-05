@@ -1,7 +1,7 @@
 <script>
     const props=$props()
 </script>
-	<dialog class="overlay" id= {props.id}>
+	<dialog class="overlay" id={props.id}>
 		<div class="dialog">
 			<h2>Confirmation</h2>
 			<p>{props.message}</p>

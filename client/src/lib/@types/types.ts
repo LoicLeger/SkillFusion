@@ -93,10 +93,12 @@ export interface Tool {
         updatedAt: Date
         cours: CoursHasTool[]
 }
-export interface Badge {
+export interface IBadge {
         id: number
         name: string
         description: string
+        icon:string
+        color:string
         createdAt: Date
         updatedAt: Date
         users: UserHasBadge[]

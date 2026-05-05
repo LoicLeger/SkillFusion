@@ -11193,6 +11193,8 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11201,6 +11203,8 @@ export namespace Prisma {
     id: number | null
     name: string | null
     description: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11209,6 +11213,8 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    icon: number
+    color: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11227,6 +11233,8 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11235,6 +11243,8 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11243,6 +11253,8 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11338,6 +11350,8 @@ export namespace Prisma {
     id: number
     name: string
     description: string | null
+    icon: string
+    color: string
     createdAt: Date
     updatedAt: Date
     _count: BadgeCountAggregateOutputType | null
@@ -11365,6 +11379,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     users?: boolean | Badge$usersArgs<ExtArgs>
@@ -11375,6 +11391,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["badge"]>
@@ -11383,6 +11401,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["badge"]>
@@ -11391,11 +11411,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    icon?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type BadgeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["badge"]>
+  export type BadgeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "icon" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["badge"]>
   export type BadgeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Badge$usersArgs<ExtArgs>
     _count?: boolean | BadgeCountOutputTypeDefaultArgs<ExtArgs>
@@ -11412,6 +11434,8 @@ export namespace Prisma {
       id: number
       name: string
       description: string | null
+      icon: string
+      color: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["badge"]>
@@ -11841,6 +11865,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Badge", 'Int'>
     readonly name: FieldRef<"Badge", 'String'>
     readonly description: FieldRef<"Badge", 'String'>
+    readonly icon: FieldRef<"Badge", 'String'>
+    readonly color: FieldRef<"Badge", 'String'>
     readonly createdAt: FieldRef<"Badge", 'DateTime'>
     readonly updatedAt: FieldRef<"Badge", 'DateTime'>
   }
@@ -22499,6 +22525,8 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    icon: 'icon',
+    color: 'color',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -23274,6 +23302,8 @@ export namespace Prisma {
     id?: IntFilter<"Badge"> | number
     name?: StringFilter<"Badge"> | string
     description?: StringNullableFilter<"Badge"> | string | null
+    icon?: StringFilter<"Badge"> | string
+    color?: StringFilter<"Badge"> | string
     createdAt?: DateTimeFilter<"Badge"> | Date | string
     updatedAt?: DateTimeFilter<"Badge"> | Date | string
     users?: UserHasBadgeListRelationFilter
@@ -23283,6 +23313,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     users?: UserHasBadgeOrderByRelationAggregateInput
@@ -23295,6 +23327,8 @@ export namespace Prisma {
     NOT?: BadgeWhereInput | BadgeWhereInput[]
     name?: StringFilter<"Badge"> | string
     description?: StringNullableFilter<"Badge"> | string | null
+    icon?: StringFilter<"Badge"> | string
+    color?: StringFilter<"Badge"> | string
     createdAt?: DateTimeFilter<"Badge"> | Date | string
     updatedAt?: DateTimeFilter<"Badge"> | Date | string
     users?: UserHasBadgeListRelationFilter
@@ -23304,6 +23338,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: BadgeCountOrderByAggregateInput
@@ -23320,6 +23356,8 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Badge"> | number
     name?: StringWithAggregatesFilter<"Badge"> | string
     description?: StringNullableWithAggregatesFilter<"Badge"> | string | null
+    icon?: StringWithAggregatesFilter<"Badge"> | string
+    color?: StringWithAggregatesFilter<"Badge"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Badge"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Badge"> | Date | string
   }
@@ -24506,6 +24544,8 @@ export namespace Prisma {
   export type BadgeCreateInput = {
     name: string
     description?: string | null
+    icon: string
+    color: string
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserHasBadgeCreateNestedManyWithoutBadgeInput
@@ -24515,6 +24555,8 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    icon: string
+    color: string
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserHasBadgeUncheckedCreateNestedManyWithoutBadgeInput
@@ -24523,6 +24565,8 @@ export namespace Prisma {
   export type BadgeUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserHasBadgeUpdateManyWithoutBadgeNestedInput
@@ -24532,6 +24576,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserHasBadgeUncheckedUpdateManyWithoutBadgeNestedInput
@@ -24541,6 +24587,8 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    icon: string
+    color: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -24548,6 +24596,8 @@ export namespace Prisma {
   export type BadgeUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24556,6 +24606,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25680,6 +25732,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -25692,6 +25746,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -25700,6 +25756,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29406,6 +29464,8 @@ export namespace Prisma {
   export type BadgeCreateWithoutUsersInput = {
     name: string
     description?: string | null
+    icon: string
+    color: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29414,6 +29474,8 @@ export namespace Prisma {
     id?: number
     name: string
     description?: string | null
+    icon: string
+    color: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29495,6 +29557,8 @@ export namespace Prisma {
   export type BadgeUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29503,6 +29567,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
