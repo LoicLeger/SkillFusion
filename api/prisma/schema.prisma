@@ -274,6 +274,7 @@ model Notification {
   id      Int    @id @default(autoincrement())
   content String
   seen    Boolean @default(false)
+  targetId Int @map("target_id") @unique
   
   coursId Int    @map("cours_id")
   userId  Int    @map("user_id")

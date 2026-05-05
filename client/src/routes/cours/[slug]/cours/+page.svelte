@@ -62,9 +62,9 @@ let user: IUserLocalStorage | null = $state(null);
 		commentContentElement.value = '';
 	}
 	async function DeleteComment(data:number){
-	 await api('api/comments/' + data, 'DELETE');
+	await api('api/comments/' + data, 'DELETE');
 	const refresh = await api('api/cours?slug=' + page.params.slug);
-		cours = refresh.data;
+	cours = refresh.data;
 
 	}
 

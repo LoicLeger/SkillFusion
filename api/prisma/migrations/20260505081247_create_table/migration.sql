@@ -194,6 +194,7 @@ CREATE TABLE "notifications" (
     "id" SERIAL NOT NULL,
     "content" TEXT NOT NULL,
     "seen" BOOLEAN NOT NULL DEFAULT false,
+    "target_id" INTEGER NOT NULL,
     "cours_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -242,6 +243,9 @@ CREATE UNIQUE INDEX "cours_has_learning_objective_cours_id_lerning_objective_key
 
 -- CreateIndex
 CREATE UNIQUE INDEX "opinions_user_id_cours_id_key" ON "opinions"("user_id", "cours_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "notifications_target_id_key" ON "notifications"("target_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "refresh_tokens_token_key" ON "refresh_tokens"("token");

@@ -272,9 +272,10 @@ model Opinion {
 }
 
 model Notification {
-  id      Int     @id @default(autoincrement())
-  content String
-  seen    Boolean @default(false)
+  id       Int     @id @default(autoincrement())
+  content  String
+  seen     Boolean @default(false)
+  targetId Int     @unique @map("target_id")
 
   coursId Int @map("cours_id")
   userId  Int @map("user_id")

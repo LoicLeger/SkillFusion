@@ -44,7 +44,8 @@ export default {
         const createdNotification = await prisma.notification.create({data:{
             content:data.description,
             coursId:data.coursId,
-            userId:data.authorId
+            userId:data.authorId,
+            targetId:createdComment.id
         }})
 
         res.status(201).json(createdComment);
@@ -91,11 +92,14 @@ export default {
         }
 
         // By-pass admin pour la suppression d'un commentaire
-        if (req.user?.userId !== comment.authorId && req.user?.role !== roles.admin) {
+        if (req.user?.userId !== comment.authorId && req.user?.role !== ROLES.ADMIN) {
             throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer ce commentaire");
         }
 
-        await prisma.comment.delete({ where: { id: commentId } });
+        const deletedComment =await prisma.comment.delete({ where: { id: commentId } });
+        const deletedNotification = await prisma.notification.delete({
+            where:{targetId:comment.id}
+        })
         res.status(204).send();
     },
 };

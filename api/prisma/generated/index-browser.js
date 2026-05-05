@@ -270,6 +270,7 @@ exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   content: 'content',
   seen: 'seen',
+  targetId: 'targetId',
   coursId: 'coursId',
   userId: 'userId',
   createdAt: 'createdAt',
