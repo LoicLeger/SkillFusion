@@ -1,20 +1,23 @@
-<script lang='ts'>
-	import Category from "../../Category/Category.svelte";
-
+<script lang="ts">
+	import Category from '../../Category/Category.svelte';
 
 	const props = $props();
 
-	let name=$derived(props.badge?.name)
-	let description=$derived(props.badge?.description)
+	let name = $derived(props.badge.name);
+	let description = $derived(props.badge?.description);
 
-	let textColor=$state("")
-	let borderColor=$state("")
-	let backgroundColor=$state("")
+	let textColor = $derived(props.badge.textColor);
+	let borderColor = $derived(props.badge.borderColor);
+	let backgroundColor = $derived(props.badge.backgroundColor);
 
-	function onSumbit(event:SubmitEvent){
-		event.preventDefault()
-		console.log(name,description)
-		props.confirm({name,description})
+	function onSumbit(event: SubmitEvent) {
+		event.preventDefault();
+		console.log(name, description);
+		props.confirm({ name, description });
+	}
+
+	function cancel() {
+		props.cancel();
 	}
 </script>
 
@@ -24,32 +27,38 @@
 		<form onsubmit={onSumbit}>
 			<div class="input">
 				<label for="name">Nom</label>
-				<input id="name" placeholder="Nom du badge" bind:value={name}>
+				<input id="name" placeholder="Nom du badge" bind:value={name}/>
 			</div>
 			<div class="input">
 				<label for="description">Description</label>
-				<textarea name="description" id="description" bind:value={description}>{description}</textarea>
+				<textarea name="description" id="description" bind:value={description}
+					>{description}</textarea
+				>
 			</div>
 			<div class="input">
 				<label for="textColor">Couleur du text : </label>
-				<input type="color">
-				
+				<input type="color" bind:value={textColor} />
 			</div>
-			
-			<Category
-			category={{name:name}}
-			--text_color={textColor}
-			--border_color={borderColor}
-			--background_color={backgroundColor}
-			/>
+			<div class="input">
+				<label for="textColor">Couleur de la bordure : </label>
+				<input type="color" bind:value={borderColor} />
+			</div>
+			<div class="input">
+				<label for="textColor">Couleur du fond : </label>
+				<input type="color" bind:value={backgroundColor} />
+			</div>
+			<div class="div_category">
+				<Category
+					category={{ name: name }}
+					--text_color={textColor}
+					--border_color={borderColor}
+					--background_color={backgroundColor}
+				/>
+			</div>
 
 			<div class="actions">
-				<button class="cancel" type="button" onclick={props.cancel}>
-					Annuler
-				</button>
-				<button class="confirm" type="submit">
-					Valider
-				</button>
+				<button class="cancel" type="button" onclick={cancel}> Annuler </button>
+				<button class="confirm" type="submit"> Valider </button>
 			</div>
 		</form>
 	</div>
@@ -88,6 +97,11 @@
 
 	h2 {
 		margin-bottom: 1rem;
+	}
+
+	.div_category {
+		width: max-content;
+		margin: auto;
 	}
 
 	.actions {
