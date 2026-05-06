@@ -20,11 +20,11 @@ export function generateAuthTokens(user: User) {
   return {
     accessToken: {
       token: accessToken,
-      expiresIn: 15 * 60 * 1000,
+      expiresIn: config.jwtAccesExpireIn * 1000,
     },
     refreshToken: {
       token: refreshToken,
-      expiresIn: 7 * 24 * 60 * 60 * 1000,
+      expiresIn: config.jwtRefreshExpireIn* 1000,
     },
   };
 }

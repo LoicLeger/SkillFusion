@@ -19,7 +19,7 @@ function setRefreshTokenCookie(res: Response, refreshToken: Token) {
         secure: config.isProd,
         sameSite: config.isProd ? "none" : "lax",
         maxAge: refreshToken.expiresIn,
-        path: "/api/auth/refresh",
+        path: "/auth/refresh",
     });
 }
 
@@ -172,7 +172,7 @@ export async function getAuthenticatedUser(req: AuthenticatedRequest, res: Respo
 // logoutUser controller --------------------------------------------------------------------
 
 export async function logoutUser(req: AuthenticatedRequest, res: Response) {
-    res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
+    res.clearCookie("refreshToken", { path: "/auth/refresh" });
     if (req.user) {
         await prisma.refreshToken.deleteMany({ where: { userId: req.user.userId } });
     }
@@ -180,14 +180,13 @@ export async function logoutUser(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function refreshAccessToken(req: Request, res: Response) {
-    const receivedRefreshToken =
-        req.body?.refreshToken ?? req.cookies.refreshToken;
-
+    const receivedRefreshToken = req.cookies.refreshToken;
     if (!receivedRefreshToken) {
         throw new UnauthorizedError(
             "Vous n'êtes pas autorisé à accéder à cette resource",
         );
     }
+    
 
     // Vérifier la signature JWT avant d'interroger la base de données
     try {

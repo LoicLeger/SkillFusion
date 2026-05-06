@@ -25,7 +25,8 @@ export default {
         const userId= await parseIdFromParams(req.params.id);
         const badgesByUser = await prisma.userHasBadge.findMany({
             where:{userId: userId},
-            include: {badge: true}
+            include: {badge: true},
+            orderBy:{id:'asc'}
         })
         if (!badgesByUser){
             throw new NotFoundError(`Badges with id ${badgesByUser} not found`);

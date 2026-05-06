@@ -5,7 +5,7 @@
 	import '../../../../app.css';
 	import ModalValidator from '../Modal/ModalValidator.svelte';
 	import type { IModal } from '$lib/@types/html';
-	import Badge from './Badge/Badge.svelte';
+	import Badge from './Badge/BodyBadge.svelte';
 	import ArticleDashBoard from './Article/ArticleDashBoard.svelte';
 	import BodyCategory from './Category/BodyCategory.svelte';
 	import BodyCours from './Cours/BodyCours.svelte';

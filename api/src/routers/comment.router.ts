@@ -1,7 +1,6 @@
 import express from "express";
 import commentController from "../controllers/comment.controller";
 import { verifyToken } from '../middlewares/auth.middleware';
-import { sendReportEmail } from "../services/mailer";
 import { checkRoles, ROLES } from '../middlewares/rbac.middleware'; 
 
 const router = express.Router();

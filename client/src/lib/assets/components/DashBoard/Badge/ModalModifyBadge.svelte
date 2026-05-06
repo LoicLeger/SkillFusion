@@ -8,7 +8,6 @@
 
 	function onSumbit(event:SubmitEvent){
 		event.preventDefault()
-		console.log(name,description)
 		props.confirm({name,description})
 	}
 </script>
