@@ -3,17 +3,17 @@
 
 	const props = $props();
 
-	let name = $derived(props.badge.name);
+	let name = $derived(props.badge?.name);
 	let description = $derived(props.badge?.description);
 
-	let textColor = $derived(props.badge.textColor);
-	let borderColor = $derived(props.badge.borderColor);
-	let backgroundColor = $derived(props.badge.backgroundColor);
+	let textColor = $derived(props.badge?.textColor);
+	let borderColor = $derived(props.badge?.borderColor);
+	let backgroundColor = $derived(props.badge?.backgroundColor);
 
 	function onSumbit(event: SubmitEvent) {
 		event.preventDefault();
 		console.log(name, description);
-		props.confirm({ name, description });
+		props.confirm({ name, description ,textColor,borderColor,backgroundColor});
 	}
 
 	function cancel() {

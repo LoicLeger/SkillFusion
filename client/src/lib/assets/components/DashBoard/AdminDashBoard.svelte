@@ -202,6 +202,7 @@
 		badgeToUpdate = null;
 		let refreshBadges = await api('api/badges');
 		badges = refreshBadges.data;
+		
 		cancelModifyBadge();
 	}
 
@@ -260,7 +261,7 @@
 	}
 
 	async function confirmModifyCategory(data: { name: string; description: string }) {
-		const response = await api(`api/categories/${categoryToUpdate?.id}`, 'PATCH', { ...data });
+		const response = await api(`api/categories/${categoryToUpdate?.id}`, 'PATCH', { ...data});
 
 		if (response.status === 204 || response.status === 200) {
 			successMessage = 'La categorie a été modifier avec succès';
@@ -272,8 +273,10 @@
 			setTimeout(() => (errorMessage = ''), 5000);
 		}
 		categoryToUpdate = null;
-		let refreshBadges = await api('api/categories');
-		badges = refreshBadges.data;
+		let refreshCategories = await api('api/categories');
+		categories = refreshCategories.data;
+		let refreshCourses = await api('api/cours');
+		courses = refreshCourses.data;
 		cancelModifyCategory();
 	}
 
