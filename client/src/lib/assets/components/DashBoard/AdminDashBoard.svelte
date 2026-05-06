@@ -202,7 +202,7 @@
 		badgeToUpdate = null;
 		let refreshBadges = await api('api/badges');
 		badges = refreshBadges.data;
-		
+
 		cancelModifyBadge();
 	}
 
@@ -261,7 +261,7 @@
 	}
 
 	async function confirmModifyCategory(data: { name: string; description: string }) {
-		const response = await api(`api/categories/${categoryToUpdate?.id}`, 'PATCH', { ...data});
+		const response = await api(`api/categories/${categoryToUpdate?.id}`, 'PATCH', { ...data });
 
 		if (response.status === 204 || response.status === 200) {
 			successMessage = 'La categorie a été modifier avec succès';
@@ -321,6 +321,9 @@
 <div class="dashboard">
 	<div class="dashboard__header">
 		<h1 class="dashboard__title">Mon tableau de bord</h1>
+		<div class="link-to-mail">
+			<a class="Gmail-Admin" href="https://mail.google.com/mail/u/1/#inbox">Mes mails</a>
+		</div>
 	</div>
 
 	{#if successMessage}
@@ -532,8 +535,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 14px;
 		margin-bottom: 28px;
+		flex-direction: column;
 	}
 
 	.dashboard__title {
@@ -560,6 +563,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
+	}
+
+	.Gmail-Admin {
+		text-decoration: none;
+		font-size: 14px;
+		color: var(--blue);
 	}
 
 	.panel__head {
