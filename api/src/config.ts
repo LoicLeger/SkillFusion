@@ -15,4 +15,5 @@ export const config = {
 jwtRefreshExpireIn: 7 * 24 * 60 * 60,
   emailUser: process.env.EMAIL_USER ?? "",
   emailPass: process.env.EMAIL_PASS ?? "",
+  corsOriginUrl: process.env.CORS_ORIGIN_URL ?? "",
 };

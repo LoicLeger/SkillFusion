@@ -32,8 +32,15 @@ const globalLimiter = rateLimit({
   message: { message: "Trop de requêtes, veuillez réessayer plus tard." }
 });
 
-app.use(helmet());
-app.use(cors({ origin: config.allowedOrigins }));
+//app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+//app.use(cors({ origin: config.allowedOrigins }));
+app.use(cors({
+    origin: config.corsOriginUrl,
+    credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(xss());
