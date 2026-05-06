@@ -202,7 +202,6 @@ export default {
             difficulty,
             summary,
             visibility,
-            authorId,
             categoryId }
             = await updateCoursBodyScheme.parseAsync(req.body);
 
