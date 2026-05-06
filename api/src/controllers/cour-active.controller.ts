@@ -88,19 +88,6 @@ export default {
 
     // Requête pour mettre à jour un cours active
     updatingCoursActive: async (req: AuthenticatedRequest, res: Response) => {
-        const coursActiveId = await parseIdFromParams(req.params.id);
-
-        // Récupération dans la bdd avant update pour pouvoir vérifier la propriété
-        const coursActive = await prisma.coursActived.findUnique({ where: { id: coursActiveId } });
-        if (!coursActive) {
-            throw new NotFoundError(`Cours active with id ${coursActiveId} not found`);
-        }
-
-        // Vérification du role/de la propriété
-        if (coursActive.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
-            throw new ForbiddenError("Accès refusé");
-        }
-
         const updateCoursActiveBodySchema = z.object({
             coursId: z.number().int(),
             userId: z.number().int(),
@@ -115,6 +102,32 @@ export default {
             where: { id: dataCoursActive[0].id },
             data: { IsEnd: data.IsEnd }
         });
+
+        const coursForUser = await prisma.coursActived.findMany({
+            where:{userId:data.userId,IsEnd:true}
+        })
+        const bageForUser= await prisma.userHasBadge.findMany({
+            where:{userId:data.userId}
+        })
+        if (coursForUser.length===1 && !bageForUser.find((badge)=>badge.badgeId==1)){
+            await prisma.userHasBadge.create({data:{
+                userId:data.userId,
+                badgeId:1
+            }})
+        }
+        if (coursForUser.length===5 && !bageForUser.find((badge)=>badge.badgeId==2)){
+            await prisma.userHasBadge.create({data:{
+                userId:data.userId,
+                badgeId:2
+            }})
+        }
+        if (coursForUser.length===10 && !bageForUser.find((badge)=>badge.badgeId==3)){
+            await prisma.userHasBadge.create({data:{
+                userId:data.userId,
+                badgeId:3
+            }})
+        }
+
         res.json(updatedCoursActive);
     },
 

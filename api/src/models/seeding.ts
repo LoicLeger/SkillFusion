@@ -1384,7 +1384,7 @@ async function seed() {
   
    const asignedBadges =  await prisma.userHasBadge.createMany({
             data: [
-              {userId:2, badgeId:1 }, {userId:2, badgeId:2 },{userId:2, badgeId:3 },
+              {userId:2, badgeId:2 },{userId:2, badgeId:3 },
               {userId:3, badgeId:1 }, 
             ]
           })
