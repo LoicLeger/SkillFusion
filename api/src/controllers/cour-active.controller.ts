@@ -2,9 +2,7 @@ import type { Request, Response } from "express"
 import { prisma } from "../models/client"
 import z from "zod";
 import { parseIdFromParams } from "./utils";
-import { ForbiddenError, NotFoundError } from "../lib/errors";
-import type { AuthenticatedRequest } from "../@types/express";
-import { ROLES } from "../middlewares/rbac.middleware";
+import { NotFoundError } from "../lib/errors";
 
 export default {
     // Requête pour récuperer tous les cours actives
@@ -62,20 +60,24 @@ export default {
 
     // Requête pour mettre à jour un cours active
     updatingCoursActive: async (req: Request, res: Response) => {
-        const coursActiveId = await parseIdFromParams(req.params.id);
         const updateCoursActiveBodySchema = z.object({
             coursId: z.number(),
             userId: z.number(),
             IsEnd: z.boolean(),
         });
-        const { coursId, userId, IsEnd } = await updateCoursActiveBodySchema.parseAsync(req.body);
+        const data = await updateCoursActiveBodySchema.parseAsync(req.body);
+        console.log(data)
 
+        const dataCoursActive = await prisma.coursActived.findMany({
+             where: { coursId: data.coursId, userId: data.userId  },
+        })
+        console.log(dataCoursActive)
         const updatedCoursActive = await prisma.coursActived.update({
-            where: { id: coursActiveId },
+            where: { id: dataCoursActive[0].id },
             data: {
-                coursId,
-                userId,
-                IsEnd,
+            coursId: data.coursId,
+                userId: data.userId,
+                IsEnd: data.IsEnd
             }
         });
         res.json(updatedCoursActive);
