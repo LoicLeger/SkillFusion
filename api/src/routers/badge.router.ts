@@ -9,6 +9,7 @@ const router = express.Router();
 // Route Public
 router.get("/badges", badgeController.getAll)
 router.get("/badges/:id", badgeController.getOneBadge)
+router.get("/badges/user/:id", badgeController.getBadgesByUser)
 
 // Route dédié à l'admin (selon les User Stories)
 router.post("/badges", verifyToken, checkRoles([ROLES.ADMIN]), badgeController.createBadge)

@@ -577,6 +577,7 @@ async function seed() {
   });
   console.log("Courses :", courses.count);
 
+  
   // Liens outils et objectifs pour chaque cours (simplifié pour l'exemple)
   await prisma.coursHasTool.createMany({
     data: [
@@ -618,7 +619,7 @@ async function seed() {
       { coursId: 30, toolsId: 10 }, { coursId: 30, toolsId: 9 }, { coursId: 30, toolsId: 24 },
     ],
   });
-
+  
   await prisma.coursHasLearningObjective.createMany({
     data: [
       // Menuiserie
@@ -659,7 +660,7 @@ async function seed() {
       { coursId: 30, learningObjectiveId: 18 }, { coursId: 30, learningObjectiveId: 10 },
     ],
   });
-
+  
   // Contenus pour chaque cours (4 pages chacun en Markdown)
   const coursContents = await prisma.coursContent.createMany({
     data: [
@@ -781,6 +782,7 @@ async function seed() {
       },
       {
         content: "# Montage du siphon\n\nAssemblez les joints, serrez à la clé à molette et vérifiez que l'ensemble est bien aligné pour éviter les fuites.",
+        
         numberPage: 3,
         coursId: 6,
       },
@@ -1379,7 +1381,15 @@ async function seed() {
     ]
   })
   console.log("Badges :", badges.count);
-
+  
+   const asignedBadges =  await prisma.userHasBadge.createMany({
+            data: [
+              {userId:2, badgeId:1 }, {userId:2, badgeId:2 },{userId:2, badgeId:3 },
+              {userId:3, badgeId:1 }, 
+            ]
+          })
+    console.log("Badges assigned:", asignedBadges.count);
+  
   console.log("Termined");
 }
 

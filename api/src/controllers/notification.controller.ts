@@ -6,9 +6,8 @@ import { ForbiddenError, NotFoundError } from "../lib/errors";
 import type { AuthenticatedRequest } from "../@types/express";
 import { ROLES } from "../middlewares/rbac.middleware";
 
-
 export default {
-    // Requête pour récuperer toutes les notifications
+    // Requête pour récuperer toutes les notifications — ADMIN only 
     getAll: async (req: Request, res: Response) => {
         const notifications = await prisma.notification.findMany();
         res.json(notifications);
@@ -25,7 +24,7 @@ export default {
         res.json(comments)
     },
 
-    // Requête pour récuperer une notification par son id
+    // Requête pour récuperer une notification par son id 
     getOneNotification: async (req: AuthenticatedRequest, res: Response) => {
         const notificationId = await parseIdFromParams(req.params.id);
         const notification = await prisma.notification.findUnique({ where: { id: notificationId } });
@@ -36,7 +35,6 @@ export default {
         if (notification.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
             throw new ForbiddenError("Vous n'êtes pas autorisé à accéder à cette notification");
         }
-
         res.json(notification);
     },
 
@@ -61,26 +59,45 @@ export default {
         res.status(201).json(createdNotification);
     },
 
-    // Requête pour mettre à jour une notification
-    updatingNotification: async (req: Request, res: Response) => {
+// Requête pour mettre à jour une notification 
+    updatingNotification: async (req: AuthenticatedRequest, res: Response) => {
         const notificationId = await parseIdFromParams(req.params.id);
         const updateNotificationBodySchema = z.object({
             content: z.string().min(1).optional(),
-            coursId: z.number().int().optional(),
-            userId: z.number().int().optional(),
-            seen:z.boolean().optional()
         });
-        const data= await updateNotificationBodySchema.parseAsync(req.body);
+        const { content } = await updateNotificationBodySchema.parseAsync(req.body);
+
+        // Récupération avant update pour vérifier l'appartenance
+        const notification = await prisma.notification.findUnique({ where: { id: notificationId } });
+        if (!notification) {
+            throw new NotFoundError(`Notification with id ${notificationId} not found`);
+        }
+        // Seul le propriétaire ou un admin peut modifier la notification
+        if (notification.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Vous n'êtes pas autorisé à modifier cette notification");
+        }
+
         const updatedNotification = await prisma.notification.update({
             where: { id: notificationId },
-            data
+            data: { content }
         });
         res.json(updatedNotification);
     },
 
-    // Requête pour supprimer une notification
-    deleteNotification: async (req: Request, res: Response) => {
+    // Requete pour supprimer une notification
+    deleteNotification: async (req: AuthenticatedRequest, res: Response) => {
         const notificationId = await parseIdFromParams(req.params.id);
+
+        // Récupération avant delete pour vérifier l'appartenance
+        const notification = await prisma.notification.findUnique({ where: { id: notificationId } });
+        if (!notification) {
+            throw new NotFoundError(`Notification with id ${notificationId} not found`);
+        }
+        // Seul le propriétaire ou un admin peut supprimer la notification
+        if (notification.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer cette notification");
+        }
+
         await prisma.notification.delete({ where: { id: notificationId } });
         res.status(204).send();
     },

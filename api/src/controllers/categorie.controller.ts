@@ -56,9 +56,9 @@ export default {
         const updateCategoryBodySchema = z.object({
             name: z.string().min(1).optional(),
             description: z.string().optional(),
-            textColor: z.string(),
-            borderColor: z.string(),
-            backgroundColor: z.string(), // c'est dans le schema prisma
+            textColor: z.string().optional(),
+            borderColor: z.string().optional(),
+            backgroundColor: z.string().optional(), 
         });
 
         const { name, description, textColor, borderColor, backgroundColor } = await updateCategoryBodySchema.parseAsync(req.body);

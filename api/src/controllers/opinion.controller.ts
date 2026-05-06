@@ -71,8 +71,6 @@ export default {
         const updateOpinionBodySchema = z.object({
             content: z.string().min(1).optional(),
             note: z.number().min(0).max(5).int().optional(),
-            coursId: z.number(),
-            // userId retiré : on ne peut pas changer le propriétaire d'une opinion
         });
         const data = await updateOpinionBodySchema.parseAsync(req.body);
 
@@ -90,7 +88,6 @@ export default {
             data: {
                 content: data.content,
                 note: data.note,
-                coursId: data.coursId,
             }
         });
         res.json(updatedOpinion);

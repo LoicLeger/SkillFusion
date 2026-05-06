@@ -2,7 +2,9 @@ import type { Request, Response } from "express"
 import { prisma } from "../models/client"
 import z from "zod";
 import { parseIdFromParams } from "./utils";
-import { NotFoundError } from "../lib/errors";
+import { ForbiddenError, NotFoundError } from "../lib/errors";
+import { ROLES } from "../middlewares/rbac.middleware";
+import { AuthenticatedRequest } from "../@types/express";
 
 export default {
     // Requête pour récuperer tous les cours actives
@@ -11,11 +13,10 @@ export default {
         res.json(coursActives);
 
     },
-    // Requête pour récuperer tous les cours actives d'un étudiant
-    getByUser: async (req: Request, res: Response) => {
+    getEndedCoursByUser: async (req: Request, res: Response) => {
         const userId = await parseIdFromParams(req.params.id);
         const coursByUser = await prisma.coursActived.findMany({
-            where: { userId: userId, cours: {visibility: true }},
+            where: { IsEnd: true, userId: userId, cours: {visibility: true }},
             include: {
                 cours: { include: { category: true } },
             }
@@ -25,69 +26,118 @@ export default {
         }
         res.json(coursByUser);
     },
+    // Requête pour récuperer tous les cours actives d'un étudiant
+    getByUser: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = await parseIdFromParams(req.params.id);
+
+        // Vérification ! un étudiant ne voit que ses cours actifs
+        if (userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Accès refusé");
+        }
+
+        const coursByUser = await prisma.coursActived.findMany({
+            where: {IsEnd:false, userId: userId, cours: {visibility: true }},
+            include: {
+                cours: { include: { category: true } },
+            }
+        })
+        res.json(coursByUser);
+    },
+
     // Requête pour récuperer un cours active par son id
-    getOneCoursActive: async (req: Request, res: Response) => {
+    getOneCoursActive: async (req: AuthenticatedRequest, res: Response) => {
         const coursActiveId = await parseIdFromParams(req.params.id);
+
         const coursActive = await prisma.coursActived.findUnique({ where: { id: coursActiveId } });
         if (!coursActive) {
             throw new NotFoundError(`Cours active with id ${coursActiveId} not found`);
         }
+
+        // ✅ manquant !
+        if (coursActive.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Accès refusé");
+        }
+
         res.json(coursActive);
     },
 
     // Requête pour créer un cours active
-    createCoursActive: async (req: Request, res: Response) => {
+    createCoursActive: async (req: AuthenticatedRequest, res: Response) => {
         const createCoursActiveBodySchema = z.object({
             coursId: z.number(),
-            userId: z.number(),
-            IsEnd: z.boolean(),
+
         });
         const data = await createCoursActiveBodySchema.parseAsync(req.body);
+        const userId = req.user!.userId;
 
-        const alreadyExistingCours = await prisma.coursActived.findFirst({ where: { coursId: data.coursId, userId: data.userId } });
+        const alreadyExistingCours = await prisma.coursActived.findFirst({ where: { coursId: data.coursId, userId } });
+
         if (alreadyExistingCours) {
             return res.status(204).end()
         }
+
         const createdCoursActive = await prisma.coursActived.create({
             data: {
                 coursId: data.coursId,
-                userId: data.userId,
-                IsEnd: data.IsEnd,
+                userId,
+                IsEnd: false
             }
         });
         res.status(201).json(createdCoursActive);
     },
 
     // Requête pour mettre à jour un cours active
-    updatingCoursActive: async (req: Request, res: Response) => {
+    updatingCoursActive: async (req: AuthenticatedRequest, res: Response) => {
+        const coursActiveId = await parseIdFromParams(req.params.id);
+
+        // Récupération dans la bdd avant update pour pouvoir vérifier la propriété
+        const coursActive = await prisma.coursActived.findUnique({ where: { id: coursActiveId } });
+        if (!coursActive) {
+            throw new NotFoundError(`Cours active with id ${coursActiveId} not found`);
+        }
+
+        // Vérification du role/de la propriété
+        if (coursActive.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Accès refusé");
+        }
+
         const updateCoursActiveBodySchema = z.object({
-            coursId: z.number(),
-            userId: z.number(),
+            coursId: z.number().int(),
+            userId: z.number().int(),
             IsEnd: z.boolean(),
         });
         const data = await updateCoursActiveBodySchema.parseAsync(req.body);
-        console.log(data)
 
         const dataCoursActive = await prisma.coursActived.findMany({
              where: { coursId: data.coursId, userId: data.userId  },
         })
-        console.log(dataCoursActive)
         const updatedCoursActive = await prisma.coursActived.update({
             where: { id: dataCoursActive[0].id },
-            data: {
-            coursId: data.coursId,
-                userId: data.userId,
-                IsEnd: data.IsEnd
-            }
+            data: { IsEnd: data.IsEnd }
         });
         res.json(updatedCoursActive);
     },
 
+
     // Requête pour supprimer un cours active
-    deleteCoursActive: async (req: Request, res: Response) => {
+    deleteCoursActive: async (req: AuthenticatedRequest, res: Response) => {
         const coursActiveId = await parseIdFromParams(req.params.id);
-        const coursDeleted = await prisma.coursActived.delete({ where: { id: coursActiveId } });
+
+        // Récupération avant delete pour vérifier la propriété
+        const coursActive = await prisma.coursActived.findUnique({ where: { id: coursActiveId } });
+        if (!coursActive) {
+            throw new NotFoundError(`Cours active with id ${coursActiveId} not found`);
+        }
+
+        // Vérification de la propriété
+        if (coursActive.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Accès refusé");
+        }
+
+        await prisma.coursActived.delete({ where: { id: coursActiveId } });
         res.status(204).send();
+
+
     },
 
 }

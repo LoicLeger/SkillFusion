@@ -265,8 +265,23 @@ export async function forgotPassword(req: Request, res: Response) {
 
 // Réinitialisation du mot de passe
 export async function resetPassword(req: Request, res: Response) {
-    const { token, password } = req.body;
+   
+   // Schema de validation Zod
+       const resetPasswordSchema = z.object({
+        token: z.string().min(1),
+        password: z
+            .string()
+            .min(2)
+            .max(100)
+            .regex(/[a-z]/)      // au moins une minuscule
+            .regex(/[A-Z]/)      // au moins une majuscule
+            .regex(/[!@#$%&*-+{}?]/), // au moins un caractère spécial
+    });
+   
+    const { token, password } = await resetPasswordSchema.parseAsync(req.body);
 
+
+ // Vérifie que le token existe en BDD et qu'il n'est pas expiré
     const user = await prisma.user.findFirst({
         where: {
             resetToken: token,
@@ -274,10 +289,12 @@ export async function resetPassword(req: Request, res: Response) {
         },
     });
 
+    // Si aucun utilisateur n'est trouvé, le token est invalide ou expiré
     if (!user) {
         throw new BadRequestError("Token invalide ou expiré.");
     }
 
+    // Hasher le nouveau mot de passe
     const hashedPassword = await argon2.hash(password);
 
     await prisma.user.update({

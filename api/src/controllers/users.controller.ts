@@ -1,13 +1,15 @@
 import type { Request, Response } from "express";
 import { prisma } from "../models/client"
 import { AuthenticatedRequest } from "../@types/express";
-import { NotFoundError, ConflictError } from "../lib/errors";
+import { NotFoundError, ConflictError, ForbiddenError } from "../lib/errors";
 import z from "zod";
 import { parseIdFromParams } from "./utils";
+import argon2 from "argon2";
+import { ROLES } from "../middlewares/rbac.middleware";
 
 
 export default {
-  getAllUsers:async (req: Request, res: Response)=> {
+  getAllUsers: async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
       omit: { password: true },
       include: { role: true }
@@ -17,7 +19,7 @@ export default {
 
   // Export des données de l'utilisateur connecté (RGPD) -----------------------------------------------
 
-  exportMyData: async (req: AuthenticatedRequest, res: Response)=>{
+  exportMyData: async (req: AuthenticatedRequest, res: Response) => {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.userId },
       include: {
@@ -95,7 +97,7 @@ export default {
 
   // Suppression du compte de l'utilisateur connecté (RGPD) --------------------------------------------
 
-  deleteMyAccount: async(req: AuthenticatedRequest, res: Response)=>{
+  deleteMyAccount: async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user!.userId;
 
     const coursCreés = await prisma.cours.findMany({
@@ -113,10 +115,17 @@ export default {
     }
 
     await prisma.user.delete({ where: { id: userId } });
+    res.status(204).send();
   },
+
   // Récupérer un utilisateur par son id
-  getUserById: async(req: Request, res: Response)=> {
+  getUserById: async (req: AuthenticatedRequest, res: Response) => {
     const userId = await parseIdFromParams(req.params.id);
+
+    // Seul l'utilisateur lui-même ou un admin peut voir ce profil
+    if (userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+      throw new ForbiddenError("Vous n'êtes pas autorisé à accéder à ce profil");
+    }
     const user = await prisma.user.findUnique({
       where: { id: userId },
       omit: { password: true },
@@ -124,6 +133,8 @@ export default {
         role: true
       }
     });
+
+    // Si pas trouvé → 404 sinon 200 + user
     if (!user) {
       throw new NotFoundError(`Utilisateur avec l'id ${userId} non trouvé`);
     }
@@ -131,7 +142,7 @@ export default {
   },
 
   // Créer un nouvel utilisateur
-  createUser: async (req: Request, res: Response)=>{
+  createUser: async (req: Request, res: Response) => {
     const createUserBodySchema = z.object({
       pseudo: z.string().min(1),
       email: z.string().email(),
@@ -153,11 +164,22 @@ export default {
       }
     }
 
+    // Vérification email unique
+    const existingEmail = await prisma.user.findUnique({ where: { email: data.email } });
+    if (existingEmail) throw new ConflictError("Email déjà utilisé");
+
+    // AJOUTÉ : vérification pseudo unique 
+    const existingPseudo = await prisma.user.findUnique({ where: { pseudo: data.pseudo } });
+    if (existingPseudo) throw new ConflictError("Pseudo déjà utilisé");
+
+    // Pour le hashage du mot de passe
+    const hashedPassword = await argon2.hash(data.password);
+
     const createdUser = await prisma.user.create({
       data: {
         pseudo: data.pseudo,
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
         firstname: data.firstname,
         lastname: data.lastname,
         urlProfilImage: data.urlProfilImage,
@@ -168,9 +190,13 @@ export default {
   },
 
   // Mettre à jour un utilisateur
-  updateUser:async(req: Request, res: Response)=>{
+  updateUser: async (req: AuthenticatedRequest, res: Response) => {
     const userId = await parseIdFromParams(req.params.id);
 
+    // Seul l'utilisateur lui-même ou un admin peut modifier ce profil
+    if (userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+      throw new ForbiddenError("Vous n'êtes pas autorisé à modifier ce profil");
+    }
     // Schéma de validation des données
     const updateUserBodySchema = z.object({
       pseudo: z.string().min(1).optional(),
@@ -179,18 +205,15 @@ export default {
       firstname: z.string().min(1).optional(),
       lastname: z.string().min(1).optional(),
       urlProfilImage: z.string().optional(),
-      rolesId: z.number().optional(),
+      roleId: z.number().optional(),
     });
 
     const data = await updateUserBodySchema.parseAsync(req.body);
 
-    // Si l'email est modifié, vérifie qu'il soit unique
-    const { email } = data;
-
-    if (email) {
+    if (data.email) {
       // Ne pas vérifier si l'email appartient déjà à l'utilisateur en cours
       const existingUser = await prisma.user.findUnique({
-        where: { email }
+        where: { email: data.email }
       });
 
       // Si l'email existe et ce n'est pas celui de l'utilisateur actuel, alors renvoyer une erreur
@@ -199,16 +222,19 @@ export default {
       }
     }
 
+    // Si password fourni → on hash, sinon undefined
+    const hashedPassword = data.password ? await argon2.hash(data.password) : undefined;
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
         pseudo: data.pseudo,
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
         firstname: data.firstname,
         lastname: data.lastname,
         urlProfilImage: data.urlProfilImage,
-        roleId: data.rolesId,
+        roleId: data.roleId,
       }
     });
 
@@ -216,11 +242,15 @@ export default {
   },
 
   // Supprimer un utilisateur
-  deleteUser:async(req: Request, res: Response)=>{
+  deleteUser: async (req: AuthenticatedRequest, res: Response) => {
     const userId = await parseIdFromParams(req.params.id);
-    await prisma.user.delete({
-      where: { id: userId }
-    });
+
+        // Seul l'utilisateur lui-même ou un admin peut supprimer ce profil
+    if (userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+      throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer ce profil");
+    }
+
+    await prisma.user.delete({ where: { id: userId } });
     res.status(204).send();
   }
 }

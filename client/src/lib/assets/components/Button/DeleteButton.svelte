@@ -1,6 +1,6 @@
 <script>
 
-    const onclick=$props()
+    const {onclick}=$props()
 </script>
 
 
@@ -22,12 +22,12 @@
 			color 0.15s;
 		background: var(--color-background-delete-button);
 		color: var(--color-font-delete-button);
-		border-color: var(--pink-m);
+		border-color: var(--color-font-delete-button);
 	}
 
     .deleteButton:hover {
 		background: var(--pink-d);
-		color: var(--white);
+		color: var(--color-font-hover-modify-button);
 	}
 
 </style>

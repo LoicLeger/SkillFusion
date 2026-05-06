@@ -68,7 +68,7 @@
 <form
   onsubmit={onSubmitForm}
   class="contact-form"
-  action="https://formspree.io/f/mkoqjznl"
+  action="https://formspree.io/f/mkokynrn"
   method="POST"
   id="contact-form"
 >

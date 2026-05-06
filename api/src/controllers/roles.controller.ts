@@ -25,10 +25,11 @@ export default {
     createRoles: async (req: Request, res: Response) => {
         const createRoleBodySchema = z.object({
             name: z.string(),
+            frName: z.string(),
         });
         const data = await createRoleBodySchema.parseAsync(req.body);
 
-         const alreadyExistingRole = await prisma.role.findFirst({ where: { name: data.name } });
+         const alreadyExistingRole = await prisma.role.findFirst({ where: { name: data.name, } });
         if (alreadyExistingRole) {
             throw new ConflictError(`Role name already taken : ${data.name}`);
         }
@@ -36,6 +37,7 @@ export default {
         const createdRole = await prisma.role.create({
             data: {
                 name: data.name,
+                frName: data.frName,
             }
         });
         res.status(201).json(createdRole);
@@ -47,6 +49,7 @@ export default {
         const roleId = await parseIdFromParams(req.params.id);
         const updateRoleBodySchema = z.object({
             name: z.string(),
+            frName: z.string(),
         });
         const data = await updateRoleBodySchema.parseAsync(req.body);
 
@@ -63,6 +66,7 @@ export default {
             where: { id: roleId },
             data: {
                 name: data.name,
+                frName: data.frName,
             }
         });
         res.json(updatedRole);

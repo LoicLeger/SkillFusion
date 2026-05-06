@@ -1,21 +1,22 @@
 <script lang="ts">
-
 	import api from '$lib/services/api.service';
 	import { onMount } from 'svelte';
 	import type { IBadge, ICategory, ICours, IRole, IUser } from '$lib/@types/types';
 	import '../../../../app.css';
 	import ModalValidator from '../Modal/ModalValidator.svelte';
 	import type { IModal } from '$lib/@types/html';
-	import { goto } from '$app/navigation';
-	import Badge from '../Badge/Badge.svelte';
+	import Badge from './Badge/Badge.svelte';
 	import ArticleDashBoard from './Article/ArticleDashBoard.svelte';
-
+	import BodyCategory from './Category/BodyCategory.svelte';
+	import BodyCours from './Cours/BodyCours.svelte';
+	import { goto } from '$app/navigation';
+	import BodyUser from './User/BodyUser.svelte';
 
 	let users: IUser[] = $state([]);
 	let roles: IRole[] = $state([]);
-	let cours: ICours[] = $state([]);
+	let courses: ICours[] = $state([]);
 	let categories: ICategory[] = $state([]);
-	let badges : IBadge[]=$state([])
+	let badges: IBadge[] = $state([]);
 
 	onMount(async () => {
 		// Fetch tous les roles
@@ -28,16 +29,15 @@
 
 		// Fetch tous les cours
 		const responseCours = await api('api/cours');
-		cours = responseCours.data;
+		courses = responseCours.data;
 
 		// Fetch toutes les categories
 		const responseCategories = await api('api/categories');
 		categories = responseCategories.data;
 
-		const responseBagde=await api("api/badges")
-		badges=responseBagde.data
+		const responseBagde = await api('api/badges');
+		badges = responseBagde.data;
 	});
-
 
 	// ── Filtres ─────────────────────────────────────────────────
 	let searchUsers = $state('');
@@ -47,55 +47,61 @@
 	let searchCats = $state('');
 
 	const filteredUsers = $derived(
-		users.filter((u) => {
+		users.filter((user) => {
 			const matchSearch =
 				!searchUsers ||
-				u.lastname.toLowerCase().includes(searchUsers.toLowerCase()) ||
-				u.firstname.toLowerCase().includes(searchUsers.toLowerCase()) ||
-				u.pseudo.toLowerCase().includes(searchUsers.toLowerCase());
-			const matchRole = !filterRole || u.role.name === filterRole;
+				user.lastname.toLowerCase().includes(searchUsers.toLowerCase()) ||
+				user.firstname.toLowerCase().includes(searchUsers.toLowerCase()) ||
+				user.pseudo.toLowerCase().includes(searchUsers.toLowerCase());
+			const matchRole = !filterRole || user.role.name === filterRole;
 			return matchSearch && matchRole;
 		})
 	);
 
 	const filteredCours = $derived(
-		cours.filter((c) => !searchCours || c.title.toLowerCase().includes(searchCours.toLowerCase()))
+		courses.filter(
+			(cours) => !searchCours || cours.title.toLowerCase().includes(searchCours.toLowerCase())
+		)
 	);
 
 	const filteredBadges = $derived(
-		badges.filter((b) => !searchBadges || b.nom.toLowerCase().includes(searchBadges.toLowerCase()))
+		badges.filter(
+			(badge) => !searchBadges || badge.name.toLowerCase().includes(searchBadges.toLowerCase())
+		)
 	);
-
-	const filteredCats = $derived(
-		categories.filter((c) => !searchCats || c.name.toLowerCase().includes(searchCats.toLowerCase()))
+	const filteredCategories = $derived(
+		categories.filter(
+			(category) => !searchCats || category.name.toLowerCase().includes(searchCats.toLowerCase())
+		)
 	);
-
 
 	let errorMessage = $state('');
 	let successMessage = $state('');
 
+	let coursToDelete = $state<number | null>(null);
 	let userToDelete = $state<number | null>(null);
-	let categoryToDelete =$state<number | null>(null);
+	let categoryToDelete = $state<number | null>(null);
+	let badgeToDelete = $state<number | null>(null);
 
-	async function confirmDeleteCategory() {
-	if(!categoryToDelete)return;
-		const response = await api(`api/categories/${categoryToDelete}`, "DELETE");
-		
-		if (response.status === 204 || response.status ===200){
-			categories = categories.filter((c) => c.id !== categoryToDelete);
-			successMessage = 'La catégorie a été supprimé avec succès';
-			errorMessage='';
-			setTimeout(()=>(successMessage='', 5000))
-		}else {
-			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-			successMessage = '';
-			setTimeout(() => (errorMessage = ''), 5000);
+	/* Fonction pour la modification d'un cours */
+	function modifyUser(user: IUser) {
+		goto('/profil/'+user.id);
+	}
+
+	/* Fonction pour la fenetre modal de confirmation de suppression d'un utilisateur */
+
+	function openModalDeleteUser(userId: number) {
+		userToDelete = userId;
+		const modal = document.getElementById('modalDeleteUser') as IModal;
+		if (modal) {
+			modal.show();
 		}
-		categoryToDelete = null;
-		let refreshCourses =  await api('api/cours')
-		cours = refreshCourses.data
-		cancelDeleteCategory();
-
+	}
+	function cancelDeleteUser() {
+		const modal = document.getElementById('modalDeleteUser') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmDeleteUser() {
@@ -117,16 +123,92 @@
 		cancelDeleteUser();
 	}
 
-	function cancelDeleteUser() {
-		const modal = document.getElementById('modalDeleteUser') as IModal;
+	/* Fonction pour la modification d'un cours */
+	function modifyCours(cours: ICours) {
+		goto('/cours/' + cours.slug);
+	}
+
+	/* Fonction pour la fenetre modal de confirmation de suppression d'un cours */
+
+	function openModalDeleteCours(CoursId: number) {
+		coursToDelete = CoursId;
+		const modal = document.getElementById('modalDeleteCours') as IModal;
+		if (modal) {
+			modal.show();
+		}
+	}
+
+	function cancelDeleteCours() {
+		const modal = document.getElementById('modalDeleteCours') as IModal;
 		if (modal) {
 			modal.close();
 		}
 	}
 
-	function openModalDeleteUser(userId: number) {
-		userToDelete = userId;
-		const modal = document.getElementById('modalDeleteUser') as IModal;
+	async function confirmDeleteCours() {
+		if (!coursToDelete) return;
+		const response = await api(`api/cours/${coursToDelete}`, 'DELETE');
+
+		if (response.status === 204 || response.status === 200) {
+			courses = courses.filter((cours) => cours.id !== coursToDelete);
+			successMessage = 'La cours a été supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		coursToDelete = null;
+		let refreshCourses = await api('api/cours');
+		courses = refreshCourses.data;
+		cancelDeleteCours();
+	}
+
+	/* Fonction pour la modification d'un cours */
+
+	/* Fonction pour la fenetre modal de confirmation de suppression d'un badge */
+
+	function openModalDeleteBadge(BadgeId: number) {
+		badgeToDelete = BadgeId;
+		const modal = document.getElementById('modalDeleteBadge') as IModal;
+		if (modal) {
+			modal.show();
+		}
+	}
+
+	function cancelDeleteBadge() {
+		const modal = document.getElementById('modalDeleteBadge') as IModal;
+		if (modal) {
+			modal.close();
+		}
+	}
+
+	async function confirmDeleteBadge() {
+		if (!badgeToDelete) return;
+		const response = await api(`api/badges/${badgeToDelete}`, 'DELETE');
+
+		if (response.status === 204 || response.status === 200) {
+			badges = badges.filter((badge) => badge.id !== badgeToDelete);
+			successMessage = 'La Badge a été supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		badgeToDelete = null;
+		let refreshCourses = await api('api/cours');
+		courses = refreshCourses.data;
+		cancelDeleteBadge();
+	}
+
+	/* Fonction pour la fenetre modal de confirmation de suppression d'une catégories */
+
+	function openModalDeleteCategory(CategoryId: number) {
+		categoryToDelete = CategoryId;
+		const modal = document.getElementById('modalDeleteCategory') as IModal;
 		if (modal) {
 			modal.show();
 		}
@@ -139,12 +221,24 @@
 		}
 	}
 
-	function openModalDeleteCategory(CategoryId: number) {
-		categoryToDelete = CategoryId;
-		const modal = document.getElementById('modalDeleteCategory') as IModal;
-		if (modal) {
-			modal.show();
+	async function confirmDeleteCategory() {
+		if (!categoryToDelete) return;
+		const response = await api(`api/categories/${categoryToDelete}`, 'DELETE');
+
+		if (response.status === 204 || response.status === 200) {
+			categories = categories.filter((c) => c.id !== categoryToDelete);
+			successMessage = 'La catégorie a été supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
 		}
+		categoryToDelete = null;
+		let refreshCourses = await api('api/cours');
+		courses = refreshCourses.data;
+		cancelDeleteCategory();
 	}
 
 	async function updateRole(userId: number, roleName: string) {
@@ -223,39 +317,17 @@
 
 			<div class="panel__list">
 				{#each filteredUsers as user}
-					<div class="table-row">
-						<span class="table-row__cell click" onclick={() => goToUser(user.id)}>
-							{user.lastname}
-						</span>
-						<span class="table-row__cell click" onclick={() => goToUser(user.id)}>
-							{user.firstname}
-						</span>
-						<span
-							class="table-row__cell table-row__cell--pseudo click"
-							onclick={() => goToUser(user.id)}
-						>
-							{user.pseudo}
-						</span>
-						<span class="badge">
-							<select
-								class="role-user"
-								value={user.role.name}
-								onchange={(e) => updateRole(user.id, e.currentTarget.value)}
-							>
-								{#each roles as r}
-									<option value={r.name}>{r.frName}</option>
-								{/each}
-							</select>
-							<button class="delete-btn delete-btn--edit" onclick={() => openModalDeleteUser(user.id)}>
-								x</button
-							>
-						</span>
-					</div>
-				{/each}
+					<ArticleDashBoard
+						openDeleteModal={() => openModalDeleteUser(user.id)}
+						openModifyModal={() => modifyUser(user)}
+					>
+						<BodyUser {user} />
+					</ArticleDashBoard>
 
 				{#if filteredUsers.length === 0}
 					<p class="panel__empty">Aucun utilisateur trouvé.</p>
 				{/if}
+				{/each}
 			</div>
 		</div>
 
@@ -273,21 +345,13 @@
 			</div>
 
 			<div class="panel__list">
-				{#each filteredCours as c}
-					<div class="list-row">
-						{#if c.visibility == true}
-							🟢
-						{:else if c.visibility == false}
-							🔴
-						{/if}
-						<div class="list-row__info">
-							<p class="list-row__title">{c.title}</p>
-							<span class="badge badge--cat" style="color:{c.category.textColor}"
-								>{c.category.name}</span
-							>
-						</div>
-						<span class="list-row__date">{new Date(c.updatedAt).toLocaleDateString()}</span>
-					</div>
+				{#each filteredCours as cours}
+					<ArticleDashBoard
+						openDeleteModal={() => openModalDeleteCours(cours.id)}
+						openModifyModal={() => modifyCours(cours)}
+					>
+						<BodyCours {cours} />
+					</ArticleDashBoard>
 				{/each}
 
 				{#if filteredCours.length === 0}
@@ -302,7 +366,6 @@
 		<div class="panel">
 			<div class="panel__head">
 				<h2 class="panel__title">Gestion des badges</h2>
-				<button class="btn-add" title="Ajouter un badge">+</button>
 			</div>
 
 			<div class="panel__filters">
@@ -311,9 +374,9 @@
 
 			<div class="panel__list">
 				{#each filteredBadges as badge}
-				<ArticleDashBoard>
-					<Badge badge={badge} --color={badge.color}/>
-				</ArticleDashBoard>
+					<ArticleDashBoard openDeleteModal={() => openModalDeleteBadge(badge.id)}>
+						<Badge {badge} --color={badge.color} />
+					</ArticleDashBoard>
 				{/each}
 
 				{#if filteredBadges.length === 0}
@@ -336,22 +399,19 @@
 			</div>
 
 			<div class="panel__list">
-				{#each filteredCats as cat}
-					<div class="list-row">
-						<span class="badge badge--cat" style="color:{cat.textColor}">{cat.name}</span>
-						<div class="list-row__actions">
-							<button class="action-btn action-btn--edit">Modifier</button>
-							<button class="action-btn action-btn--delete" onclick={() => openModalDeleteCategory(cat.id)}>Supprimer</button>
-						</div>
-					</div>
+				{#each filteredCategories as category}
+					<ArticleDashBoard openDeleteModal={() => openModalDeleteCategory(category.id)}>
+						<BodyCategory {category} />
+					</ArticleDashBoard>
 				{/each}
 
-				{#if filteredCats.length === 0}
+				{#if filteredCategories.length === 0}
 					<p class="panel__empty">Aucune catégorie trouvée.</p>
 				{/if}
 			</div>
 		</div>
 	</div>
+
 	<ModalValidator
 		id="modalDeleteUser"
 		message="Êtes-vous sûr de vouloir supprimer cet utilisateur ?"
@@ -359,10 +419,22 @@
 		confirm={confirmDeleteUser}
 	/>
 	<ModalValidator
+		id="modalDeleteCours"
+		message="Êtes-vous sûr de vouloir supprimer cette cours ?"
+		cancel={cancelDeleteCours}
+		confirm={confirmDeleteCours}
+	/>
+	<ModalValidator
 		id="modalDeleteCategory"
 		message="Êtes-vous sûr de vouloir supprimer cette catégorie ? Si vous la supprimez, vous supprimerez tous les cours liés à celle-ci..."
 		cancel={cancelDeleteCategory}
 		confirm={confirmDeleteCategory}
+	/>
+	<ModalValidator
+		id="modalDeleteBadge"
+		message="Êtes-vous sûr de vouloir supprimer cette badge ?"
+		cancel={cancelDeleteBadge}
+		confirm={confirmDeleteBadge}
 	/>
 </div>
 
@@ -427,16 +499,6 @@
 		border-radius: 100px;
 		letter-spacing: 0.04em;
 		cursor: pointer;
-	}
-
-
-	.click {
-		cursor: pointer;
-		transition: color 0.15s;
-	}
-
-	.click:hover {
-		color: var(--blue);
 	}
 
 	/* ── Grid 2x2 ────────────────────────────────────────────── */
@@ -588,55 +650,6 @@
 		font-size: 12px;
 	}
 
-	/* ── List rows (cours, badges, cats) ─────────────────────── */
-	.list-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 10px;
-		padding: 10px 12px;
-		border-radius: var(--r-md);
-		background: var(--bg);
-		border: 0.5px solid transparent;
-		transition:
-			border-color 0.15s,
-			background 0.15s;
-	}
-
-	.list-row:hover {
-		background: var(--blue-l);
-		border-color: var(--blue-m);
-	}
-
-	.list-row__info {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		flex: 1;
-		min-width: 0;
-	}
-
-	.list-row__title {
-		font-size: 13px;
-		font-weight: 500;
-		color: var(--dark);
-		margin: 0;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.list-row__date {
-		font-size: 11px;
-		color: var(--gray);
-		flex-shrink: 0;
-	}
-
-	.list-row__actions {
-		display: flex;
-		gap: 6px;
-		flex-shrink: 0;
-	}
 	/* ── Boutons action ──────────────────────────────────────── */
 	.btn-add {
 		width: 28px;
@@ -660,36 +673,6 @@
 		color: var(--white);
 	}
 
-	.action-btn {
-		font-family: var(--font);
-		font-size: 11px;
-		font-weight: 500;
-		padding: 4px 8px;
-		border-radius: 6px;
-		cursor: pointer;
-		border: 0.5px solid transparent;
-		transition:
-			background 0.15s,
-			color 0.15s;
-	}
-
-	.action-btn--edit {
-		background: var(--blue-l);
-		color: var(--blue);
-		border-color: var(--blue-m);
-	}
-
-	.action-btn--edit:hover {
-		background: var(--blue);
-		color: var(--white);
-	}
-
-	.action-btn--delete {
-		background: var(--pink-l);
-		color: var(--pink-d);
-		border-color: var(--pink-m);
-	}
-
 	.delete-btn {
 		background: transparent;
 		border: none;
@@ -701,11 +684,6 @@
 
 	.delete-btn:hover {
 		color: red;
-	}
-
-	.action-btn--delete:hover {
-		background: var(--pink-d);
-		color: var(--white);
 	}
 
 	/* ── Responsive ──────────────────────────────────────────── */
