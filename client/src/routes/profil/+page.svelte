@@ -8,19 +8,31 @@
 	import api from '$lib/services/api.service';
 	import { writable } from 'svelte/store';
 	import { authStore } from '$lib/services/localstorage.service.svelte';
+	import { page } from '$app/state';
+	import { get } from 'svelte/store';
 
 	let user = writable({ firstname: '', lastname: '', email: '', password: '' });
 
 	let errorEmail = $state(false);
 	let succesMessage: string | null = $state(null);
 
+	let userId = $derived(page.url.searchParams.get('id'));
+
+	let isSelf = $derived(!userId || userId === String(authStore.user?.id));
+	let isAdmin = $derived(authStore.user?.role === 'admin');
+	let isAdminViewingOther = $derived(!isSelf && authStore.user?.role === 'admin');
+
 	onMount(async () => {
 		try {
-			const response = await api('auth/me', 'GET');
-			user.set(response.data);
-			errorEmail = false;
-		} catch (error) {
-			console.error('Erreur lors de la récupération des informations utilisateur :', error);
+			if (userId) {
+				const res = await api(`api/users/${userId}`, 'GET');
+				user.set(res.data);
+			} else {
+				const res = await api('auth/me', 'GET');
+				user.set(res.data);
+			}
+		} catch (e) {
+			console.error(e);
 		}
 	});
 
@@ -35,11 +47,13 @@
 		};
 
 		// Supprimer les champs vides pour éviter de les envoyer à l'API
+		const currentUser = get(user);
+
 		if (!updatedUser.password) {
 			delete updatedUser.password; // Ne pas inclure le champ password si il est vide
 		}
 
-		if (updatedUser.email === String($user.email)) {
+		if (updatedUser.email === currentUser.email) {
 			delete updatedUser.email;
 		}
 
@@ -54,8 +68,9 @@
 		errorEmail = false;
 
 		try {
-			const response = await api(`api/users/${authStore?.user?.id}`, 'PATCH', updatedUser);
-			console.log(response);
+			const targetId = userId ?? authStore?.user?.id;
+
+			const response = await api(`api/users/${targetId}`, 'PATCH', updatedUser);
 			// Vérification du statut de la réponse
 			if (response.status !== 200) {
 				if (response.data.error === 'Email déjà utilisé') {
@@ -85,7 +100,13 @@
 <Header />
 
 <div class="profil-container">
+	<a class="back" href="/tableau-de-bord"
+		>⬅ Retour au tableau de bord</a
+	>
 	<h1 class="title-page">Mes informations</h1>
+	{#if isAdminViewingOther}
+		<p class="text-sm text-gray-500">Mode lecture admin</p>
+	{/if}
 	<div class="profil-wrapper">
 		<form class="profil-form" onsubmit={handleSubmit}>
 			<div class="form-fields">
@@ -97,6 +118,7 @@
 							id="name"
 							name="name"
 							bind:value={$user.lastname}
+							disabled={!isSelf}
 							placeholder="Dupont"
 						/>
 					</span>
@@ -107,6 +129,7 @@
 							id="firstname"
 							name="firstname"
 							bind:value={$user.firstname}
+							disabled={!isSelf}
 							placeholder="Jean"
 						/>
 					</span>
@@ -119,6 +142,7 @@
 							id="email"
 							name="email"
 							value={$user?.email}
+							disabled={!isSelf}
 							placeholder="jean.dupont@email.com"
 						/>
 						{#if errorEmail}
@@ -132,17 +156,18 @@
 							id="password"
 							name="password"
 							placeholder="Modifier mon mot de passe"
+							disabled={!isSelf}
 						/>
 					</span>
 				</div>
-				<div class="btn-modify">
-					<button class="btn-update" type="submit">Enregistrer les modifications</button>
-					<button class="btn-cancel" type="submit">Annuler</button>
-					<BtnExportRGPD />
-
-					
-					<BtnDeleteAccount />
-				</div>
+				{#if isSelf}
+					<div class="btn-modify">
+						<button class="btn-update" type="submit">Enregistrer les modifications</button>
+						<button class="btn-cancel" type="submit">Annuler</button>
+						<BtnExportRGPD />
+						<BtnDeleteAccount />
+					</div>
+				{/if}
 				{#if succesMessage}
 					<p style="color:green; font-weight: bold; margin-top: 20px;">{succesMessage}</p>
 				{/if}
@@ -271,6 +296,11 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+	}
+
+	.back {
+		text-decoration: none;
+		color: #1d4e89;
 	}
 
 	.btn-update {

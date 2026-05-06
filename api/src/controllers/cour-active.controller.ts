@@ -2,9 +2,7 @@ import type { Request, Response } from "express"
 import { prisma } from "../models/client"
 import z from "zod";
 import { parseIdFromParams } from "./utils";
-import { ForbiddenError, NotFoundError } from "../lib/errors";
-import type { AuthenticatedRequest } from "../@types/express";
-import { ROLES } from "../middlewares/rbac.middleware";
+import { NotFoundError } from "../lib/errors";
 
 export default {
     // Requête pour récuperer tous les cours actives
@@ -24,7 +22,7 @@ export default {
         }
 
         const coursByUser = await prisma.coursActived.findMany({
-            where: { userId: userId },
+            where: { userId: userId, cours: {visibility: true }},
             include: {
                 cours: { include: { category: true } },
             }
@@ -94,6 +92,10 @@ export default {
         });
         const { IsEnd } = await updateCoursActiveBodySchema.parseAsync(req.body);
 
+        const dataCoursActive = await prisma.coursActived.findMany({
+             where: { coursId: data.coursId, userId: data.userId  },
+        })
+        console.log(dataCoursActive)
         const updatedCoursActive = await prisma.coursActived.update({
             where: { id: coursActiveId },
             data: { IsEnd },

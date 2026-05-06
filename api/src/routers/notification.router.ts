@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Route dédiée a l'admin pour la gestion des notifications
 router.get("/notifications", verifyToken, checkRoles([ROLES.ADMIN]), notificationController.getAll)
-
+router.get("/notifications/instructor/:id", notificationController.getNotificationByInstructor)
 // Utilisateur connecté — Propiété vérifiée dans le controller
 router.get("/notifications/:id", verifyToken, notificationController.getOneNotification)
 router.patch("/notifications/:id", verifyToken, notificationController.updatingNotification)

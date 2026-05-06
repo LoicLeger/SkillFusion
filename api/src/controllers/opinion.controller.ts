@@ -91,6 +91,7 @@ export default {
             }
         });
         res.json(updatedOpinion);
+        return res.json(updatedOpinion);
     },
 
 

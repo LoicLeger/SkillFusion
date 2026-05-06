@@ -7,7 +7,7 @@
     "schema": "./prisma/schema.prisma"
   },
   "scripts": {
-    "start": "npx prisma migrate deploy && npx tsx src/models/seeding.ts && tsx app.ts",
+    "start": "npx prisma migrate reset --force && npx tsx src/models/seeding.ts && tsx app.ts",
     "test:unit": "tsx --test ./**/*.unit.test.ts",
     "test:spec": "tsx --test --env-file=./test/config/.env.test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
     "test": "npm run test:unit && npm run test:spec",

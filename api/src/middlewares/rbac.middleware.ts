@@ -38,7 +38,7 @@ export function requireSelfOrAdmin(req: AuthenticatedRequest, res: Response, nex
 
   const resourceId = parseInt(req.params.id as string);
 
-  if (userId !== resourceId && role !== ROLES.ADMIN) {
+  if (userId !== resourceId && role !== role.admin) {
     throw new ForbiddenError(
       "Vous ne pouvez modifier que votre propre ressource"
     );

@@ -2,7 +2,17 @@
 	import '../../../../app.css';
 	import LevelBar from '$lib/assets/components/Levelbar/LevelBar.svelte';
 	import Category from '$lib/assets/components/Category/Category.svelte';
+	import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
+	import { getAuth, authStore } from '$lib/services/localstorage.service.svelte';
+	import { onMount } from 'svelte';
+
 	let { isDashboard = false, ...props } = $props();
+	let user: IUserLocalStorage | null = $state(null);
+
+	onMount(() => {
+		getAuth();
+		user = authStore.user;
+	});
 </script>
 
 <article class="cours-card {props.class}">
@@ -15,10 +25,20 @@
 					category={props.cours.category}
 					--background_color={props.cours.category.backgroundColor}
 				/>
-				<LevelBar {isDashboard} level={props.cours.difficulty} />
+
+				<div>
+					{#if  isDashboard == true && user?.role != "student" }
+						{#if props.cours.visibility == true}
+							🟢
+						{:else if props.cours.visibility == false}
+							🔴
+						{/if}
+					{/if}
+					<LevelBar {isDashboard} level={props.cours.difficulty} />
+				</div>
 			</div>
-		</div>
-	</a>
+		</div></a
+	>
 </article>
 
 <style>

@@ -8,6 +8,20 @@
     --border-radius:12px;
     --h1-color:#1D4E89;
 
+    --color-notification-not-seen: #ecd7b2;
+
+    --color-font-delete-button:#a93226;
+    --color-background-delete-button:#fdedec;
+    --color-font-hover-delete-button:#fdedec;
+    --color-font-background-delete-button:#a93226;
+
+    --color-font-modify-button:#1d4e89;
+    --color-background-modify-button:#ebf2fa;
+    --color-font-hover-modify-button:white;
+    --color-font-background-modify-button:#1d4e89;
+
+    --size-icon-mobile:32px
+
 }
 body{
     min-height: 100vh;

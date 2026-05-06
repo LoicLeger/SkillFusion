@@ -5,7 +5,6 @@ import { checkRoles, ROLES } from '../middlewares/rbac.middleware';
 
 export const router=express.Router()
 
-// Routes Publiques
 router.get("/cours",coursController.getAll)
 router.get("/cours/homepage",coursController.getForHomePage)
 router.get("/cours/instructor/:id",coursController.getCoursByInstructor)

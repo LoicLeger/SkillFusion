@@ -49,6 +49,15 @@ cd ../client
 npm install
 ```
 
+### 5. Deploiment de prisma et seeding de la base de donnée
+
+
+```bash
+cd api
+npm run db:reset
+
+```
+
 ## Commandes utiles
 
 - `docker compose up` : Lancer les conteneurs

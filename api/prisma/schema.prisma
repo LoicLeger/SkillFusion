@@ -36,8 +36,6 @@ model User {
   pseudo         String @unique
   urlProfilImage String? @map("url_profil_image")
 
-  note           Int     @default(0)
-
   verified       Boolean @default(false)
   verifyToken    String? @map("verify_token")  
 
@@ -72,12 +70,14 @@ model Cours {
   visibility    Boolean @default(false)
   numberPage    Int @map("number_page")
 
+  note           Int     @default(0)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   author        User                             @relation("CreatedCours", fields: [authorId], references: [id], onDelete: Restrict)
   authorId      Int                              @map("author_id")
-  category      Category                         @relation(fields: [categoryId], references: [id])
+  category      Category                    @relation(fields: [categoryId], references: [id],onDelete: Cascade)
   categoryId    Int                              @map("category_id")
   tools         CoursHasTool[]
   learningObjectives     CoursHasLearningObjective[]
@@ -151,6 +151,8 @@ model Badge {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
+  icon      String
+  color     String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -249,7 +251,7 @@ model Comment {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   cours  Cours @relation(fields: [coursId], references: [id], onDelete: Cascade)
-  auteur User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
   @@map("comments")
 }
 
@@ -273,6 +275,9 @@ model Opinion {
 model Notification {
   id      Int    @id @default(autoincrement())
   content String
+  seen    Boolean @default(false)
+  targetId Int @map("target_id") @unique
+  
   coursId Int    @map("cours_id")
   userId  Int    @map("user_id")
 

@@ -14,6 +14,11 @@ export default {
                 where: { slug: { contains: req.query.slug as string } },
                 include: {
                     category: true,
+                    comments:{
+                        include:{
+                            author:true
+                        }
+                    },
                     author: {
                         omit: { password: true }
                     },
@@ -109,26 +114,19 @@ export default {
         res.json(cours)
     },
     // Requête pour créer un cours
-    createCours: async (req: AuthenticatedRequest, res: Response) => {
+    createCours: async (req: Request, res: Response) => {
+        req.body.slug=req.body.title.replaceAll(" ","-")
+        req.body.authorId=req.user.userId
         const createCoursBodySchema = z.object({
             title: z.string().min(1),
             littleSummary: z.string().optional(),
             urlImage: z.string().optional(),
             difficulty: z.number().int().min(0).max(4),
             summary: z.string().optional(),
-            visibility: z.boolean(),
             authorId: z.number().int(),
             categoryId: z.number().int(),
-            tools: z.array(z.number().int()),
-            learningObjectives: z.array(z.number().int()),
-            content: z.array(z.number().int()),
-            enrollments: z.array(z.number().int()),
-            activations: z.array(z.number().int()),
-            comments: z.array(z.number().int()),
-            opinions: z.array(z.number().int()),
-            notifications: z.array(z.number().int()),
             slug: z.string().min(1),
-            numberPage: z.number().int().min(1),
+
         });
         const data = await createCoursBodySchema.parseAsync(req.body);
 
@@ -138,14 +136,13 @@ export default {
         const createdCours = await prisma.cours.create({
             data: {
                 title: data.title,
-                slug: data.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+                slug: data.slug,
                 numberPage: 0,
                 littleSummary: data.littleSummary,
-                urlImage: data.urlImage,
                 difficulty: data.difficulty,
                 summary: data.summary,
-                visibility: data.visibility,
-                authorId: req.user!.userId,
+                visibility:false,
+                authorId: data.authorId,
                 categoryId: data.categoryId
             }
         });
@@ -205,7 +202,6 @@ export default {
             difficulty,
             summary,
             visibility,
-            authorId,
             categoryId }
             = await updateCoursBodyScheme.parseAsync(req.body);
 

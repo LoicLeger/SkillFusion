@@ -12,6 +12,7 @@ export default {
         const comments = await prisma.comment.findMany();
         res.json(comments);
     },
+    
 
     // Requête pour récuperer un commentaire par son id
     getOneComment: async (req: Request, res: Response) => {
@@ -38,6 +39,14 @@ export default {
                 coursId: data.coursId,
             }
         });
+
+        const createdNotification = await prisma.notification.create({data:{
+            content:data.description,
+            coursId:data.coursId,
+            userId:data.authorId,
+            targetId:createdComment.id
+        }})
+
         res.status(201).json(createdComment);
     },
 
@@ -84,7 +93,10 @@ export default {
             throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer ce commentaire");
         }
 
-        await prisma.comment.delete({ where: { id: commentId } });
+        const deletedComment =await prisma.comment.delete({ where: { id: commentId } });
+        const deletedNotification = await prisma.notification.delete({
+            where:{targetId:comment.id}
+        })
         res.status(204).send();
     },
 };

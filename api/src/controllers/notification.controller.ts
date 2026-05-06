@@ -12,6 +12,17 @@ export default {
         const notifications = await prisma.notification.findMany();
         res.json(notifications);
     },
+    getNotificationByInstructor:async (req: Request, res: Response)=>{
+        const instructorId = await parseIdFromParams(req.params.id)
+        const comments = await prisma.notification.findMany({
+            include:{
+                cours:{select:{authorId:true,title:true,slug:true}},
+                user:{select:{pseudo:true}}
+            },
+            where:{cours:{authorId:instructorId}}
+        })
+        res.json(comments)
+    },
 
     // Requête pour récuperer une notification par son id 
     getOneNotification: async (req: AuthenticatedRequest, res: Response) => {
@@ -33,6 +44,7 @@ export default {
             content: z.string().min(1),
             coursId: z.number().int(),
             userId: z.number().int(),
+            target: z.number().int()
         });
         const data = await createNotificationBodySchema.parseAsync(req.body);
 
@@ -41,6 +53,7 @@ export default {
                 content: data.content,
                 userId: data.userId,
                 coursId: data.coursId,
+                targetId:data.target
             }
         });
         res.status(201).json(createdNotification);

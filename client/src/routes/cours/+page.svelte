@@ -11,12 +11,13 @@
 	let courses: ICours[] = $state([]);
 	let categories: ICategory[] = $state([]);
 
+	let sortBy = $state('');
+
 	onMount(async () => {
 		const categoriesResponse = await api('api/categories');
 		categories = categoriesResponse.data;
 		const coursesResponse = await api('api/cours?visibility=true');
 		courses = coursesResponse.data;
-		console.log(courses);
 	});
 	let searchQuery = $state('');
 	let selectedCategory = $state('Toutes les catégories');
@@ -28,6 +29,46 @@
 					selectedCategory === 'Toutes les catégories' || cours.category.name == selectedCategory
 			)
 			.filter((cours) => cours.title.toLowerCase().includes(searchQuery.toLowerCase()))
+	);
+
+	let displayedCourses = $derived(
+		filteredCourses.slice().sort((a, b) => {
+			if (!sortBy) return 0;
+
+			if (sortBy === 'alpha-asc') {
+				return a.title.localeCompare(b.title);
+			}
+
+			if (sortBy === 'alpha-desc') {
+				return b.title.localeCompare(a.title);
+			}
+
+			if (sortBy === 'date-desc') {
+				return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+			}
+
+			if (sortBy === 'date-asc') {
+				return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+			}
+
+			if (sortBy === 'difficulty-asc') {
+				return a.difficulty - b.difficulty;
+			}
+
+			if (sortBy === 'difficulty-desc') {
+				return b.difficulty - a.difficulty;
+			}
+
+			if (sortBy === 'note-desc') {
+				return b.author.note - a.author.note;
+			}
+
+			if (sortBy === 'note-asc') {
+				return a.author.note - b.author.note;
+			}
+
+			return 0;
+		})
 	);
 </script>
 
@@ -45,6 +86,21 @@
 				bind:value={searchQuery}
 			/>
 
+			<!-- Filtre par ordre alphabétique, date, note -->
+			<div class="filter">
+				<select class="category-btn" bind:value={sortBy}>
+					<option value="">Trier par...</option>
+					<option value="alpha-asc">A → Z</option>
+					<option value="alpha-desc">Z → A</option>
+					<option value="date-desc">Plus récent</option>
+					<option value="date-asc">Plus ancien</option>
+					<option value="difficulty-asc">Difficulté croissante</option>
+					<option value="difficulty-desc">Difficulté décroissante</option>
+					<option value="note-desc">Note croissante</option>
+					<option value="note-asc">Note décroissante</option>
+				</select>
+			</div>
+
 			<div class="dropdown-wrapper">
 				<select id="categorie-select" class="category-btn" bind:value={selectedCategory}>
 					<option value="Toutes les catégories"> Toutes les catégories </option>
@@ -59,7 +115,7 @@
 			<button type="button" class="add-btn">+</button>
 		</div>
 		<div class="courses-grid">
-			{#each filteredCourses as cours (cours.id)}
+			{#each displayedCourses as cours (cours.id)}
 				<CoursCard
 					{cours}
 					--card__image__color={cours.category.textColor}

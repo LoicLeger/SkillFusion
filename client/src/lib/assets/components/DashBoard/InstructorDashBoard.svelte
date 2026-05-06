@@ -1,76 +1,63 @@
 <script lang="ts">
 	import '../../../../app.css';
-	import type { ICours } from '$lib/@types/types';
+	import type { ICours, INotification } from '$lib/@types/types';
 	import { onMount } from 'svelte';
 	import api from '$lib/services/api.service';
 	import { authStore, getAuth } from '$lib/services/localstorage.service.svelte';
 	import CoursCard from '../Cours/CoursCard.svelte';
+	import ModalNewCours from '../Modal/ModalNewCours.svelte';
+	import type { IModal } from '$lib/@types/html';
+	import type { IPropsComfirmeNewCours } from '$lib/@types/typeUtils';
+	import Notification from './Notification.svelte';
 
 	let cours: ICours[] = $state([]);
+	let notifications : INotification[]= $state([]);
 
 	onMount(async () => {
 		getAuth();
 		// Fetch tous les cours du formateur connecté
 		const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
 		cours = responseCours.data;
+		const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
+		notifications = responseNotification.data;
+
 	});
 
-	const notifications = [
-		{
-			auteur: 'Antoine L.',
-			type: 'question',
-			contenu: "Que faire si l'écrou est rouillé ?",
-			cours: 'Installer un robinet',
-			lu: false,
-			heure: '14h32'
-		},
-		{
-			auteur: 'Sophie M.',
-			type: 'question',
-			contenu: 'Quel type de téflon utiliser ?',
-			cours: 'Installer un robinet',
-			lu: false,
-			heure: '11h15'
-		},
-		{
-			auteur: 'Pierre T.',
-			type: 'avis',
-			contenu: 'Excellent cours, très clair !',
-			cours: 'Poser une prise',
-			lu: true,
-			heure: '09h40'
-		},
-		{
-			auteur: 'Laura K.',
-			type: 'question',
-			contenu: 'Un cours sur les douches est-il prévu ?',
-			cours: 'Installer un robinet',
-			lu: true,
-			heure: 'Hier'
-		},
-		{
-			auteur: 'Thomas B.',
-			type: 'avis',
-			contenu: 'Super contenu, bien détaillé.',
-			cours: 'Assembler un meuble',
-			lu: true,
-			heure: 'Hier'
-		}
-	];
+	function openModalNewCours(){
+		const modalNewCours=document.getElementById("modalNewCours") as IModal
+		modalNewCours.show()
+	}
 
+	function cancelModalNewCours(){
+		const modalNewCours=document.getElementById("modalNewCours") as IModal
+		modalNewCours.close()
+	}
+
+	async function comfirmModalNewCours(data:IPropsComfirmeNewCours){
+		await api("api/cours","POST",data)
+		cancelModalNewCours()
+	}
+	
 	// ── État ────────────────────────────────────────────────────
 	let searchCours = $state('');
 	let filteredCours = $derived(
 		cours.filter((c) => !searchCours || c.title.toLowerCase().includes(searchCours.toLowerCase()))
 	);
 
-	const nonLues = $derived(notifications.filter((n) => !n.lu).length);
+	 async function seenNotification(id:number){
+        await api("api/notifications/"+id,"PATCH",{seen:true})
+    }
 
-	// ── Config types notifs ──────────────────────────────────────
-	const typeConfig = {
-		question: { label: 'Question', cls: 'notif--question' },
-		avis: { label: 'Avis', cls: 'notif--avis' }
-	};
+    async function deleteNotification(event,id:number){
+		event.preventDefault()
+        await api("api/notifications/"+id,"DELETE")
+		const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
+		cours = responseCours.data;
+		const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
+		notifications = responseNotification.data;
+    }
+
+
 </script>
 
 <div class="dashboard">
@@ -87,7 +74,7 @@
 				<h2 class="panel__title">Mes cours</h2>
 				<div class="panel__head-actions">
 					<span class="panel__count">{filteredCours.length}</span>
-					<button class="btn-add" title="Nouveau cours">+ Nouveau cours</button>
+					<button class="btn-add" title="Nouveau cours" onclick={openModalNewCours}>+ Nouveau cours</button>
 				</div>
 			</div>
 
@@ -102,7 +89,7 @@
 
 			<div class="panel__list panel__list--cours">
 				{#each filteredCours as c}
-					<CoursCard
+				<CoursCard
 						class="coursCardDashboard"
 						isDashboard={true}
 						cours={c}
@@ -125,33 +112,22 @@
 		<div class="panel">
 			<div class="panel__head">
 				<h2 class="panel__title">Notifications</h2>
-				{#if nonLues > 0}
-					<span class="notif-badge">{nonLues} nouvelle{nonLues > 1 ? 's' : ''}</span>
-				{/if}
 			</div>
 
 			<div class="panel__list panel__list--notifs">
-				{#each notifications as n}
-					<div class="notif {typeConfig[n.type]?.cls}" class:notif--unread={!n.lu}>
-						<div class="notif__top">
-							<div class="notif__meta">
-								<span class="notif__auteur">{n.auteur}</span>
-								<span class="notif__type-pill notif__type-pill--{n.type}">
-									{typeConfig[n.type]?.label}
-								</span>
-							</div>
-							<span class="notif__heure">{n.heure}</span>
-						</div>
-						<p class="notif__contenu">{n.contenu}</p>
-						<p class="notif__cours">↳ {n.cours}</p>
-						{#if n.type === 'question' && !n.lu}
-							<button class="notif__reply-btn">Répondre</button>
-						{/if}
-					</div>
+				{#each notifications as notification}
+					<Notification 
+					notification={notification}
+					seenNotification={seenNotification}
+					deleteNotification={deleteNotification}
+					/>
 				{/each}
 			</div>
 		</div>
 	</div>
+	<ModalNewCours
+	cancel={cancelModalNewCours}
+	confirm={comfirmModalNewCours}/>
 </div>
 
 <style>
@@ -163,7 +139,7 @@
 		--amber: #f5a623;
 		--amber-l: #fef5e7;
 		--amber-m: #fac775;
-		--bg: #f7f4ef;
+		
 		--dark: #2c3e50;
 		--white: #ffffff;
 		--gray: #6b7280;
@@ -200,56 +176,6 @@
 		font-size: 28px;
 		font-weight: 400;
 		color: var(--dark);
-		margin: 0;
-	}
-
-	.dashboard__role-pill {
-		background: var(--amber-l);
-		color: #ba7517;
-		border: 0.5px solid var(--amber-m);
-		font-size: 11px;
-		font-weight: 600;
-		padding: 3px 10px;
-		border-radius: 100px;
-		letter-spacing: 0.04em;
-	}
-
-	/* ── Stats ──────────────────────────────────────────────── */
-	.stats {
-		display: flex;
-		gap: 14px;
-		margin-bottom: 24px;
-		flex-wrap: wrap;
-	}
-
-	.stat-card {
-		background: var(--white);
-		border: 0.5px solid var(--border);
-		border-radius: var(--r-lg);
-		padding: 16px 20px;
-		flex: 1;
-		min-width: 100px;
-	}
-
-	.stat-card--alert-active {
-		background: var(--amber-l);
-		border-color: var(--amber-m);
-	}
-
-	.stat-card__value {
-		font-family: 'DM Serif Display', serif;
-		font-size: 28px;
-		color: var(--blue);
-		margin: 0 0 2px;
-	}
-
-	.stat-card--alert-active .stat-card__value {
-		color: #ba7517;
-	}
-
-	.stat-card__label {
-		font-size: 12px;
-		color: var(--gray);
 		margin: 0;
 	}
 
@@ -363,103 +289,7 @@
 		background: var(--white);
 	}
 
-	/* ── Course row ─────────────────────────────────────────── */
-	.course-row {
-		display: flex;
-		align-items: center;
-		gap: 14px;
-		padding: 12px;
-		background: var(--bg);
-		border-radius: var(--r-md);
-		border: 0.5px solid transparent;
-		transition:
-			border-color 0.15s,
-			background 0.15s;
-	}
 
-	.course-row:hover {
-		background: var(--blue-l);
-		border-color: var(--blue-m);
-	}
-
-	.course-row__thumb {
-		width: 44px;
-		height: 44px;
-		border-radius: 8px;
-		flex-shrink: 0;
-	}
-
-	.course-row__thumb--plomb {
-		background: var(--blue);
-	}
-	.course-row__thumb--elec {
-		background: #ba7517;
-	}
-	.course-row__thumb--menu {
-		background: var(--green-d);
-	}
-	.course-row__thumb--chauf {
-		background: var(--pur-d);
-	}
-	.course-row__thumb--carr {
-		background: var(--pink-d);
-	}
-	.course-row__thumb--peint {
-		background: #57534e;
-	}
-
-	.course-row__body {
-		flex: 1;
-		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-	}
-
-	.course-row__top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-
-	.course-row__title {
-		font-size: 13px;
-		font-weight: 500;
-		color: var(--dark);
-		margin: 0;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.course-row__meta {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
-
-	.meta-item {
-		font-size: 11px;
-		color: var(--gray);
-		display: flex;
-		align-items: center;
-		gap: 3px;
-	}
-
-	.meta-item__icon {
-		font-size: 12px;
-	}
-	.meta-item__icon.star {
-		color: var(--amber);
-	}
-	.meta-item--date {
-		margin-left: auto;
-	}
-
-	.course-row__actions {
-		flex-shrink: 0;
-	}
 
 	/* ── Boutons ─────────────────────────────────────────────── */
 	.btn-add {
@@ -479,174 +309,9 @@
 		color: var(--white);
 	}
 
-	.action-btn {
-		font-family: var(--font);
-		font-size: 11px;
-		font-weight: 500;
-		padding: 5px 10px;
-		border-radius: 6px;
-		cursor: pointer;
-		border: 0.5px solid transparent;
-		text-decoration: none;
-		transition:
-			background 0.15s,
-			color 0.15s;
-	}
 
-	.action-btn--edit {
-		background: var(--blue-l);
-		color: var(--blue);
-		border-color: var(--blue-m);
-	}
 
-	.action-btn--edit:hover {
-		background: var(--blue);
-		color: var(--white);
-	}
 
-	/* ── Notifications ───────────────────────────────────────── */
-	.notif-badge {
-		background: var(--amber);
-		color: var(--white);
-		font-size: 11px;
-		font-weight: 600;
-		padding: 2px 8px;
-		border-radius: 100px;
-	}
-
-	.notif {
-		padding: 12px 14px;
-		border-radius: var(--r-md);
-		background: var(--bg);
-		border: 0.5px solid transparent;
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-		transition: border-color 0.15s;
-	}
-
-	.notif--unread {
-		background: var(--blue-l);
-		border-left: 3px solid var(--blue);
-	}
-
-	.notif__top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-
-	.notif__meta {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-	}
-
-	.notif__auteur {
-		font-size: 12px;
-		font-weight: 600;
-		color: var(--dark);
-	}
-
-	.notif__type-pill {
-		font-size: 10px;
-		font-weight: 600;
-		padding: 2px 7px;
-		border-radius: 100px;
-	}
-
-	.notif__type-pill--question {
-		background: var(--blue-l);
-		color: var(--blue);
-		border: 0.5px solid var(--blue-m);
-	}
-
-	.notif__type-pill--avis {
-		background: var(--green-l);
-		color: var(--green-d);
-		border: 0.5px solid var(--green-m);
-	}
-
-	.notif__heure {
-		font-size: 10px;
-		color: var(--gray);
-		flex-shrink: 0;
-	}
-
-	.notif__contenu {
-		font-size: 12px;
-		color: var(--dark);
-		margin: 0;
-		line-height: 1.5;
-	}
-
-	.notif__cours {
-		font-size: 11px;
-		color: var(--gray);
-		margin: 0;
-	}
-
-	.notif__reply-btn {
-		align-self: flex-start;
-		font-family: var(--font);
-		font-size: 11px;
-		font-weight: 500;
-		padding: 4px 10px;
-		border-radius: 6px;
-		background: var(--blue);
-		color: var(--white);
-		border: none;
-		cursor: pointer;
-		margin-top: 2px;
-		transition: opacity 0.15s;
-	}
-
-	.notif__reply-btn:hover {
-		opacity: 0.85;
-	}
-
-	/* ── Badges catégories ───────────────────────────────────── */
-	.badge {
-		display: inline-flex;
-		align-items: center;
-		padding: 3px 10px;
-		border-radius: 100px;
-		font-size: 11px;
-		font-weight: 600;
-		white-space: nowrap;
-	}
-
-	.badge--plomb {
-		background: var(--blue-l);
-		color: var(--blue);
-		border: 0.5px solid var(--blue-m);
-	}
-	.badge--elec {
-		background: var(--amber-l);
-		color: #ba7517;
-		border: 0.5px solid var(--amber-m);
-	}
-	.badge--menu {
-		background: var(--green-l);
-		color: var(--green-d);
-		border: 0.5px solid var(--green-m);
-	}
-	.badge--chauf {
-		background: var(--pur-l);
-		color: var(--pur-d);
-		border: 0.5px solid #d7bde2;
-	}
-	.badge--carr {
-		background: var(--pink-l);
-		color: var(--pink-d);
-		border: 0.5px solid var(--pink-m);
-	}
-	.badge--peint {
-		background: #f5f5f4;
-		color: #57534e;
-		border: 0.5px solid #d6d3d1;
-	}
 
 	/* ── Responsive ──────────────────────────────────────────── */
 	@media (max-width: 1024px) {
@@ -670,25 +335,11 @@
 			overflow: hidden;
 		}
 
-		.stats {
-			gap: 10px;
-		}
 
-		.stat-card {
-			padding: 12px 14px;
-			min-width: calc(50% - 5px);
-		}
-
-		.stat-card__value {
-			font-size: 22px;
-		}
 
 		.panel__list--notifs {
 			max-height: 320px;
 		}
 
-		.meta-item--date {
-			display: none;
-		}
 	}
 </style>

@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Routes publiques
 router.get("/comments", commentController.getAll)
+
 router.get("/comments/:id", commentController.getOneComment)
 
 // Création — accessible à tous les rôles connectés
