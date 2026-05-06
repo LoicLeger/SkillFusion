@@ -80,12 +80,10 @@ export default {
             IsEnd: z.boolean(),
         });
         const data = await updateCoursActiveBodySchema.parseAsync(req.body);
-        console.log(data)
 
         const dataCoursActive = await prisma.coursActived.findMany({
              where: { coursId: data.coursId, userId: data.userId  },
         })
-        console.log(dataCoursActive)
         const updatedCoursActive = await prisma.coursActived.update({
             where: { id: dataCoursActive[0].id },
             data: {

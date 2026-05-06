@@ -20,7 +20,17 @@ export default {
         }
         res.json(badge);
     },
-
+    getBadgesByUser :async (req: Request, res: Response) => {
+        const userId= await parseIdFromParams(req.params.id);
+        const badgesByUser = await prisma.userHasBadge.findMany({
+            where:{userId: userId},
+            include: {badge: true}
+        })
+        if (!badgesByUser){
+            throw new NotFoundError(`Badges with id ${badgesByUser} not found`);
+        }
+        res.json(badgesByUser);
+    },
     // Requête pour créer un badge
     createBadge: async (req: Request, res: Response) => {
         const createBadgeBodySchema = z.object({

@@ -21,7 +21,7 @@ export interface IUser {
         role: IRole
         roleId: string
         createdCours: ICours[]
-        badges: UserHasBadge[]
+        badges: IUserHasBadge[]
         enrollments: UserHasCours[]
         activations: ICoursActived[]
         commentaires: IComment[]
@@ -101,7 +101,7 @@ export interface IBadge {
         color:string
         createdAt: Date
         updatedAt: Date
-        users: UserHasBadge[]
+        users: IUserHasBadge[]
 }
 
 export interface UserHasCours {
@@ -124,14 +124,14 @@ export interface ICoursActived {
         user: IUser
         cours: ICours[]
 }
-export interface UserHasBadge {
+export interface IUserHasBadge {
         id: number
         userId: number
         badgeId: number
         createdAt: Date
         updatedAt: Date
         user: IUser
-        badge: Badge[]
+        badge: IBadge
 }
 export interface CoursHasTool {
         id: number

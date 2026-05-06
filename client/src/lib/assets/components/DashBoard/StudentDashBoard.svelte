@@ -2,15 +2,15 @@
 	import '../../../../app.css';
 	import { onMount } from 'svelte';
 	import api from '$lib/services/api.service';
-	import type { ICours } from '$lib/@types/types';
+	import type { ICours, IUserHasBadge } from '$lib/@types/types';
 	import { authStore, getAuth } from '$lib/services/localstorage.service.svelte';
 	import CoursCard from '../Cours/CoursCard.svelte';
 	import Category from '../Category/Category.svelte';
+	import Badge from '../Badge/Badge.svelte';
 
 	let coursActive: ICours[] = $state([]);
 	let coursTermines: ICours[] = $state([]);
-
-	let props = $props();
+	let userBadges :IUserHasBadge[] = $state([]);
 
 	onMount(async () => {
 		getAuth();
@@ -19,20 +19,11 @@
 		coursActive = response.data;
 		const ended = await api('api/cours-active/user/' + authStore?.user?.id + '/ended');
 		coursTermines = ended.data;
-		console.log(coursTermines);
+		const badges = await api('api/badges/user/'+authStore?.user?.id )
+		userBadges = badges.data;
+		console.log(userBadges)
 	});
-
-	const mesSucces = [
-		{ nom: 'Première réalisation', icone: '⭐', couleur: 'amber', debloque: true },
-		{ nom: 'Cours terminé', icone: '✓', couleur: 'green', debloque: true },
-		{ nom: 'En progression', icone: '↑', couleur: 'blue', debloque: true },
-		{ nom: 'Expert bricoleur', icone: '🏆', couleur: 'amber', debloque: false },
-		{ nom: '5 cours terminés', icone: '🔥', couleur: 'blue', debloque: false }
-	];
-
-	const totalBadges = mesSucces.length;
-	const debloques = mesSucces.filter((b) => b.debloque).length;
-	const progressBadge = Math.round((debloques / totalBadges) * 100);
+	
 </script>
 
 <div class="dashboard">
@@ -52,7 +43,7 @@
 			<p class="stat-card__label">Cours terminés</p>
 		</div>
 		<div class="stat-card">
-			<p class="stat-card__value">{debloques}</p>
+			<p class="stat-card__value">{userBadges.length}</p>
 			<p class="stat-card__label">Badges débloqués</p>
 		</div>
 	</div>
@@ -92,27 +83,15 @@
 		<div class="panel">
 			<div class="panel__head">
 				<h2 class="panel__title">Mes succès</h2>
-				<span class="panel__count">{debloques}/{totalBadges}</span>
-			</div>
-
-			<!-- Barre de progression globale badges -->
-			<div class="badge-progress">
-				<div class="progress-bar">
-					<div class="progress-bar__fill" style="width: {progressBadge}%"></div>
-				</div>
-				<span class="progress-bar__label"
-					>{debloques} badge{debloques > 1 ? 's' : ''} sur {totalBadges}</span
-				>
+				<span class="panel__count">/{userBadges.length}</span>
 			</div>
 
 			<div class="badges-grid">
-				{#each mesSucces as b}
-					<div class="badge-item" class:badge-item--locked={!b.debloque}>
-						<div class="badge-icon badge-icon--{b.couleur}" class:badge-icon--locked={!b.debloque}>
-							{b.debloque ? b.icone : '🔒'}
-						</div>
-						<p class="badge-item__name">{b.nom}</p>
-					</div>
+				{#each userBadges as b}
+				<Badge
+				badge={b.badge}
+				--color={b.badge.color}
+				/>
 				{/each}
 			</div>
 		</div>
@@ -437,9 +416,11 @@
 
 	/* ── Badges grid ─────────────────────────────────────────── */
 	.badges-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		display: flex;
+		padding: 10px;
+		overflow-x : scroll;
 		gap: 10px;
+
 	}
 
 	.badge-item {
