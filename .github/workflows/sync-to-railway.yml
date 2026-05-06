@@ -1,8 +1,10 @@
 name: Sync to Railway
 
 on:
-  schedule:
-    - cron: '0 3 * * *'
+  workflow_run:
+    workflows: ["Lint & Format (On main push)"]
+    branches: [main]
+    types: [completed]
   workflow_dispatch:
 
 jobs:

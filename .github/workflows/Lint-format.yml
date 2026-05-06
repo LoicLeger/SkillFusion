@@ -1,17 +1,16 @@
-name: Lint & Format (On PR Approval)
+name: Lint & Format (On main push)
 
 on:
-  pull_request_review:
-    types: [submitted]
+  push:
+    branches: [main-dev, main]
 
 jobs:
   lint-and-fix:
-    if: github.event.review.state == 'approved' && github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v3

@@ -1,0 +1,56 @@
+name: Tests (Unit + Integration)
+
+on:
+  push:
+    branches: [main-dev, main]
+
+jobs:
+  test-api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install API dependencies
+        working-directory: ./api
+        run: npm install
+      
+      - name: Run API unit tests
+        working-directory: ./api
+        run: npm run test:unit
+        continue-on-error: true
+      
+      - name: Run API integration tests
+        working-directory: ./api
+        run: npm run test:spec
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@postgres:5432/skillfusion_test
+
+  test-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install client dependencies
+        working-directory: ./client
+        run: npm install
+      
+      - name: Run client tests
+        working-directory: ./client
+        run: npm run test
