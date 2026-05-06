@@ -1,6 +1,7 @@
 import express from "express";
 import commentController from "../controllers/comment.controller";
 import { verifyToken } from '../middlewares/auth.middleware';
+import { sendReportEmail } from "../services/mailer";
 import { checkRoles, ROLES } from '../middlewares/rbac.middleware'; 
 
 const router = express.Router();
@@ -18,5 +19,7 @@ router.patch("/comments/:id", verifyToken, commentController.updatingComment)
 
 // Suppression - propriété vérifiée dans le controller (auteur ou admin)
 router.delete("/comments/:id", verifyToken, commentController.deleteComment)
+
+router.post("/comments/:id/report", verifyToken, commentController.reportComment)
 
 export default router;

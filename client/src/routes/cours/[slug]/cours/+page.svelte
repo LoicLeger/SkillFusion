@@ -17,12 +17,12 @@
 
 	import type { ICours, ICoursContent } from '$lib/@types/types';
 	import ModalValidator from '$lib/assets/components/Modal/ModalValidator.svelte';
+	import ModalReportComment from '$lib/assets/components/Modal/ModalReportComment.svelte';
 	import type { IModal, ITextArea } from '$lib/@types/html';
 	import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
-	import {goto} from '$app/navigation'
-	
-	
-let user: IUserLocalStorage | null = $state(null);
+	import { goto } from '$app/navigation';
+
+	let user: IUserLocalStorage | null = $state(null);
 	let isLoading = $state(false);
 	let cours: ICours | null = $state(null);
 	let currentPage: number = $state(1);
@@ -62,11 +62,10 @@ let user: IUserLocalStorage | null = $state(null);
 		cours = refresh.data;
 		commentContentElement.value = '';
 	}
-	async function DeleteComment(data:number){
-	await api('api/comments/' + data, 'DELETE');
-	const refresh = await api('api/cours?slug=' + page.params.slug);
-	cours = refresh.data;
-
+	async function DeleteComment(data: number) {
+		await api('api/comments/' + data, 'DELETE');
+		const refresh = await api('api/cours?slug=' + page.params.slug);
+		cours = refresh.data;
 	}
 
 	function handleModify() {
@@ -129,8 +128,8 @@ let user: IUserLocalStorage | null = $state(null);
 	}
 	async function endCours() {
 		const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: true };
-		await api('api/cours-active/'+ cours?.id, "PATCH", data);
-		goto('/cours/' +  page.params.slug)
+		await api('api/cours-active/' + cours?.id, 'PATCH', data);
+		goto('/cours/' + page.params.slug);
 	}
 
 	function modalDeletePage() {
@@ -151,6 +150,20 @@ let user: IUserLocalStorage | null = $state(null);
 		getCours();
 	}
 
+	// Fonction pour signaler un commentaire
+
+	let reportModal = $state(false);
+	let commentToReport = $state<number | null>(null);
+
+	function signalerComment(commentId: number) {
+		commentToReport = commentId;
+		reportModal = true;
+	}
+
+	function closeReport() {
+		reportModal = false;
+		commentToReport = null;
+	}
 </script>
 
 <App>
@@ -219,21 +232,16 @@ let user: IUserLocalStorage | null = $state(null);
 					>
 				{/if}
 				{#if currentPage === cours?.numberPage}
-				<button 
-				class="nav-btn next-btn"
-				onclick={endCours}
-				>
-					Terminé le cours
-				</button>
+					<button class="nav-btn next-btn" onclick={endCours}> Terminé le cours </button>
 				{:else}
-				<button
-					class="nav-btn next-btn"
-					disabled={currentPage === cours?.numberPage}
-					onclick={goToNext}
-				>
-					Suivant →
-				</button>
-				{/if}		
+					<button
+						class="nav-btn next-btn"
+						disabled={currentPage === cours?.numberPage}
+						onclick={goToNext}
+					>
+						Suivant →
+					</button>
+				{/if}
 			</div>
 
 			<div class="card comments-card">
@@ -250,6 +258,7 @@ let user: IUserLocalStorage | null = $state(null);
 								<div class="comment__header">
 									<div class="comment__meta">
 										<span class="comment__pseudo">{c.author.pseudo}</span>
+
 										<span class="comment__date">
 											{new Date(c.updatedAt).toLocaleDateString('fr-FR', {
 												day: '2-digit',
@@ -258,8 +267,11 @@ let user: IUserLocalStorage | null = $state(null);
 											})}
 										</span>
 									</div>
-									{#if user?.id == c.authorId || user?.role === "admin"}
-									<button onclick={()=>DeleteComment(c.id)}>X</button>
+									{#if user?.id == c.authorId || user?.role === 'admin'}
+										<button onclick={() => DeleteComment(c.id)}>X</button>
+									{/if}
+									{#if user && user.id !== c.authorId}
+										<button class="signal" onclick={() => signalerComment(c.id)}>⚑ Signaler</button>
 									{/if}
 								</div>
 								<p class="comment__content">{c.description}</p>
@@ -287,6 +299,11 @@ let user: IUserLocalStorage | null = $state(null);
 			cancel={closeDeletePageModale}
 			confirm={deletePage}
 		/>
+		{#if reportModal}
+			<ModalReportComment 
+			commentId={commentToReport} 
+			onClose={closeReport} />
+		{/if}
 	</Main>
 	<Footer />
 </App>
@@ -316,6 +333,19 @@ let user: IUserLocalStorage | null = $state(null);
 	.author span {
 		font-weight: 600;
 		color: #1a1a1a;
+	}
+
+	.signal {
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		font-size: 12px;
+		color: #6b7280;
+	}
+
+	.signal:hover {
+		color: #ef4444;
+		font-weight: bold;
 	}
 
 	.cours-main {
