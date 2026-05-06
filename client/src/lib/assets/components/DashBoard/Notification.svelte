@@ -1,29 +1,38 @@
 <script lang="ts">
-    import "../../../../app.css"
-    const {notification,seenNotification,deleteNotification}=$props()
+	import '../../../../app.css';
+	const { notification, seenNotification, deleteNotification } = $props();
 
-   let datetime=$derived(new Date(notification.createdAt).toLocaleDateString("fr-FR",{
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-}))
+	let datetime = $derived(
+		new Date(notification.createdAt).toLocaleDateString('fr-FR', {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		})
+	);
 </script>
 
-<div class="notif {notification.seen?"seen":"unseen"}" >
-    <a href={'/cours/' + notification.cours.slug + '/cours'} onclick={()=>seenNotification(notification.id)} class="notif__content-wrapper">
-        <div class="notif__header">
-            <h3 class="notif__title">{notification.cours.title}</h3>
-            <div class="notif__meta">
-                <span class="notif__pseudo">{notification.user.pseudo}</span>
-                <span class="notif__date">{datetime}</span>
-            </div>
-        </div>
-        <p class="notif__body">{notification.content}</p>
-    </a>
-    <button class="notif__close" onclick={(event)=>deleteNotification(event,notification.id)} title="Supprimer">✕</button>
+<div class="notif {notification.seen ? 'seen' : 'unseen'}">
+	<a
+		href={'/cours/' + notification.cours.slug + '/cours'}
+		onclick={() => seenNotification(notification.id)}
+		class="notif__content-wrapper"
+	>
+		<div class="notif__header">
+			<h3 class="notif__title">{notification.cours.title}</h3>
+			<div class="notif__meta">
+				<span class="notif__pseudo">{notification.user.pseudo}</span>
+				<span class="notif__date">{datetime}</span>
+			</div>
+		</div>
+		<p class="notif__body">{notification.content}</p>
+	</a>
+	<button
+		class="notif__close"
+		onclick={(event) => deleteNotification(event, notification.id)}
+		title="Supprimer">✕</button
+	>
 </div>
-
 
 <style>
 	.notif {

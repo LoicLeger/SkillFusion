@@ -8,10 +8,9 @@
 	import Category from '../Category/Category.svelte';
 	import Badge from '../Badge/Badge.svelte';
 
-
 	let coursActive: ICours[] = $state([]);
 	let coursTermines: ICours[] = $state([]);
-	let userBadges :IUserHasBadge[] = $state([]);
+	let userBadges: IUserHasBadge[] = $state([]);
 
 	onMount(async () => {
 		getAuth();
@@ -20,10 +19,9 @@
 		coursActive = response.data;
 		const ended = await api('api/cours-active/user/' + authStore?.user?.id + '/ended');
 		coursTermines = ended.data;
-		const badges = await api('api/badges/user/'+authStore?.user?.id )
+		const badges = await api('api/badges/user/' + authStore?.user?.id);
 		userBadges = badges.data;
 	});
-	
 </script>
 
 <div class="dashboard">
@@ -88,10 +86,7 @@
 
 			<div class="badges-grid">
 				{#each userBadges as b}
-				<Badge
-				badge={b.badge}
-				--color={b.badge.color}
-				/>
+					<Badge badge={b.badge} --color={b.badge.color} />
 				{/each}
 			</div>
 		</div>
@@ -118,7 +113,8 @@
 							/>
 						</div>
 						<span class="list-row__date"
-							>Terminé le : <br/> {new Date(c.updatedAt).toLocaleDateString('fr-FR', {
+							>Terminé le : <br />
+							{new Date(c.updatedAt).toLocaleDateString('fr-FR', {
 								weekday: 'long',
 								year: 'numeric',
 								month: 'long',
@@ -418,9 +414,8 @@
 	.badges-grid {
 		display: flex;
 		padding: 10px;
-		overflow-x : scroll;
+		overflow-x: scroll;
 		gap: 10px;
-
 	}
 
 	.badge-item {

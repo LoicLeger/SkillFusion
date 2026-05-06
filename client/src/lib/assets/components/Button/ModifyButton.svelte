@@ -1,14 +1,10 @@
 <script>
-
-    const {onclick}=$props()
+	const { onclick } = $props();
 </script>
 
-
-<button class="modifyButton" onclick={onclick}>Modifier</button>
-
+<button class="modifyButton" {onclick}>Modifier</button>
 
 <style>
-
 	.modifyButton {
 		font-family: var(--font);
 		font-size: 11px;
@@ -25,9 +21,8 @@
 		border-color: var(--color-font-modify-button);
 	}
 
-    .modifyButton:hover {
+	.modifyButton:hover {
 		background: var(--color-font-background-modify-button);
 		color: var(--color-font-hover-modify-button);
 	}
-
 </style>

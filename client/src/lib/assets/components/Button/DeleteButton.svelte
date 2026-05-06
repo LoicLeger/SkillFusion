@@ -1,14 +1,10 @@
 <script>
-
-    const {onclick}=$props()
+	const { onclick } = $props();
 </script>
 
-
-<button class="deleteButton" onclick={onclick}>Supprimer</button>
-
+<button class="deleteButton" {onclick}>Supprimer</button>
 
 <style>
-
 	.deleteButton {
 		font-family: var(--font);
 		font-size: 11px;
@@ -25,9 +21,8 @@
 		border-color: var(--color-font-delete-button);
 	}
 
-    .deleteButton:hover {
+	.deleteButton:hover {
 		background: var(--pink-d);
 		color: var(--color-font-hover-modify-button);
 	}
-
 </style>

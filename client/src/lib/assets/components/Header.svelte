@@ -1,27 +1,25 @@
 <script lang="ts">
 	import logoSkillFusion from '$lib/assets/img/logo_title.png';
-	import {getAuth, authStore, clearAuth} from "$lib/services/localstorage.service.svelte"
+	import { getAuth, authStore, clearAuth } from '$lib/services/localstorage.service.svelte';
 	import { onMount } from 'svelte';
 
-	import type {IUserLocalStorage} from "$lib/@types/type.localStorage"
+	import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
 	import { goto } from '$app/navigation';
 	import api from '$lib/services/api.service';
 
-	let user:IUserLocalStorage|null = $state(null);
+	let user: IUserLocalStorage | null = $state(null);
 
-	onMount(()=>{
-		getAuth()
-		user= authStore.user
-	})
+	onMount(() => {
+		getAuth();
+		user = authStore.user;
+	});
 
 	async function logout() {
-		const response= await api("auth/logout","POST")
-		clearAuth()
-	    user = null;
-		goto('/')
+		const response = await api('auth/logout', 'POST');
+		clearAuth();
+		user = null;
+		goto('/');
 	}
-	
-
 </script>
 
 <header class="header">
@@ -44,7 +42,7 @@
 	<nav class="header__nav" aria-label="Navigation principale">
 		<a href="/cours" class="header__nav-link"> Nos cours </a>
 		{#if user}
-		<a href="/tableau-de-bord" class="header__nav-link"> Tableau de bord </a>
+			<a href="/tableau-de-bord" class="header__nav-link"> Tableau de bord </a>
 		{/if}
 	</nav>
 </header>
@@ -196,7 +194,7 @@
 
 	@media (min-width: 1024px) {
 		img {
-		width: 200px;
-	}
+			width: 200px;
+		}
 	}
 </style>

@@ -27,7 +27,7 @@
 				/>
 
 				<div>
-					{#if  isDashboard == true && user?.role != "student" }
+					{#if isDashboard == true && user?.role != 'student'}
 						{#if props.cours.visibility == true}
 							🟢
 						{:else if props.cours.visibility == false}

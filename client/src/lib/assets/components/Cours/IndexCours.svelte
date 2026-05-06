@@ -138,7 +138,7 @@
 			categoryId: cours?.categoryId,
 			tools: cours?.tools.map((t) => t.tools.id) ?? [],
 			learningObjectives: cours?.learningObjectives.map((o) => o.objectif.id) ?? [],
-			content: cours?.content.map((c) => c.id) ?? [],
+			content: cours?.content.map((c) => c.id) ?? []
 		};
 
 		const response = await api('api/cours/' + cours?.id, 'PATCH', data);
