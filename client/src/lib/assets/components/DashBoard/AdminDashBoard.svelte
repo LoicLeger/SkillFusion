@@ -267,6 +267,11 @@
 			setTimeout(() => (errorMessage = ''), 5000);
 		}
 	}
+
+	// Navigation vers détail utilisateur
+	function goToUser(id: number) {
+		goto(`/profil?id=${id}`);
+	}
 </script>
 
 <div class="dashboard">
@@ -421,7 +426,7 @@
 	/>
 	<ModalValidator
 		id="modalDeleteCategory"
-		message="Êtes-vous sûr de vouloir supprimer cette catégorie ?"
+		message="Êtes-vous sûr de vouloir supprimer cette catégorie ? Si vous la supprimez, vous supprimerez tous les cours liés à celle-ci..."
 		cancel={cancelDeleteCategory}
 		confirm={confirmDeleteCategory}
 	/>

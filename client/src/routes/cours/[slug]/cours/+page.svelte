@@ -19,6 +19,7 @@
 	import ModalValidator from '$lib/assets/components/Modal/ModalValidator.svelte';
 	import type { IModal, ITextArea } from '$lib/@types/html';
 	import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
+	import {goto} from '$app/navigation'
 	
 	
 let user: IUserLocalStorage | null = $state(null);
@@ -126,6 +127,11 @@ let user: IUserLocalStorage | null = $state(null);
 		currentPage++;
 		getCours();
 	}
+	async function endCours() {
+		const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: true };
+		await api('api/cours-active/'+ cours?.id, "PATCH", data);
+		goto('/cours/' +  page.params.slug)
+	}
 
 	function modalDeletePage() {
 		const modal = document.getElementById('ModalValidator') as IModal;
@@ -144,6 +150,7 @@ let user: IUserLocalStorage | null = $state(null);
 		}
 		getCours();
 	}
+
 </script>
 
 <App>
@@ -211,7 +218,14 @@ let user: IUserLocalStorage | null = $state(null);
 						}}>Ajouter une Page</button
 					>
 				{/if}
-
+				{#if currentPage === cours?.numberPage}
+				<button 
+				class="nav-btn next-btn"
+				onclick={endCours}
+				>
+					Terminé le cours
+				</button>
+				{:else}
 				<button
 					class="nav-btn next-btn"
 					disabled={currentPage === cours?.numberPage}
@@ -219,6 +233,7 @@ let user: IUserLocalStorage | null = $state(null);
 				>
 					Suivant →
 				</button>
+				{/if}		
 			</div>
 
 			<div class="card comments-card">
