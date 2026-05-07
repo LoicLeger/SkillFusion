@@ -26,7 +26,7 @@
 		<form onsubmit={onSumbit}>
 			<div class="input">
 				<label for="name">Nom</label>
-				<input id="name" placeholder="Nom du badge" bind:value={name} />
+				<input id="name" placeholder="Nom de la catégorie" bind:value={name} />
 			</div>
 			<div class="input">
 				<label for="description">Description</label>
