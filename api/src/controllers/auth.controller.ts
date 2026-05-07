@@ -1,6 +1,6 @@
 import type { Request, Response } from "express"
 import argon2 from "argon2";
-import { z } from "zod";
+import { includes, z } from "zod";
 import { prisma, User } from "../models/client";
 import { config } from "../config";
 import type { Token } from "../@types/index.d.ts";
@@ -199,7 +199,7 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
     const existingRefreshToken = await prisma.refreshToken.findUnique({
         where: { token: receivedRefreshToken },
-        include: { user: true },
+        include: { user: {include:{role:true}} },
     });
 
     if (!existingRefreshToken) {
@@ -216,7 +216,7 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
     setRefreshTokenCookie(res, refreshToken);
 
-    res.json({ accessToken });
+    res.json({ accessToken,user:{ id: existingRefreshToken.user.id, pseudo: existingRefreshToken.user.pseudo, role: existingRefreshToken.user.role.name } });
 }
 
 export async function verifyEmail(req: Request, res: Response) {

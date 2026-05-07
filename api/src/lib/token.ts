@@ -8,7 +8,6 @@ export function generateAuthTokens(user: User) {
     userId: user.id,
     role: user.roleId,
   };
-
   const accessToken = jwt.sign(payload, config.jwtSecret, { expiresIn: config.jwtAccesExpireIn, audience: "access" });
   const refreshUniqueId = crypto.randomBytes(128).toString("base64");
   const refreshToken = jwt.sign(
@@ -24,7 +23,7 @@ export function generateAuthTokens(user: User) {
     },
     refreshToken: {
       token: refreshToken,
-      expiresIn: config.jwtRefreshExpireIn* 1000,
+      expiresIn: config.jwtRefreshExpireIn * 1000,
     },
   };
 }

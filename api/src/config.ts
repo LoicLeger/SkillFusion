@@ -12,7 +12,7 @@ export const config = {
   isProd: process.env.NODE_ENV === "production" || false,
   jwtSecret: process.env.JWT_SECRET!,
   jwtAccesExpireIn: Number(process.env.JWT_ACCES_EXPIRES_IN),
-  jwtRefreshExpireIn: Number(process.env.JWT_ACCES_EXPIRES_IN),
+  jwtRefreshExpireIn: Number(process.env.JWT_REFRESH_EXPIRES_IN),
   emailUser: process.env.EMAIL_USER ?? "",
   emailPass: process.env.EMAIL_PASS ?? "",
   corsOriginUrl: process.env.CORS_ORIGIN_URL ?? "",
