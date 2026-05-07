@@ -5,6 +5,7 @@
 	import Header from '$lib/assets/components/Header.svelte';
 	import App from '$lib/assets/components/App.svelte';
 	import Main from '$lib/assets/components/Main.svelte';
+    import photoCS from '$lib/assets/img/CELIK-Samed.png';
 </script>
 
 <App>
@@ -129,8 +130,8 @@
 				<p class="team__role">Développeur Full Stack</p>
 			</div>
 			<div class="team__member">
-				<div class="team__avatar">
-					<img src="/images/membre2.jpg" alt="Membre 2" />
+				<div class="team__avatar-2">
+					<img src={photoCS} alt="Samed CELIK" />
 				</div>
 				<h3 class="team__name">Samed CELIK</h3>
 				<p class="team__role">Développeur Full Stack</p>
@@ -165,306 +166,257 @@
 </App>
 
 <style>
-	/* ── Variables & base ── */
-	.page {
-		--blue: #1d4e89;
-		--blue-l: #ebf2fa;
-		--amber: #f5a623;
-		--bg: #f7f4ef;
-		--white: #ffffff;
-		--dark: #1a1a2e;
-		--gray: #6b7280;
-		--border: rgba(44, 62, 80, 0.1);
+.hero,
+.section,
+.team,
+.divider,
+.mission {
+	max-width: 760px;
+	margin: 0 auto;
+}
 
-		font-family: 'DM Sans', 'Segoe UI', sans-serif;
-		background: var(--bg);
-		color: var(--dark);
-		min-height: 100vh;
-	}
+/* ── HERO ── */
+.hero {
+	padding: 80px 24px 60px;
+	text-align: center;
+}
 
-	/* ── Hero ── */
-	.hero {
-		max-width: 760px;
-		margin: 0 auto;
-		padding: 80px 24px 60px;
-		text-align: center;
-	}
+.hero__tag {
+	display: inline-block;
+	background: var(--color-background-modify-button);
+	color: var(--color-font-modify-button);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	padding: 5px 14px;
+	border-radius: var(--border-radius);
+	margin-bottom: 24px;
+	border: 1px solid var(--color-font-modify-button);
+}
 
-	.hero__tag {
-		display: inline-block;
-		background: var(--blue-l);
-		color: var(--blue);
-		font-size: 12px;
-		font-weight: 600;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		padding: 5px 14px;
-		border-radius: 100px;
-		margin-bottom: 24px;
-		border: 1px solid rgba(29, 78, 137, 0.15);
-	}
+.hero__title {
+	font-family: 'DM Serif Display', serif;
+	font-size: 40px;
+	font-weight: 400;
+	color: var(--h1-color);
+	margin-bottom: 20px;
+}
 
-	.hero__title {
-		font-family: 'DM Serif Display', Georgia, serif;
-		font-size: clamp(2.5rem, 6vw, 4rem);
-		font-weight: 400;
-		line-height: 1.1;
-		color: var(--h1-color);
-		margin: 0 0 24px;
-		letter-spacing: -0.02em;
-	}
+.hero__title em {
+	font-style: italic;
+	color: var(--h2-color);
+}
 
-	.hero__title em {
-		font-style: italic;
-		color: var(--h2-color);
-	}
+.hero__sub {
+	color: #57534e;
+	font-size: 16px;
+	line-height: 1.6;
+	max-width: 540px;
+	margin: 0 auto;
+}
 
-	.hero__sub {
-		font-size: 1.05rem;
-		color: var(--gray);
-		line-height: 1.7;
-		max-width: 540px;
-		margin: 0 auto;
-	}
+/* ── SECTIONS ── */
+.section {
+	padding: 30px 24px;
+	background: var(--background-white);
+	border-radius: 10px;
+	margin-bottom: 30px;
+}
 
-	/* ── Divider ── */
-	.divider {
-		max-width: 760px;
-		margin: 0 auto;
-		height: 1px;
-		background: linear-gradient(to right, transparent, var(--border), transparent);
-	}
+.section__label {
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--h2-color);
+	margin-bottom: 20px;
+}
 
-	/* ── Sections ── */
+.section__content p {
+	font-size: 16px;
+	line-height: 1.7;
+	color: #57534e;
+	margin-bottom: 16px;
+}
+
+.section__content strong {
+	color: var(--h1-color);
+}
+
+/* ── DIVIDER ── */
+.divider {
+	height: 1px;
+	background: rgba(44, 62, 80, 0.1);
+	margin: 40px auto;
+}
+
+/* ── CARDS ── */
+.cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+}
+
+.card {
+	background: var(--background-white);
+	border: 1px solid rgba(44, 62, 80, 0.1);
+	border-radius: var(--border-radius);
+	padding: 20px;
+	transition: 0.2s;
+}
+
+.card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.card__icon {
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+
+.card__title {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--h1-color);
+}
+
+.card__text {
+	font-size: 14px;
+	color: #57534e;
+}
+
+/* ── FEATURES ── */
+.features {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 12px;
+}
+
+.feature {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 14px;
+	color: #57534e;
+}
+
+.feature__dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--h2-color);
+}
+
+/* ── TEAM ── */
+.section--team {
+	padding-bottom: 30px;
+}
+
+.team__headline {
+	font-family: 'DM Serif Display', serif;
+	font-size: 24px;
+	color: var(--h3-color);
+}
+
+.team__desc {
+	font-size: 14px;
+	color: #57534e;
+}
+
+.team {
+	padding: 0 24px 60px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 24px;
+}
+
+.team__member {
+	background: var(--background-white);
+	border: 1px solid rgba(44, 62, 80, 0.1);
+	border-radius: var(--border-radius);
+	padding: 20px;
+	text-align: center;
+	transition: 0.2s;
+}
+
+.team__member:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.team__avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	overflow: hidden;
+	margin: 0 auto 10px;
+	border: 2px solid var(--color-background-modify-button);
+}
+
+.team__avatar-2 {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 10px;
+    border: 2px solid var(--color-background-modify-button);
+}
+
+.team__avatar-2 img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.team__avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.team__name {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--h3-color);
+}
+
+.team__role {
+	font-size: 13px;
+	color: #6b7280;
+}
+
+/* ── MISSION ── */
+.mission {
+	background: var(--button-backgroung-color);
+	padding: 60px 24px;
+	border-radius: var(--border-radius);
+}
+
+.mission blockquote {
+	font-family: 'DM Serif Display', serif;
+	font-size: 20px;
+	color: white;
+	text-align: center;
+	line-height: 1.6;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
 	.section {
-		max-width: 760px;
-		margin: 0 auto;
-		padding: 60px 24px;
-		display: grid;
-		grid-template-columns: 180px 1fr;
-		gap: 40px;
-		align-items: start;
+		grid-template-columns: 1fr;
 	}
 
-	.section__label {
-		font-size: 11px;
-		font-weight: 700;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--amber);
-		padding-top: 4px;
-	}
-
-	.section__content p {
-		font-size: 0.95rem;
-		line-height: 1.75;
-		color: #374151;
-		margin-bottom: 16px;
-	}
-
-	.section__content p:last-child {
-		margin-bottom: 0;
-	}
-
-	.section__content strong {
-		color: var(--blue);
-		font-weight: 600;
-	}
-
-	/* ── Cards utilisateurs ── */
 	.cards {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 16px;
+		grid-template-columns: 1fr;
 	}
 
-	.card {
-		background: var(--white);
-		border: 1px solid var(--border);
-		border-radius: 14px;
-		padding: 20px;
-		transition:
-			transform 0.2s,
-			box-shadow 0.2s;
-	}
-
-	.card:hover {
-		transform: translateY(-3px);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-	}
-
-	.card__icon {
-		font-size: 1.5rem;
-		margin-bottom: 12px;
-	}
-
-	.card__title {
-		font-size: 0.9rem;
-		font-weight: 700;
-		color: var(--blue);
-		margin: 0 0 8px;
-	}
-
-	.card__text {
-		font-size: 0.8rem;
-		color: var(--gray);
-		line-height: 1.6;
-		margin: 0;
-	}
-
-	/* ── Features ── */
 	.features {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 12px;
-	}
-
-	.feature {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		font-size: 0.875rem;
-		color: #374151;
-	}
-
-	.feature__dot {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: var(--amber);
-		flex-shrink: 0;
-	}
-
-	/* ── Équipe ── */
-	.section--team {
-		padding-bottom: 32px;
-	}
-
-	.team__intro {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.team__headline {
-		font-family: 'DM Serif Display', Georgia, serif;
-		font-size: 1.5rem;
-		font-weight: 400;
-		color: var(--dark);
-		margin: 0;
-	}
-
-	.team__desc {
-		font-size: 0.9rem;
-		color: var(--gray);
-		line-height: 1.65;
-		margin: 0;
+		grid-template-columns: 1fr;
 	}
 
 	.team {
-		max-width: 760px;
-		margin: 0 auto;
-		padding: 0 24px 60px;
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 24px;
+		grid-template-columns: repeat(2, 1fr);
 	}
-
-	.team__member {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 10px;
-		text-align: center;
-		background: var(--white);
-		border: 1px solid var(--border);
-		border-radius: 16px;
-		padding: 24px 16px;
-		transition:
-			transform 0.2s,
-			box-shadow 0.2s;
-	}
-
-	.team__member:hover {
-		transform: translateY(-3px);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-	}
-
-	.team__avatar {
-		width: 80px;
-		height: 80px;
-		border-radius: 50%;
-		overflow: hidden;
-		border: 3px solid var(--blue-l);
-		box-shadow: 0 4px 12px rgba(29, 78, 137, 0.15);
-		background: var(--blue-l);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.team__avatar img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.team__name {
-		font-size: 0.875rem;
-		font-weight: 700;
-		color: var(--dark);
-		margin: 0;
-	}
-
-	.team__role {
-		font-size: 0.75rem;
-		color: var(--gray);
-		margin: 0;
-	}
-
-	/* ── Mission ── */
-	.mission {
-		background: var(--button-backgroung-color);
-		padding: 60px 24px;
-		border-radius: 10px;
-	}
-
-	.mission blockquote {
-		max-width: 680px;
-		margin: 0 auto;
-		font-family: 'DM Serif Display', Georgia, serif;
-		font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-		font-style: italic;
-		color: rgba(255, 255, 255, 0.92);
-		line-height: 1.65;
-		text-align: center;
-		border: none;
-		padding: 0;
-	}
-
-	/* ── Responsive ── */
-	@media (max-width: 640px) {
-		.section {
-			grid-template-columns: 1fr;
-			gap: 16px;
-			padding: 40px 20px;
-		}
-
-		.cards {
-			grid-template-columns: 1fr;
-		}
-
-		.features {
-			grid-template-columns: 1fr;
-		}
-
-		.hero {
-			padding: 60px 20px 40px;
-		}
-
-		.team {
-			grid-template-columns: repeat(2, 1fr);
-			padding: 0 20px 40px;
-		}
-	}
+}
 </style>
