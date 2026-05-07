@@ -2,13 +2,12 @@
 	let props = $props();
 </script>
 
-<div class="card-category"> 
+<div class="card-category">
 	{props.category.name}
 </div>
 
 <style>
-
-.card-category {
+	.card-category {
 		color: var(--text_color);
 		font-size: 10px;
 		font-family: 'DM Sans', sans-serif;

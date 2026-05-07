@@ -100,9 +100,7 @@
 <Header />
 
 <div class="profil-container">
-	<a class="back" href="/tableau-de-bord"
-		>⬅ Retour au tableau de bord</a
-	>
+	<a class="back" href="/tableau-de-bord">⬅ Retour au tableau de bord</a>
 	<h1 class="title-page">Mes informations</h1>
 	{#if isAdminViewingOther}
 		<p class="text-sm text-gray-500">Mode lecture admin</p>

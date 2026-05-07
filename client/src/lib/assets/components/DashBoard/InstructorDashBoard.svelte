@@ -11,7 +11,7 @@
 	import Notification from './Notification.svelte';
 
 	let cours: ICours[] = $state([]);
-	let notifications : INotification[]= $state([]);
+	let notifications: INotification[] = $state([]);
 
 	onMount(async () => {
 		getAuth();
@@ -20,44 +20,41 @@
 		cours = responseCours.data;
 		const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
 		notifications = responseNotification.data;
-
 	});
 
-	function openModalNewCours(){
-		const modalNewCours=document.getElementById("modalNewCours") as IModal
-		modalNewCours.show()
+	function openModalNewCours() {
+		const modalNewCours = document.getElementById('modalNewCours') as IModal;
+		modalNewCours.show();
 	}
 
-	function cancelModalNewCours(){
-		const modalNewCours=document.getElementById("modalNewCours") as IModal
-		modalNewCours.close()
+	function cancelModalNewCours() {
+		const modalNewCours = document.getElementById('modalNewCours') as IModal;
+		modalNewCours.close();
 	}
 
-	async function comfirmModalNewCours(data:IPropsComfirmeNewCours){
-		await api("api/cours","POST",data)
-		cancelModalNewCours()
+	async function comfirmModalNewCours(data: IPropsComfirmeNewCours) {
+		await api('api/cours', 'POST', data);
+		cancelModalNewCours();
 	}
-	
+
 	// ── État ────────────────────────────────────────────────────
 	let searchCours = $state('');
 	let filteredCours = $derived(
 		cours.filter((c) => !searchCours || c.title.toLowerCase().includes(searchCours.toLowerCase()))
 	);
 
-	 async function seenNotification(id:number){
-        await api("api/notifications/"+id,"PATCH",{seen:true})
-    }
+	async function seenNotification(id: number) {
+		await api('api/notifications/' + id, 'PATCH', { seen: true });
+	}
 
-    async function deleteNotification(event,id:number){
-		event.preventDefault()
-        await api("api/notifications/"+id,"DELETE")
+	async function deleteNotification(event, id: number) {
+		event.preventDefault();
+		await api('api/notifications/' + id, 'DELETE');
 		const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
 		cours = responseCours.data;
 		const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
 		notifications = responseNotification.data;
-    }
-
-
+	}
 </script>
 
 <div class="dashboard">
@@ -74,7 +71,9 @@
 				<h2 class="panel__title">Mes cours</h2>
 				<div class="panel__head-actions">
 					<span class="panel__count">{filteredCours.length}</span>
-					<button class="btn-add" title="Nouveau cours" onclick={openModalNewCours}>+ Nouveau cours</button>
+					<button class="btn-add" title="Nouveau cours" onclick={openModalNewCours}
+						>+ Nouveau cours</button
+					>
 				</div>
 			</div>
 
@@ -89,7 +88,7 @@
 
 			<div class="panel__list panel__list--cours">
 				{#each filteredCours as c}
-				<CoursCard
+					<CoursCard
 						class="coursCardDashboard"
 						isDashboard={true}
 						cours={c}
@@ -116,18 +115,12 @@
 
 			<div class="panel__list panel__list--notifs">
 				{#each notifications as notification}
-					<Notification 
-					notification={notification}
-					seenNotification={seenNotification}
-					deleteNotification={deleteNotification}
-					/>
+					<Notification {notification} {seenNotification} {deleteNotification} />
 				{/each}
 			</div>
 		</div>
 	</div>
-	<ModalNewCours
-	cancel={cancelModalNewCours}
-	confirm={comfirmModalNewCours}/>
+	<ModalNewCours cancel={cancelModalNewCours} confirm={comfirmModalNewCours} />
 </div>
 
 <style>
@@ -139,7 +132,7 @@
 		--amber: #f5a623;
 		--amber-l: #fef5e7;
 		--amber-m: #fac775;
-		
+
 		--dark: #2c3e50;
 		--white: #ffffff;
 		--gray: #6b7280;
@@ -289,8 +282,6 @@
 		background: var(--white);
 	}
 
-
-
 	/* ── Boutons ─────────────────────────────────────────────── */
 	.btn-add {
 		font-family: 'DM Sans', sans-serif;
@@ -308,10 +299,6 @@
 		background: var(--amber);
 		color: var(--white);
 	}
-
-
-
-
 
 	/* ── Responsive ──────────────────────────────────────────── */
 	@media (max-width: 1024px) {
@@ -335,11 +322,8 @@
 			overflow: hidden;
 		}
 
-
-
 		.panel__list--notifs {
 			max-height: 320px;
 		}
-
 	}
 </style>

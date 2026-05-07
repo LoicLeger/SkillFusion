@@ -13,11 +13,7 @@
 </script>
 
 <div class="badge_item">
-	<div
-		class="tooltip-trigger"
-		onmouseenter={show}
-		onmouseleave={() => (visible = false)}
-	>
+	<div class="tooltip-trigger" onmouseenter={show} onmouseleave={() => (visible = false)}>
 		<span class={`icon-${badge.icon}`}></span>
 	</div>
 </div>
@@ -86,7 +82,6 @@
 		-webkit-mask-repeat: no-repeat;
 		mask-repeat: no-repeat;
 		margin: auto 10px;
-
 	}
 
 	.icon-three-star {
@@ -100,6 +95,5 @@
 		-webkit-mask-repeat: no-repeat;
 		mask-repeat: no-repeat;
 		margin: auto 10px;
-
 	}
 </style>

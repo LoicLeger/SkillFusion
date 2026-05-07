@@ -4,28 +4,28 @@
 
 	let status = $state('idle'); // 'idle' | 'success' | 'error'
 
-  const  onSubmitForm = async (e:SubmitEvent):Promise<void> =>{
-    e.preventDefault();
-    const form = e.currentTarget as HTMLFormElement;
-    const data = new FormData(form);
+	const onSubmitForm = async (e: SubmitEvent): Promise<void> => {
+		e.preventDefault();
+		const form = e.currentTarget as HTMLFormElement;
+		const data = new FormData(form);
 
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' }
-      });
+		try {
+			const res = await fetch(form.action, {
+				method: 'POST',
+				body: data,
+				headers: { Accept: 'application/json' }
+			});
 
-      if (res.ok) {
-        status = 'success';
-        form.reset();
-      } else {
-        throw new Error();
-      }
-    } catch {
-      status = 'error';
-    }
-  }
+			if (res.ok) {
+				status = 'success';
+				form.reset();
+			} else {
+				throw new Error();
+			}
+		} catch {
+			status = 'error';
+		}
+	};
 </script>
 
 <Header />
@@ -63,57 +63,57 @@
 	</div>
 
 	<h2>Formulaire de contact</h2>
-<p>Pour nous contacter directement, utilisez le formulaire ci-dessous :</p>
+	<p>Pour nous contacter directement, utilisez le formulaire ci-dessous :</p>
 
-<form
-  onsubmit={onSubmitForm}
-  class="contact-form"
-  action="https://formspree.io/f/mkokynrn"
-  method="POST"
-  id="contact-form"
->
-  <input type="hidden" name="_next" value="http://localhost:5173/contact" />
-  <input type="hidden" name="_subject" value="Nouveau message de contact depuis SkillFusion" />
+	<form
+		onsubmit={onSubmitForm}
+		class="contact-form"
+		action="https://formspree.io/f/mkokynrn"
+		method="POST"
+		id="contact-form"
+	>
+		<input type="hidden" name="_next" value="http://localhost:5173/contact" />
+		<input type="hidden" name="_subject" value="Nouveau message de contact depuis SkillFusion" />
 
-  <div class="form-group">
-    <label for="name">Nom :</label>
-    <input type="text" id="name" name="name" placeholder="Votre nom" required />
-  </div>
+		<div class="form-group">
+			<label for="name">Nom :</label>
+			<input type="text" id="name" name="name" placeholder="Votre nom" required />
+		</div>
 
-  <div class="form-group">
-    <label for="email">Email :</label>
-    <input type="email" id="email" name="email" placeholder="votre@email.com" required />
-  </div>
+		<div class="form-group">
+			<label for="email">Email :</label>
+			<input type="email" id="email" name="email" placeholder="votre@email.com" required />
+		</div>
 
-  <div class="form-group">
-    <label for="subject">Sujet :</label>
-    <select id="subject" name="subject" required>
-      <option value="">Choisissez un sujet</option>
-      <option value="support">Support technique</option>
-      <option value="cours">Question sur les cours</option>
-      <option value="inscription">Problème d'inscription</option>
-      <option value="partenariat">Partenariat / Devenir instructeur</option>
-      <option value="autre">Autre</option>
-    </select>
-  </div>
+		<div class="form-group">
+			<label for="subject">Sujet :</label>
+			<select id="subject" name="subject" required>
+				<option value="">Choisissez un sujet</option>
+				<option value="support">Support technique</option>
+				<option value="cours">Question sur les cours</option>
+				<option value="inscription">Problème d'inscription</option>
+				<option value="partenariat">Partenariat / Devenir instructeur</option>
+				<option value="autre">Autre</option>
+			</select>
+		</div>
 
-  <div class="form-group">
-    <label for="message">Message :</label>
-    <textarea id="message" name="message" rows="5" required></textarea>
-  </div>
+		<div class="form-group">
+			<label for="message">Message :</label>
+			<textarea id="message" name="message" rows="5" required></textarea>
+		</div>
 
-  {#if status === 'success'}
-    <p style="color: #6dba8a; font-size:0.88rem;">
-      ✅ Message envoyé avec succès ! Nous vous répondrons rapidement.
-    </p>
-  {:else if status === 'error'}
-    <p style="color: #d97a7a; font-size:0.88rem;">
-      ❌ Une erreur est survenue. Veuillez réessayer.
-    </p>
-  {/if}
+		{#if status === 'success'}
+			<p style="color: #6dba8a; font-size:0.88rem;">
+				✅ Message envoyé avec succès ! Nous vous répondrons rapidement.
+			</p>
+		{:else if status === 'error'}
+			<p style="color: #d97a7a; font-size:0.88rem;">
+				❌ Une erreur est survenue. Veuillez réessayer.
+			</p>
+		{/if}
 
-  <button type="submit" class="submit-btn">Envoyer</button>
-</form>
+		<button type="submit" class="submit-btn">Envoyer</button>
+	</form>
 </main>
 
 <Footer />

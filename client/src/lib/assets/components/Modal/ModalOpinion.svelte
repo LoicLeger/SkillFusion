@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { ITextArea } from "$lib/@types/html";
+	import type { ITextArea } from '$lib/@types/html';
 
 	const props = $props();
 	let hovered = $state(0);
-	let currentContent= $state();
-	let currentNote=$state(0);
+	let currentContent = $state();
+	let currentNote = $state(0);
 
-	$effect(()=>{
-		currentNote=props.opinion.opinion.note
-	})
+	$effect(() => {
+		currentNote = props.opinion.opinion.note;
+	});
 
 	async function submitNote(): Promise<void> {
-		currentContent = document.getElementById("textarea")?.value as ITextArea;
-		props.confirm(currentNote, currentContent )
+		currentContent = document.getElementById('textarea')?.value as ITextArea;
+		props.confirm(currentNote, currentContent);
 	}
 </script>
 
@@ -21,13 +21,13 @@
 		<form action="">
 			<h2>Confirmation</h2>
 			{#if props.opinion.IsOpinionExisting}
-			<p>Veuillez modifier votre avis :</p>
+				<p>Veuillez modifier votre avis :</p>
 			{:else}
-			<p>{props.message}</p>
+				<p>{props.message}</p>
 			{/if}
 
 			<div class="stars">
-				{#each [1,2,3,4,5] as star}
+				{#each [1, 2, 3, 4, 5] as star}
 					<span
 						class="star"
 						role="button"
@@ -43,22 +43,25 @@
 				{/each}
 			</div>
 			{#if props.opinion.IsOpinionExisting}
-			<textarea  id="textarea" placeholder="Merci de modifier votre avis : {props.opinion.opinion.content} ">{props.opinion.opinion.content}</textarea>
+				<textarea
+					id="textarea"
+					placeholder="Merci de modifier votre avis : {props.opinion.opinion.content} "
+					>{props.opinion.opinion.content}</textarea
+				>
 			{:else}
-			<textarea  id="textarea" placeholder="Merci de laisser votre avis"></textarea>
+				<textarea id="textarea" placeholder="Merci de laisser votre avis"></textarea>
 			{/if}
 
 			<div class="actions">
 				<button class="cancel" onclick={props.cancel}> Annuler </button>
-				<button class="confirm" onclick={()=>submitNote()}> Valider </button>
+				<button class="confirm" onclick={() => submitNote()}> Valider </button>
 			</div>
 		</form>
 	</div>
 </dialog>
 
 <style>
-
-	textarea{
+	textarea {
 		margin: 0px;
 		width: 80%;
 		height: 50px;
