@@ -11,7 +11,6 @@
 	onMount(async () => {
 		const response = await api('api/badges');
 		badges = response.data;
-		console.log(badges);
 	});
 </script>
 
