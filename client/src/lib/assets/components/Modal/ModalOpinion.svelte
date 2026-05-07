@@ -27,7 +27,7 @@
             {/if}
 
             <div class="stars">
-                {#each [1, 2, 3, 4, 5] as star}
+                {#each [1, 2, 3, 4, 5] as star (star)}
                     <span
                         class="star"
                         role="button"

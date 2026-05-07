@@ -273,7 +273,7 @@
                                 {/if}
                             {/if}
                         </div>
-                        {#each cours.opinions as opinion, i}
+                        {#each cours.opinions as opinion, i (opinion.id)}
                             <div class="review {i === 0 ? 'first' : ''}">
                                 <div class="review-top">
                                     <div class="avatar"></div>
