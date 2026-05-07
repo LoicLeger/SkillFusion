@@ -143,7 +143,7 @@
 	async function confirmDeleteBadge() {
 		await api('api/userHAsBadge/' + badgeToDelete, 'DELETE');
 		badgeToDelete = null;
-		cancelDeleteBadge()
+		cancelDeleteBadge();
 		getBadge();
 	}
 
@@ -161,9 +161,9 @@
 		}
 	}
 
-	async function confirmAssignBadge(id:number) {
-		await api('api/userHAsBadge', 'POST',{userId:Number(userId),badgeId:id});
-		cancelAssignBadge()
+	async function confirmAssignBadge(id: number) {
+		await api('api/userHAsBadge', 'POST', { userId: Number(userId), badgeId: id });
+		cancelAssignBadge();
 		getBadge();
 	}
 </script>
@@ -264,7 +264,7 @@
 			<div class="badges-card">
 				<h2 class="badges-title">Mes badges</h2>
 				{#if userLocal?.role === 'admin'}
-					<button onclick={()=>openModalAssignBadge()}>Ajouter un badge</button>
+					<button onclick={() => openModalAssignBadge()}>Ajouter un badge</button>
 				{/if}
 				<div class="badges-list">
 					{#each badges as badge}
@@ -286,10 +286,7 @@
 	cancel={cancelDeleteBadge}
 	confirm={confirmDeleteBadge}
 />
-<ModalAssignBadge
-	cancel={cancelAssignBadge}
-	confirm={confirmAssignBadge}
-/>
+<ModalAssignBadge cancel={cancelAssignBadge} confirm={confirmAssignBadge} />
 
 <Footer />
 

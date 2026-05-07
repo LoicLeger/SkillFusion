@@ -11,23 +11,21 @@
 	onMount(async () => {
 		const response = await api('api/badges');
 		badges = response.data;
-		console.log(badges)
+		console.log(badges);
 	});
-
-
 </script>
 
 <dialog class="overlay" id="modalAssignBadge">
 	<div class="dialog">
 		<h2>Nouveau Cours</h2>
-		<form >
+		<form>
 			<div class="input">
 				<label for="title">Choisir un badge</label>
 				<div class="div_choice">
 					{#each badges as badge}
-					<div>
-						<Badge badge={badge} --color={badge.color} />
-						<button type="button" onclick={()=>props.confirm(badge.id)}>Assigner</button>
+						<div>
+							<Badge {badge} --color={badge.color} />
+							<button type="button" onclick={() => props.confirm(badge.id)}>Assigner</button>
 						</div>
 					{/each}
 				</div>
@@ -77,7 +75,7 @@
 		color: #444;
 	}
 
-	.div_choice{
+	.div_choice {
 		display: flex;
 		flex-direction: row;
 		overflow-y: auto;

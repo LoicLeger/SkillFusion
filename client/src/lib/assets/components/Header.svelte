@@ -29,7 +29,7 @@
 		<!-- Bouton de connxion/d'inscription -->
 		<div class="header__actions">
 			{#if user}
-				<a href="/profil" class="header__pseudo" data-sveltekit-reload >{user.pseudo}</a>
+				<a href="/profil" class="header__pseudo" data-sveltekit-reload>{user.pseudo}</a>
 				<button class="header__btn-logout" onclick={logout}>⏻</button>
 			{:else}
 				<a href="/connexion" class="header__btn-login">Connexion</a>
@@ -39,7 +39,7 @@
 	</div>
 
 	<!-- Navigation -->
-	<nav class="header__nav" aria-label="Navigation principale" >
+	<nav class="header__nav" aria-label="Navigation principale">
 		<a href="/cours" class="header__nav-link"> Nos cours </a>
 		{#if user}
 			<a href="/tableau-de-bord" class="header__nav-link"> Tableau de bord </a>
