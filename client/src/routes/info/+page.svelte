@@ -9,6 +9,13 @@
 
 	import photoCS from '$lib/assets/img/CELIK-Samed.png';
 	import photo_ad from '$lib/assets/img/photo_ad.png';
+
+	import Menuiserie from '$lib/assets/img/menuiserie.png';
+	import Electricite from '$lib/assets/img/electricite.png';
+	import Chauffage from '$lib/assets/img/chauffage.png';
+	import Plomberie from '$lib/assets/img/plomberie.png';
+	import Carrelage from '$lib/assets/img/carrelage.png';
+	import Peinture from '$lib/assets/img/peinture.png';
 </script>
 
 <App>
@@ -26,7 +33,47 @@
 				contenus pédagogiques variés et de qualité.
 			</p>
 		</div>
-
+		<section class="carousel-section">
+			<p class="carousel-label">Nos catégories</p>
+			<div class="carousel">
+				<div class="carousel__item scroll-start">
+					<div class="carousel__img">
+						<img src={Menuiserie} alt="Menuiserie" />
+					</div>
+					<h3 class="carousel__title">Menuiserie</h3>
+				</div>
+				<div class="carousel__item">
+					<div class="carousel__img">
+						<img src={Electricite} alt="Électricité" />
+					</div>
+					<h3 class="carousel__title">Électricité</h3>
+				</div>
+				<div class="carousel__item">
+					<div class="carousel__img">
+						<img src={Chauffage} alt="Chauffage" />
+					</div>
+					<h3 class="carousel__title">Chauffage</h3>
+				</div>
+				<div class="carousel__item">
+					<div class="carousel__img">
+						<img src={Plomberie} alt="Plomberie" />
+					</div>
+					<h3 class="carousel__title">Plomberie</h3>
+				</div>
+				<div class="carousel__item">
+					<div class="carousel__img">
+						<img src={Carrelage} alt="Carrelage" />
+					</div>
+					<h3 class="carousel__title">Carrelage</h3>
+				</div>
+				<div class="carousel__item">
+					<div class="carousel__img">
+						<img src={Peinture} alt="Peinture" />
+					</div>
+					<h3 class="carousel__title">Peinture</h3>
+				</div>
+			</div>
+		</section>
 		<div class="divider"></div>
 
 		<!-- Histoire -->
@@ -342,7 +389,7 @@
 		padding: 20px;
 		text-align: center;
 		transition: 0.2s;
-        text-decoration: none;
+		text-decoration: none;
 	}
 
 	.team__member:hover {
@@ -405,12 +452,178 @@
 		line-height: 1.6;
 	}
 
+	/* ── CAROUSEL ── */
+	.carousel-section {
+		margin: 40px auto;
+		max-width: 760px;
+		padding: 0 24px;
+		text-align: center;
+        background-color: var(--background-white);
+        padding-top: 20px;
+        border-radius: 10px;
+	}
+
+	.carousel-label {
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--h2-color);
+		margin-bottom: 24px;
+	}
+
+	.carousel {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 200px;
+		gap: 0;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		padding-block: 20px;
+		anchor-name: --carousel;
+		overscroll-behavior-x: contain;
+        scroll-padding-inline: 10px;
+        width: 97%;
+
+		/* markers */
+		scroll-marker-group: after;
+	}
+
+	.carousel::-webkit-scrollbar {
+		display: none;
+	}
+
+	.carousel::scroll-marker-group {
+		position: absolute;
+		position-anchor: --carousel;
+		align-items: center;
+		padding-block-start: 12px;
+		top: anchor(bottom);
+		left: anchor(left);
+		right: anchor(right);
+	}
+
+	/* Boutons prev/next */
+	.carousel::scroll-button(*) {
+		position: absolute;
+		position-anchor: --carousel;
+		width: 36px;
+		aspect-ratio: 1;
+		background: var(--button-backgroung-color);
+		color: white;
+		border: none;
+		border-radius: 50%;
+		cursor: pointer;
+		display: grid;
+		place-content: center;
+		opacity: 0.8;
+		transition:
+			opacity 0.15s,
+			scale 0.15s;
+	}
+
+	.carousel::scroll-button(inline-start) {
+		content: '❮';
+		left: calc(anchor(left) - 40px);
+        top: 25%;
+	}
+
+	.carousel::scroll-button(inline-end) {
+		content: '❯';
+		right: calc(anchor(right) - 40px);
+        top: 25%;
+	}
+
+	.carousel::scroll-button(*):not(:disabled):hover {
+		opacity: 1;
+		scale: 1.1;
+	}
+
+	.carousel::scroll-button(*):disabled {
+		opacity: 0.25;
+		cursor: unset;
+	}
+
+	/* Items */
+	.carousel__item {
+		scroll-snap-align: start;
+		scroll-snap-stop: always;
+		container-type: scroll-state;
+		display: grid;
+		grid-template-areas: 'img' 'title';
+		text-align: center;
+		padding: 0 10px;
+	}
+
+	.carousel__item.scroll-start {
+		scroll-initial-target: nearest;
+	}
+
+	.carousel__img {
+		grid-area: img;
+		width: 100%;
+		aspect-ratio: 3/4;
+		transition: all 300ms ease-in-out;
+		transform-origin: center center;
+	}
+
+	.carousel__img img {
+		width: 100%;
+		height: 100%;
+		border-radius: var(--border-radius);
+		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+	}
+
+	.carousel__title {
+		grid-area: title;
+		margin: 12px 0 0;
+		font-size: 15px;
+		font-weight: 600;
+		color: var(--h1-color);
+		transition: all 300ms ease-in-out;
+	}
+
+	/* Markers */
+	.carousel__item::scroll-marker {
+		content: ' ';
+		height: 8px;
+		aspect-ratio: 1;
+		background: var(--button-backgroung-color);
+		border-radius: 50%;
+		opacity: 0.25;
+		scale: 0.75;
+		transition: 150ms ease-in-out;
+	}
+
+	.carousel__item::scroll-marker:target-current {
+		opacity: 1;
+		scale: 1;
+	}
+
+	.carousel__item::scroll-marker:hover {
+		opacity: 1;
+	}
+
+
+
 	/* ── RESPONSIVE ── */
 	@media (max-width: 640px) {
+		.carousel__item {
+			grid-auto-columns: 160px;
+		}
 		.section {
 			grid-template-columns: 1fr;
 		}
 
+		.carousel__item {
+			flex: 0 0 85%;
+		}
+
+		.carousel__item img {
+			height: 180px;
+		}
 		.cards {
 			grid-template-columns: 1fr;
 		}
