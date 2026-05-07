@@ -125,34 +125,34 @@
 		</section>
 
 		<div class="team">
-			<div class="team__member">
+			<a class="team__member" href="https://github.com/DevPoncet07" target="_blank">
 				<div class="team__avatar">
 					<img src={photo_ad} alt="Membre 1" />
 				</div>
 				<h3 class="team__name">Adrien PONCET</h3>
 				<p class="team__role">Développeur Full Stack</p>
-			</div>
-			<div class="team__member">
+			</a>
+			<a class="team__member" href="https://github.com/CELIK-Samed" target="_blank">
 				<div class="team__avatar-2">
 					<img src={photoCS} alt="Samed CELIK" />
 				</div>
 				<h3 class="team__name">Samed CELIK</h3>
 				<p class="team__role">Développeur Full Stack</p>
-			</div>
-			<div class="team__member">
+			</a>
+			<a class="team__member" href="https://github.com/LoicLeger" target="_blank">
 				<div class="team__avatar">
 					<img src={photoLoic} alt="Membre 3" />
 				</div>
 				<h3 class="team__name">Loïc LEGER</h3>
 				<p class="team__role">Développeur Full Stack</p>
-			</div>
-			<div class="team__member">
+			</a>
+			<a class="team__member" href="https://github.com/Alithiel31" target="_blank">
 				<div class="team__avatar">
 					<img src="/images/membre4.jpg" alt="Membre 4" />
 				</div>
 				<h3 class="team__name">Jacques DUCHAMPLECHEVAL</h3>
 				<p class="team__role">Développeur Full Stack</p>
-			</div>
+			</a>
 		</div>
 
 		<!-- Mission -->
@@ -342,6 +342,7 @@
 		padding: 20px;
 		text-align: center;
 		transition: 0.2s;
+        text-decoration: none;
 	}
 
 	.team__member:hover {
