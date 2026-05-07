@@ -5,6 +5,8 @@
 	import Header from '$lib/assets/components/Header.svelte';
 	import App from '$lib/assets/components/App.svelte';
 	import Main from '$lib/assets/components/Main.svelte';
+
+	import photo_ad from "$lib/assets/img/photo_ad.png"
 </script>
 
 <App>
@@ -123,7 +125,7 @@
 		<div class="team">
 			<div class="team__member">
 				<div class="team__avatar">
-					<img src="/images/membre1.jpg" alt="Membre 1" />
+					<img src={photo_ad} alt="Membre 1" />
 				</div>
 				<h3 class="team__name">Adrien PONCET</h3>
 				<p class="team__role">Développeur Full Stack</p>
