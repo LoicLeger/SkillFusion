@@ -10,15 +10,15 @@
 	let user: IUserLocalStorage | null = $state(null);
 
 	onMount(() => {
-	    getAuth();
-	    user = authStore.user;
+		getAuth();
+		user = authStore.user;
 	});
 
 	async function logout() {
-	    const response = await api('auth/logout', 'POST');
-	    clearAuth();
-	    user = null;
-	    goto('/');
+		const response = await api('auth/logout', 'POST');
+		clearAuth();
+		user = null;
+		goto('/');
 	}
 </script>
 

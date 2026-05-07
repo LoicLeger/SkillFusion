@@ -3,8 +3,8 @@
 	import { authStore } from '$lib/services/localstorage.service.svelte';
 
 	let {
-	    commentId,
-	    onClose
+		commentId,
+		onClose
 	}: {
 		commentId: number | null;
 		onClose: () => void;
@@ -13,21 +13,21 @@
 	let reportReason = $state('');
 
 	function close() {
-	    onClose();
-	    reportReason = '';
+		onClose();
+		reportReason = '';
 	}
 
 	async function submit() {
-	    if (!commentId || !reportReason) return;
+		if (!commentId || !reportReason) return;
 
-	    await api(`api/comments/${commentId}/report`, 'POST', {
-	        reason: reportReason,
-	        commentId,
-	        reporterId: authStore.user?.id
-	    });
+		await api(`api/comments/${commentId}/report`, 'POST', {
+			reason: reportReason,
+			commentId,
+			reporterId: authStore.user?.id
+		});
 
-	    onClose();
-	    reportReason = '';
+		onClose();
+		reportReason = '';
 	}
 </script>
 

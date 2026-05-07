@@ -14,8 +14,8 @@
 	let courses: ICours[] = $state([]);
 
 	onMount(async () => {
-	    const coursesResponse = await api('api/cours/homepage');
-	    courses = coursesResponse.data;
+		const coursesResponse = await api('api/cours/homepage');
+		courses = coursesResponse.data;
 	});
 </script>
 

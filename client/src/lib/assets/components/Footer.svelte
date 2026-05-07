@@ -2,12 +2,12 @@
 	const currentYear = new Date().getFullYear();
 
 	const links = [
-	    { label: 'Mention légale', href: '/mentions-legales' },
-	    { label: 'Plan du site', href: '/plan-du-site' },
-	    { label: 'Contact', href: '/contact' },
-	    { label: 'Conditions', href: '/conditions' },
-	    { label: 'Protection des données', href: '/protection-donnees' },
-	    { label: 'Accessibilité', href: '/accessibilite' }
+		{ label: 'Mention légale', href: '/mentions-legales' },
+		{ label: 'Plan du site', href: '/plan-du-site' },
+		{ label: 'Contact', href: '/contact' },
+		{ label: 'Conditions', href: '/conditions' },
+		{ label: 'Protection des données', href: '/protection-donnees' },
+		{ label: 'Accessibilité', href: '/accessibilite' }
 	];
 </script>
 

@@ -5,26 +5,26 @@
 	let status = $state('idle'); // 'idle' | 'success' | 'error'
 
 	const onSubmitForm = async (e: SubmitEvent): Promise<void> => {
-	    e.preventDefault();
-	    const form = e.currentTarget as HTMLFormElement;
-	    const data = new FormData(form);
+		e.preventDefault();
+		const form = e.currentTarget as HTMLFormElement;
+		const data = new FormData(form);
 
-	    try {
-	        const res = await fetch(form.action, {
-	            method: 'POST',
-	            body: data,
-	            headers: { Accept: 'application/json' }
-	        });
+		try {
+			const res = await fetch(form.action, {
+				method: 'POST',
+				body: data,
+				headers: { Accept: 'application/json' }
+			});
 
-	        if (res.ok) {
-	            status = 'success';
-	            form.reset();
-	        } else {
-	            throw new Error();
-	        }
-	    } catch {
-	        status = 'error';
-	    }
+			if (res.ok) {
+				status = 'success';
+				form.reset();
+			} else {
+				throw new Error();
+			}
+		} catch {
+			status = 'error';
+		}
 	};
 </script>
 

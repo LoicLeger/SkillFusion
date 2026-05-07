@@ -6,25 +6,25 @@
 	let loading = $state(true);
 
 	onMount(async () => {
-	    const token = new URLSearchParams(window.location.search).get('token');
+		const token = new URLSearchParams(window.location.search).get('token');
 
-	    if (!token) {
-	        message = 'Token manquant.';
-	        loading = false;
-	        return;
-	    }
+		if (!token) {
+			message = 'Token manquant.';
+			loading = false;
+			return;
+		}
 
-	    const res = await fetch(`http://localhost:3000/auth/verify-email?token=${token}`);
-	    const data = await res.json();
+		const res = await fetch(`http://localhost:3000/auth/verify-email?token=${token}`);
+		const data = await res.json();
 
-	    if (res.ok) {
-	        success = true;
-	        message = data.message;
-	    } else {
-	        message = data.message ?? 'Lien invalide ou expiré.';
-	    }
+		if (res.ok) {
+			success = true;
+			message = data.message;
+		} else {
+			message = data.message ?? 'Lien invalide ou expiré.';
+		}
 
-	    loading = false;
+		loading = false;
 	});
 </script>
 

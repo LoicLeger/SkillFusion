@@ -8,8 +8,8 @@
 	let badges: IBadge[] = $state([]);
 
 	onMount(async () => {
-	    const response = await api('api/badges');
-	    badges = response.data;
+		const response = await api('api/badges');
+		badges = response.data;
 	});
 </script>
 

@@ -7,12 +7,12 @@
 	let currentNote = $state(0);
 
 	$effect(() => {
-	    currentNote = props.opinion.opinion.note;
+		currentNote = props.opinion.opinion.note;
 	});
 
 	async function submitNote(): Promise<void> {
-	    currentContent = document.getElementById('textarea')?.value as ITextArea;
-	    props.confirm(currentNote, currentContent);
+		currentContent = document.getElementById('textarea')?.value as ITextArea;
+		props.confirm(currentNote, currentContent);
 	}
 </script>
 

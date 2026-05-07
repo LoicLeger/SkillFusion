@@ -22,24 +22,24 @@
 	let badges: IBadge[] = $state([]);
 
 	onMount(async () => {
-	    // Fetch tous les roles
-	    const responseRoles = await api('api/roles');
-	    roles = responseRoles.data;
+		// Fetch tous les roles
+		const responseRoles = await api('api/roles');
+		roles = responseRoles.data;
 
-	    // Fetch tous les users
-	    const responseUsers = await api('api/users');
-	    users = responseUsers.data;
+		// Fetch tous les users
+		const responseUsers = await api('api/users');
+		users = responseUsers.data;
 
-	    // Fetch tous les cours
-	    const responseCours = await api('api/cours');
-	    courses = responseCours.data;
+		// Fetch tous les cours
+		const responseCours = await api('api/cours');
+		courses = responseCours.data;
 
-	    // Fetch toutes les categories
-	    const responseCategories = await api('api/categories');
-	    categories = responseCategories.data;
+		// Fetch toutes les categories
+		const responseCategories = await api('api/categories');
+		categories = responseCategories.data;
 
-	    const responseBagde = await api('api/badges');
-	    badges = responseBagde.data;
+		const responseBagde = await api('api/badges');
+		badges = responseBagde.data;
 	});
 
 	// ── Filtres ─────────────────────────────────────────────────
@@ -50,32 +50,32 @@
 	let searchCats = $state('');
 
 	const filteredUsers = $derived(
-	    users.filter((user) => {
-	        const matchSearch =
+		users.filter((user) => {
+			const matchSearch =
 				!searchUsers ||
 				user.lastname.toLowerCase().includes(searchUsers.toLowerCase()) ||
 				user.firstname.toLowerCase().includes(searchUsers.toLowerCase()) ||
 				user.pseudo.toLowerCase().includes(searchUsers.toLowerCase());
-	        const matchRole = !filterRole || user.role.name === filterRole;
-	        return matchSearch && matchRole;
-	    })
+			const matchRole = !filterRole || user.role.name === filterRole;
+			return matchSearch && matchRole;
+		})
 	);
 
 	const filteredCours = $derived(
-	    courses.filter(
-	        (cours) => !searchCours || cours.title.toLowerCase().includes(searchCours.toLowerCase())
-	    )
+		courses.filter(
+			(cours) => !searchCours || cours.title.toLowerCase().includes(searchCours.toLowerCase())
+		)
 	);
 
 	const filteredBadges = $derived(
-	    badges.filter(
-	        (badge) => !searchBadges || badge.name.toLowerCase().includes(searchBadges.toLowerCase())
-	    )
+		badges.filter(
+			(badge) => !searchBadges || badge.name.toLowerCase().includes(searchBadges.toLowerCase())
+		)
 	);
 	const filteredCategories = $derived(
-	    categories.filter(
-	        (category) => !searchCats || category.name.toLowerCase().includes(searchCats.toLowerCase())
-	    )
+		categories.filter(
+			(category) => !searchCats || category.name.toLowerCase().includes(searchCats.toLowerCase())
+		)
 	);
 
 	let errorMessage = $state('');
@@ -91,265 +91,265 @@
 
 	/* Fonction pour la modification d'un utilisateur */
 	function modifyUser(user: IUser) {
-	    goto('/profil?id=' + user.id);
+		goto('/profil?id=' + user.id);
 	}
 
 	/* Fonction pour la fenetre modal de confirmation de suppression d'un utilisateur */
 
 	function openModalDeleteUser(userId: number) {
-	    userToDelete = userId;
-	    const modal = document.getElementById('modalDeleteUser') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		userToDelete = userId;
+		const modal = document.getElementById('modalDeleteUser') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 	function cancelDeleteUser() {
-	    const modal = document.getElementById('modalDeleteUser') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalDeleteUser') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmDeleteUser() {
-	    if (!userToDelete) return;
+		if (!userToDelete) return;
 
-	    const response = await api(`api/users/${userToDelete}`, 'DELETE');
+		const response = await api(`api/users/${userToDelete}`, 'DELETE');
 
-	    if (response.status === 204 || response.status === 200) {
-	        users = users.filter((u) => u.id !== userToDelete);
-	        successMessage = 'Utilisateur supprimé avec succès';
-	        errorMessage = '';
-	        setTimeout(() => (successMessage = ''), 5000);
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    userToDelete = null;
-	    cancelDeleteUser();
+		if (response.status === 204 || response.status === 200) {
+			users = users.filter((u) => u.id !== userToDelete);
+			successMessage = 'Utilisateur supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => (successMessage = ''), 5000);
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		userToDelete = null;
+		cancelDeleteUser();
 	}
 
 	/* Fonction pour la modification d'un cours */
 	function modifyCours(cours: ICours) {
-	    goto('/cours/' + cours.slug);
+		goto('/cours/' + cours.slug);
 	}
 
 	/* Fonction pour la fenetre modal de confirmation de suppression d'un cours */
 
 	function openModalDeleteCours(CoursId: number) {
-	    coursToDelete = CoursId;
-	    const modal = document.getElementById('modalDeleteCours') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		coursToDelete = CoursId;
+		const modal = document.getElementById('modalDeleteCours') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 
 	function cancelDeleteCours() {
-	    const modal = document.getElementById('modalDeleteCours') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalDeleteCours') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmDeleteCours() {
-	    if (!coursToDelete) return;
-	    const response = await api(`api/cours/${coursToDelete}`, 'DELETE');
+		if (!coursToDelete) return;
+		const response = await api(`api/cours/${coursToDelete}`, 'DELETE');
 
-	    if (response.status === 204 || response.status === 200) {
-	        courses = courses.filter((cours) => cours.id !== coursToDelete);
-	        successMessage = 'La cours a été supprimé avec succès';
-	        errorMessage = '';
-	        setTimeout(() => ((successMessage = ''), 5000));
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    coursToDelete = null;
-	    let refreshCourses = await api('api/cours');
-	    courses = refreshCourses.data;
-	    cancelDeleteCours();
+		if (response.status === 204 || response.status === 200) {
+			courses = courses.filter((cours) => cours.id !== coursToDelete);
+			successMessage = 'La cours a été supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		coursToDelete = null;
+		let refreshCourses = await api('api/cours');
+		courses = refreshCourses.data;
+		cancelDeleteCours();
 	}
 
 	/* Fonction pour la modification d'un Badge */
 
 	function openModalModifyBadge(badge: IBadge) {
-	    badgeToUpdate = badge;
-	    const modal = document.getElementById('modalModifyBadge') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		badgeToUpdate = badge;
+		const modal = document.getElementById('modalModifyBadge') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 
 	function cancelModifyBadge() {
-	    const modal = document.getElementById('modalModifyBadge') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalModifyBadge') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmModifyBadge(data: { name: string; description: string }) {
-	    const response = await api(`api/badges/${badgeToUpdate?.id}`, 'PATCH', { ...data });
+		const response = await api(`api/badges/${badgeToUpdate?.id}`, 'PATCH', { ...data });
 
-	    if (response.status === 204 || response.status === 200) {
-	        successMessage = 'La Badge a été modifier avec succès';
-	        errorMessage = '';
-	        setTimeout(() => ((successMessage = ''), 5000));
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    badgeToUpdate = null;
-	    let refreshBadges = await api('api/badges');
-	    badges = refreshBadges.data;
+		if (response.status === 204 || response.status === 200) {
+			successMessage = 'La Badge a été modifier avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		badgeToUpdate = null;
+		let refreshBadges = await api('api/badges');
+		badges = refreshBadges.data;
 
-	    cancelModifyBadge();
+		cancelModifyBadge();
 	}
 
 	/* Fonction pour la fenetre modal de confirmation de suppression d'un badge */
 
 	function openModalDeleteBadge(badgeId: number) {
-	    badgeToDelete = badgeId;
-	    const modal = document.getElementById('modalDeleteBadge') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		badgeToDelete = badgeId;
+		const modal = document.getElementById('modalDeleteBadge') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 
 	function cancelDeleteBadge() {
-	    const modal = document.getElementById('modalDeleteBadge') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalDeleteBadge') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmDeleteBadge() {
-	    if (!badgeToDelete) return;
-	    const response = await api(`api/badges/${badgeToDelete}`, 'DELETE');
+		if (!badgeToDelete) return;
+		const response = await api(`api/badges/${badgeToDelete}`, 'DELETE');
 
-	    if (response.status === 204 || response.status === 200) {
-	        badges = badges.filter((badge) => badge.id !== badgeToDelete);
-	        successMessage = 'La Badge a été supprimé avec succès';
-	        errorMessage = '';
-	        setTimeout(() => ((successMessage = ''), 5000));
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    badgeToDelete = null;
-	    let refreshBadges = await api('api/badges');
-	    badges = refreshBadges.data;
-	    cancelDeleteBadge();
+		if (response.status === 204 || response.status === 200) {
+			badges = badges.filter((badge) => badge.id !== badgeToDelete);
+			successMessage = 'La Badge a été supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		badgeToDelete = null;
+		let refreshBadges = await api('api/badges');
+		badges = refreshBadges.data;
+		cancelDeleteBadge();
 	}
 
 	/* Fonction pour la craetion d'une categories */
 
 	function openModalCreateCategory() {
-	    const modal = document.getElementById('modalCreateCategory') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		const modal = document.getElementById('modalCreateCategory') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 
 	function cancelCreateCategory() {
-	    const modal = document.getElementById('modalCreateCategory') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalCreateCategory') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmCreateCategory(data: { name: string; description: string }) {
-	    const response = await api(`api/categories`, 'POST', { ...data });
+		const response = await api(`api/categories`, 'POST', { ...data });
 
-	    if (response.status === 201 || response.status === 200) {
-	        successMessage = 'La categorie a été crée avec succès';
-	        errorMessage = '';
-	        setTimeout(() => ((successMessage = ''), 5000));
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    categoryToUpdate = null;
-	    let refreshCategories = await api('api/categories');
-	    categories = refreshCategories.data;
-	    cancelCreateCategory();
+		if (response.status === 201 || response.status === 200) {
+			successMessage = 'La categorie a été crée avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		categoryToUpdate = null;
+		let refreshCategories = await api('api/categories');
+		categories = refreshCategories.data;
+		cancelCreateCategory();
 	}
 
 	/* Fonction pour la modification d'une categories */
 
 	function openModalModifyCategory(category: ICategory) {
-	    categoryToUpdate = category;
-	    const modal = document.getElementById('modalModifyCategory') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		categoryToUpdate = category;
+		const modal = document.getElementById('modalModifyCategory') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 
 	function cancelModifyCategory() {
-	    const modal = document.getElementById('modalModifyCategory') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalModifyCategory') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmModifyCategory(data: { name: string; description: string }) {
-	    const response = await api(`api/categories/${categoryToUpdate?.id}`, 'PATCH', { ...data });
+		const response = await api(`api/categories/${categoryToUpdate?.id}`, 'PATCH', { ...data });
 
-	    if (response.status === 204 || response.status === 200) {
-	        successMessage = 'La categorie a été modifier avec succès';
-	        errorMessage = '';
-	        setTimeout(() => ((successMessage = ''), 5000));
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    categoryToUpdate = null;
-	    let refreshCategories = await api('api/categories');
-	    categories = refreshCategories.data;
-	    let refreshCourses = await api('api/cours');
-	    courses = refreshCourses.data;
-	    cancelModifyCategory();
+		if (response.status === 204 || response.status === 200) {
+			successMessage = 'La categorie a été modifier avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		categoryToUpdate = null;
+		let refreshCategories = await api('api/categories');
+		categories = refreshCategories.data;
+		let refreshCourses = await api('api/cours');
+		courses = refreshCourses.data;
+		cancelModifyCategory();
 	}
 
 	/* Fonction pour la fenetre modal de confirmation de suppression d'une catégories */
 
 	function openModalDeleteCategory(CategoryId: number) {
-	    categoryToDelete = CategoryId;
-	    const modal = document.getElementById('modalDeleteCategory') as IModal;
-	    if (modal) {
-	        modal.show();
-	    }
+		categoryToDelete = CategoryId;
+		const modal = document.getElementById('modalDeleteCategory') as IModal;
+		if (modal) {
+			modal.show();
+		}
 	}
 
 	function cancelDeleteCategory() {
-	    const modal = document.getElementById('modalDeleteCategory') as IModal;
-	    if (modal) {
-	        modal.close();
-	    }
+		const modal = document.getElementById('modalDeleteCategory') as IModal;
+		if (modal) {
+			modal.close();
+		}
 	}
 
 	async function confirmDeleteCategory() {
-	    if (!categoryToDelete) return;
-	    const response = await api(`api/categories/${categoryToDelete}`, 'DELETE');
+		if (!categoryToDelete) return;
+		const response = await api(`api/categories/${categoryToDelete}`, 'DELETE');
 
-	    if (response.status === 204 || response.status === 200) {
-	        categories = categories.filter((c) => c.id !== categoryToDelete);
-	        successMessage = 'La catégorie a été supprimé avec succès';
-	        errorMessage = '';
-	        setTimeout(() => ((successMessage = ''), 5000));
-	    } else {
-	        errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-	        successMessage = '';
-	        setTimeout(() => (errorMessage = ''), 5000);
-	    }
-	    categoryToDelete = null;
-	    let refreshCategories = await api('api/categories');
-	    categories = refreshCategories.data;
-	    cancelDeleteCategory();
+		if (response.status === 204 || response.status === 200) {
+			categories = categories.filter((c) => c.id !== categoryToDelete);
+			successMessage = 'La catégorie a été supprimé avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		categoryToDelete = null;
+		let refreshCategories = await api('api/categories');
+		categories = refreshCategories.data;
+		cancelDeleteCategory();
 	}
 </script>
 

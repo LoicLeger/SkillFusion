@@ -8,25 +8,25 @@
 	let categories: ICategory[] = $state([]);
 
 	onMount(async () => {
-	    const response = await api('api/categories');
-	    categories = response.data;
+		const response = await api('api/categories');
+		categories = response.data;
 	});
 
 	function valideForm(event: SubmitEvent) {
-	    event.preventDefault();
-	    const titleElement = document.getElementById('title') as IInput;
-	    const littleSummary = document.getElementById('littleSummary') as IInput;
-	    const summary = document.getElementById('summary') as IInput;
-	    const categoryId = document.getElementById('categoryId') as IInput;
-	    const difficulty = document.getElementById('difficulty') as IInput;
+		event.preventDefault();
+		const titleElement = document.getElementById('title') as IInput;
+		const littleSummary = document.getElementById('littleSummary') as IInput;
+		const summary = document.getElementById('summary') as IInput;
+		const categoryId = document.getElementById('categoryId') as IInput;
+		const difficulty = document.getElementById('difficulty') as IInput;
 
-	    props.confirm({
-	        title: titleElement.value,
-	        littleSummar: littleSummary.value,
-	        summar: summary.value,
-	        categoryId: Number(categoryId.value),
-	        difficulty: Number(difficulty.value)
-	    });
+		props.confirm({
+			title: titleElement.value,
+			littleSummar: littleSummary.value,
+			summar: summary.value,
+			categoryId: Number(categoryId.value),
+			difficulty: Number(difficulty.value)
+		});
 	}
 </script>
 

@@ -15,47 +15,47 @@
 	let notifications: INotification[] = $state([]);
 
 	onMount(async () => {
-	    getAuth();
-	    // Fetch tous les cours du formateur connecté
-	    const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
-	    cours = responseCours.data;
-	    const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
-	    notifications = responseNotification.data;
+		getAuth();
+		// Fetch tous les cours du formateur connecté
+		const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
+		cours = responseCours.data;
+		const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
+		notifications = responseNotification.data;
 	});
 
 	function openModalNewCours() {
-	    const modalNewCours = document.getElementById('modalNewCours') as IModal;
-	    modalNewCours.show();
+		const modalNewCours = document.getElementById('modalNewCours') as IModal;
+		modalNewCours.show();
 	}
 
 	function cancelModalNewCours() {
-	    const modalNewCours = document.getElementById('modalNewCours') as IModal;
-	    modalNewCours.close();
+		const modalNewCours = document.getElementById('modalNewCours') as IModal;
+		modalNewCours.close();
 	}
 
 	async function comfirmModalNewCours(data: IPropsComfirmeNewCours) {
-	    const cours = await api('api/cours', 'POST', data);
-	    cancelModalNewCours();
-	    goto('/cours/' + cours.data.slug);
+		const cours = await api('api/cours', 'POST', data);
+		cancelModalNewCours();
+		goto('/cours/' + cours.data.slug);
 	}
 
 	// ── État ────────────────────────────────────────────────────
 	let searchCours = $state('');
 	let filteredCours = $derived(
-	    cours.filter((c) => !searchCours || c.title.toLowerCase().includes(searchCours.toLowerCase()))
+		cours.filter((c) => !searchCours || c.title.toLowerCase().includes(searchCours.toLowerCase()))
 	);
 
 	async function seenNotification(id: number) {
-	    await api('api/notifications/' + id, 'PATCH', { seen: true });
+		await api('api/notifications/' + id, 'PATCH', { seen: true });
 	}
 
 	async function deleteNotification(event: SubmitEvent, id: number) {
-	    event.preventDefault();
-	    await api('api/notifications/' + id, 'DELETE');
-	    const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
-	    cours = responseCours.data;
-	    const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
-	    notifications = responseNotification.data;
+		event.preventDefault();
+		await api('api/notifications/' + id, 'DELETE');
+		const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);
+		cours = responseCours.data;
+		const responseNotification = await api('api/notifications/instructor/' + authStore?.user?.id);
+		notifications = responseNotification.data;
 	}
 </script>
 

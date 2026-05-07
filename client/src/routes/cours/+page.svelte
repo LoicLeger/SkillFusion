@@ -14,61 +14,61 @@
 	let sortBy = $state('');
 
 	onMount(async () => {
-	    const categoriesResponse = await api('api/categories');
-	    categories = categoriesResponse.data;
-	    const coursesResponse = await api('api/cours?visibility=true');
-	    courses = coursesResponse.data;
+		const categoriesResponse = await api('api/categories');
+		categories = categoriesResponse.data;
+		const coursesResponse = await api('api/cours?visibility=true');
+		courses = coursesResponse.data;
 	});
 	let searchQuery = $state('');
 	let selectedCategory = $state('Toutes les catégories');
 
 	let filteredCourses = $derived(
-	    courses
-	        .filter(
-	            (cours) =>
-	                selectedCategory === 'Toutes les catégories' || cours.category.name == selectedCategory
-	        )
-	        .filter((cours) => cours.title.toLowerCase().includes(searchQuery.toLowerCase()))
+		courses
+			.filter(
+				(cours) =>
+					selectedCategory === 'Toutes les catégories' || cours.category.name == selectedCategory
+			)
+			.filter((cours) => cours.title.toLowerCase().includes(searchQuery.toLowerCase()))
 	);
 
 	let displayedCourses = $derived(
-	    filteredCourses.slice().sort((a, b) => {
-	        if (!sortBy) return 0;
+		filteredCourses.slice().sort((a, b) => {
+			if (!sortBy) return 0;
 
-	        if (sortBy === 'alpha-asc') {
-	            return a.title.localeCompare(b.title);
-	        }
+			if (sortBy === 'alpha-asc') {
+				return a.title.localeCompare(b.title);
+			}
 
-	        if (sortBy === 'alpha-desc') {
-	            return b.title.localeCompare(a.title);
-	        }
+			if (sortBy === 'alpha-desc') {
+				return b.title.localeCompare(a.title);
+			}
 
-	        if (sortBy === 'date-desc') {
-	            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-	        }
+			if (sortBy === 'date-desc') {
+				return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+			}
 
-	        if (sortBy === 'date-asc') {
-	            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-	        }
+			if (sortBy === 'date-asc') {
+				return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+			}
 
-	        if (sortBy === 'difficulty-asc') {
-	            return a.difficulty - b.difficulty;
-	        }
+			if (sortBy === 'difficulty-asc') {
+				return a.difficulty - b.difficulty;
+			}
 
-	        if (sortBy === 'difficulty-desc') {
-	            return b.difficulty - a.difficulty;
-	        }
+			if (sortBy === 'difficulty-desc') {
+				return b.difficulty - a.difficulty;
+			}
 
-	        if (sortBy === 'note-desc') {
-	            return b.author.note - a.author.note;
-	        }
+			if (sortBy === 'note-desc') {
+				return b.author.note - a.author.note;
+			}
 
-	        if (sortBy === 'note-asc') {
-	            return a.author.note - b.author.note;
-	        }
+			if (sortBy === 'note-asc') {
+				return a.author.note - b.author.note;
+			}
 
-	        return 0;
-	    })
+			return 0;
+		})
 	);
 </script>
 

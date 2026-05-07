@@ -9,31 +9,31 @@
 	let coursBloquants: { id: number; title: string }[] = $state([]);
 
 	async function demanderSuppression() {
-	    const res = await api('api/users/me', 'DELETE');
+		const res = await api('api/users/me', 'DELETE');
 
-	    if (res.status === 204) {
-	        clearAuth();
-	        goto('/');
-	        return;
-	    }
+		if (res.status === 204) {
+			clearAuth();
+			goto('/');
+			return;
+		}
 
-	    if (res.status === 409) {
-	        coursBloquants = res.data.cours;
-	        etape = 'blocage';
-	        return;
-	    }
+		if (res.status === 409) {
+			coursBloquants = res.data.cours;
+			etape = 'blocage';
+			return;
+		}
 
-	    console.error('Erreur lors de la suppression du compte');
+		console.error('Erreur lors de la suppression du compte');
 	}
 
 	async function transfererEtSupprimer() {
-	    await api('api/cours/mine/transfer', 'PATCH');
-	    await demanderSuppression();
+		await api('api/cours/mine/transfer', 'PATCH');
+		await demanderSuppression();
 	}
 
 	async function supprimerCoursEtCompte() {
-	    await api('api/cours/mine', 'DELETE');
-	    await demanderSuppression();
+		await api('api/cours/mine', 'DELETE');
+		await demanderSuppression();
 	}
 </script>
 

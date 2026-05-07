@@ -10,8 +10,8 @@
 	let user: IUserLocalStorage | null = $state(null);
 
 	onMount(() => {
-	    getAuth();
-	    user = authStore.user;
+		getAuth();
+		user = authStore.user;
 	});
 </script>
 
