@@ -119,8 +119,8 @@
 	}
 	async function deleteCours() {
 		const response = await api('api/cours/' + cours?.id, 'DELETE');
-
 		closeDeleteCoursModale();
+		goto('/tableau-de-bord')
 	}
 	async function changeVisibility() {
 		await api('api/cours/' + cours?.id + '/visibility', 'POST');

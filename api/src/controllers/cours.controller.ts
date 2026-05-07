@@ -137,7 +137,7 @@ export default {
             data: {
                 title: data.title,
                 slug: data.slug,
-                numberPage: 0,
+                numberPage: 1,
                 littleSummary: data.littleSummary,
                 difficulty: data.difficulty,
                 summary: data.summary,
@@ -146,6 +146,14 @@ export default {
                 categoryId: data.categoryId
             }
         });
+
+        const courContent = await prisma.coursContent.create({
+            data:{
+                coursId:createdCours.id,
+                content: "# Page 1 \n\nEntrez votre contenu",
+            numberPage: 1
+            }
+        })
         res.status(201).json(createdCours);
     },
     //Recuperer un cours par son id
