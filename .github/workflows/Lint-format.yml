@@ -1,0 +1,86 @@
+name: Lint & Format (On main push)
+
+on:
+  push:
+    branches: [main-dev, main]
+
+jobs:
+  lint-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install API dependencies
+        working-directory: ./api
+        run: npm install
+
+      - name: Run API ESLint with fix
+        working-directory: ./api
+        run: npm run lint -- --fix
+        continue-on-error: true
+
+      - name: Run API Prettier
+        working-directory: ./api
+        run: npm run format
+        continue-on-error: true
+
+      - name: Commit API changes if any
+        run: |
+          git config user.name "SkillFusion Linter Bot"
+          git config user.email "linter@skillfusion.dev"
+          
+          if ! git diff --quiet; then
+            echo "📝 API format changes detected, committing..."
+            git add api/
+            git commit -m "style: auto-format API with eslint & prettier [skip ci]"
+            git push
+          else
+            echo "✅ API code already clean!"
+          fi
+
+  lint-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Client dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Run Client Lint
+        working-directory: ./client
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Run Client Format
+        working-directory: ./client
+        run: npm run format
+        continue-on-error: true
+
+      - name: Commit Client changes if any
+        run: |
+          git config user.name "SkillFusion Linter Bot"
+          git config user.email "linter@skillfusion.dev"
+          
+          if ! git diff --quiet; then
+            echo "📝 Client format changes detected, committing..."
+            git add client/
+            git commit -m "style: auto-format Client with prettier [skip ci]"
+            git push
+          else
+            echo "✅ Client code already clean!"
+          fi

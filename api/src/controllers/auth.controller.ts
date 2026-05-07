@@ -1,6 +1,6 @@
 import type { Request, Response } from "express"
 import argon2 from "argon2";
-import { z } from "zod";
+import { includes, z } from "zod";
 import { prisma, User } from "../models/client";
 import { config } from "../config";
 import type { Token } from "../@types/index.d.ts";
@@ -19,7 +19,7 @@ function setRefreshTokenCookie(res: Response, refreshToken: Token) {
         secure: config.isProd,
         sameSite: config.isProd ? "none" : "lax",
         maxAge: refreshToken.expiresIn,
-        path: "/api/auth/refresh",
+        path: "/auth/refresh",
     });
 }
 
@@ -172,7 +172,7 @@ export async function getAuthenticatedUser(req: AuthenticatedRequest, res: Respo
 // logoutUser controller --------------------------------------------------------------------
 
 export async function logoutUser(req: AuthenticatedRequest, res: Response) {
-    res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
+    res.clearCookie("refreshToken", { path: "/auth/refresh" });
     if (req.user) {
         await prisma.refreshToken.deleteMany({ where: { userId: req.user.userId } });
     }
@@ -180,14 +180,13 @@ export async function logoutUser(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function refreshAccessToken(req: Request, res: Response) {
-    const receivedRefreshToken =
-        req.body?.refreshToken ?? req.cookies.refreshToken;
-
+    const receivedRefreshToken = req.cookies.refreshToken;
     if (!receivedRefreshToken) {
         throw new UnauthorizedError(
             "Vous n'êtes pas autorisé à accéder à cette resource",
         );
     }
+    
 
     // Vérifier la signature JWT avant d'interroger la base de données
     try {
@@ -200,7 +199,7 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
     const existingRefreshToken = await prisma.refreshToken.findUnique({
         where: { token: receivedRefreshToken },
-        include: { user: true },
+        include: { user: {include:{role:true}} },
     });
 
     if (!existingRefreshToken) {
@@ -217,7 +216,7 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
     setRefreshTokenCookie(res, refreshToken);
 
-    res.json({ accessToken });
+    res.json({ accessToken,user:{ id: existingRefreshToken.user.id, pseudo: existingRefreshToken.user.pseudo, role: existingRefreshToken.user.role.name } });
 }
 
 export async function verifyEmail(req: Request, res: Response) {

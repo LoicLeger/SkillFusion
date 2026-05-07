@@ -50,7 +50,7 @@
 	p {
 		margin: 0px;
 	}
-    .div_category{
-        max-width: max-content;
-    }
+	.div_category {
+		max-width: max-content;
+	}
 </style>

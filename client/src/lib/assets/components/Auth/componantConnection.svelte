@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
+	import { goto } from '$app/navigation';
 	import api from '$lib/services/api.service';
-	import {setAuth} from "$lib/services/localstorage.service.svelte"
+	import { setAuth } from '$lib/services/localstorage.service.svelte';
 
-	const onSubmitForm = async (event:SubmitEvent):Promise<void> => {
-		event.preventDefault();	const formData = new FormData(event.target as HTMLFormElement);
+	const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
+		event.preventDefault();
+		const formData = new FormData(event.target as HTMLFormElement);
 		const email = formData.get('email');
 		const password = formData.get('password');
-		const token = await api("auth/login","POST",{ email, password });
+		const token = await api('auth/login', 'POST', { email, password });
 		setAuth(token.data.user, token.data.accessToken.token);
 		goto('/');
 	};
@@ -31,7 +32,7 @@
 				<span class="mobile-text">Pas de compte ?</span>
 				<a class="btn-register" href="/inscription">S'inscrire</a>
 				<span class="reset-password">
-				<a  class="btn-reset-password" href="/reinitialiser-mdp">Mot de passe oublié ?</a>
+					<a class="btn-reset-password" href="/reinitialiser-mdp">Mot de passe oublié ?</a>
 				</span>
 			</p>
 		</div>

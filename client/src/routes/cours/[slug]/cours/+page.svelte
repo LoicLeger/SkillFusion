@@ -300,9 +300,7 @@
 			confirm={deletePage}
 		/>
 		{#if reportModal}
-			<ModalReportComment 
-			commentId={commentToReport} 
-			onClose={closeReport} />
+			<ModalReportComment commentId={commentToReport} onClose={closeReport} />
 		{/if}
 	</Main>
 	<Footer />

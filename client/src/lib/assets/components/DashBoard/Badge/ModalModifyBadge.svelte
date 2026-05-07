@@ -1,15 +1,12 @@
-<script lang='ts'>
-
+<script lang="ts">
 	const props = $props();
 
-	let name=$derived(props.badge?.name)
-	let description=$derived(props.badge?.description)
+	let name = $derived(props.badge?.name);
+	let description = $derived(props.badge?.description);
 
-
-	function onSumbit(event:SubmitEvent){
-		event.preventDefault()
-		console.log(name,description)
-		props.confirm({name,description})
+	function onSumbit(event: SubmitEvent) {
+		event.preventDefault();
+		props.confirm({ name, description });
 	}
 </script>
 
@@ -19,11 +16,13 @@
 		<form onsubmit={onSumbit}>
 			<div class="input">
 				<label for="name">Nom</label>
-				<input id="name" placeholder="Nom du badge" bind:value={name}>
+				<input id="name" placeholder="Nom du badge" bind:value={name} />
 			</div>
 			<div class="input">
 				<label for="description">Description</label>
-				<textarea name="description" id="description" bind:value={description}>{description}</textarea>
+				<textarea name="description" id="description" bind:value={description}
+					>{description}</textarea
+				>
 			</div>
 			<div class="input">
 				<label for="icon">Icon</label>
@@ -33,12 +32,8 @@
 			</div>
 
 			<div class="actions">
-				<button class="cancel" type="button" onclick={props.cancel}>
-					Annuler
-				</button>
-				<button class="confirm" type="submit">
-					Valider
-				</button>
+				<button class="cancel" type="button" onclick={props.cancel}> Annuler </button>
+				<button class="confirm" type="submit"> Valider </button>
 			</div>
 		</form>
 	</div>

@@ -53,7 +53,6 @@ export default {
     // Requête pour mettre à jour une catégorie
     updatingCategorie: async (req: AuthenticatedRequest, res: Response) => {
         const categoryId = await parseIdFromParams(req.params.id);
-        console.log(categoryId,req.body)
         const updateCategoryBodySchema = z.object({
             name: z.string().min(1).optional(),
             description: z.string().optional(),

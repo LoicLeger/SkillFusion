@@ -1,7 +1,5 @@
-
-
-export interface IUserLocalStorage{
-    id:number
-    pseudo:string
-    role:string
+export interface IUserLocalStorage {
+	id: number;
+	pseudo: string;
+	role: string;
 }

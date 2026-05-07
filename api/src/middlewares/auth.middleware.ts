@@ -53,7 +53,6 @@ export function verifyAndDecodeJWT(accessToken: string): JwtPayload {
     const payload = jwt.verify(accessToken, config.jwtSecret, {
       audience: 'access',
     }) as JwtPayload;
-
     return payload;
   } catch (error) {
     logger.warn('JWT verification failed:', error);

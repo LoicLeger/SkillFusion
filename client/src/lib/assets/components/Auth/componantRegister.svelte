@@ -1,30 +1,34 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
+	import { goto } from '$app/navigation';
 	import api from '$lib/services/api.service';
 
-	const onSubmitForm = async (event:SubmitEvent):Promise<void> => {
+	const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
 		event.preventDefault();
 		const formData = new FormData(event.target as HTMLFormElement);
 		const pseudo = formData.get('pseudo');
 		const email = formData.get('email');
 		const password = formData.get('password');
 		const confirmPassword = formData.get('confirm-password');
-		const response = await api("auth/register","POST",{ pseudo,email, password,confirmPassword });
-		if (response.status!=201){
-			if (response.data.error=="Pseudo déjà utilisé"){
-				errorPseudo=true
+		const response = await api('auth/register', 'POST', {
+			pseudo,
+			email,
+			password,
+			confirmPassword
+		});
+		if (response.status != 201) {
+			if (response.data.error == 'Pseudo déjà utilisé') {
+				errorPseudo = true;
 			}
-			if (response.data.error=="Email déjà utilisé"){
-				errorEmail=true
+			if (response.data.error == 'Email déjà utilisé') {
+				errorEmail = true;
 			}
-		}else{
+		} else {
 			goto('/connexion');
 		}
-		
 	};
 
-	let errorEmail=$state(false)
-	let errorPseudo=$state(false)
+	let errorEmail = $state(false);
+	let errorPseudo = $state(false);
 </script>
 
 <!-- Composant d'inscription -->
@@ -79,12 +83,12 @@
 	h1 {
 		text-align: center;
 		margin-bottom: 0px;
-        color: #1d4e89;
+		color: #1d4e89;
 	}
 
-    p {
-        margin-top: 5px;
-    }
+	p {
+		margin-top: 5px;
+	}
 
 	.introduction {
 		text-align: center;
@@ -105,12 +109,12 @@
 
 	.btn-login {
 		text-decoration: none;
-        color: #1d4e89;
+		color: #1d4e89;
 	}
 
-    .btn-login:hover {
-        text-decoration: underline;
-    }
+	.btn-login:hover {
+		text-decoration: underline;
+	}
 
 	.register-container {
 		max-width: 400px;
@@ -157,8 +161,8 @@
 		.introduction {
 			display: none;
 		}
-        h1 {
-            margin-bottom: 20px
-        }
+		h1 {
+			margin-bottom: 20px;
+		}
 	}
 </style>

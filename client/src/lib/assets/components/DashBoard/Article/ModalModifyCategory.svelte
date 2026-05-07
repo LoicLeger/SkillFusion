@@ -12,8 +12,7 @@
 
 	function onSumbit(event: SubmitEvent) {
 		event.preventDefault();
-		console.log(name, description);
-		props.confirm({ name, description ,textColor,borderColor,backgroundColor});
+		props.confirm({ name, description, textColor, borderColor, backgroundColor });
 	}
 
 	function cancel() {
@@ -27,7 +26,7 @@
 		<form onsubmit={onSumbit}>
 			<div class="input">
 				<label for="name">Nom</label>
-				<input id="name" placeholder="Nom du badge" bind:value={name}/>
+				<input id="name" placeholder="Nom du badge" bind:value={name} />
 			</div>
 			<div class="input">
 				<label for="description">Description</label>

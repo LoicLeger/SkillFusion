@@ -1,29 +1,29 @@
 <script>
 	import '../../app.css';
 
-	    let email = $state('');
-    let message = $state('');
-    let error = $state('');
+	let email = $state('');
+	let message = $state('');
+	let error = $state('');
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        message = '';
-        error = '';
+	async function handleSubmit(e) {
+		e.preventDefault();
+		message = '';
+		error = '';
 
-        const res = await fetch('http://localhost:3000/auth/forgot-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-        });
+		const res = await fetch('http://localhost:3000/auth/forgot-password', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email })
+		});
 
-        const data = await res.json();
+		const data = await res.json();
 
-        if (res.ok) {
-            message = data.message;
-        } else {
-            error = data.message ?? 'Une erreur est survenue.';
-        }
-    }
+		if (res.ok) {
+			message = data.message;
+		} else {
+			error = data.message ?? 'Une erreur est survenue.';
+		}
+	}
 </script>
 
 <!-- Page de réinitialisation du mot de passe -->
@@ -38,8 +38,8 @@
 			<p style="color:red;">{error}</p>
 		{/if}
 		<p class="introduction">
-		Entrez votre adresse e-mail pour recevoir un lien de réinitialisation de mot de passe.
-	</p>
+			Entrez votre adresse e-mail pour recevoir un lien de réinitialisation de mot de passe.
+		</p>
 		<div class="form-group">
 			<input type="email" bind:value={email} placeholder="Votre adresse e-mail" required />
 		</div>
