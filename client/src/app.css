@@ -7,6 +7,8 @@
     --button-backgroung-color-hover:#629adf;
     --border-radius:12px;
     --h1-color:#1D4E89;
+    --h2-color:#F5A623;
+    --h3-color:#2C3E50;
 
     --color-notification-not-seen: #ecd7b2;
 
@@ -21,6 +23,10 @@
     --color-font-background-modify-button:#1d4e89;
 
     --size-icon-mobile:32px
+
+    
+
+
 
 }
 body{
@@ -43,7 +49,7 @@ h2{
 h3{
     font-family: "DM Sans", sans-serif;
     font-weight: 500;
-    color: #2C3E50;;
+    color: #2C3E50;
     font-size:18px ;
     margin: 5px 0px;
 }

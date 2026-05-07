@@ -47,7 +47,7 @@
 					outils que vous avez déjà. Parce qu'apprendre avec les mains, c'est aussi apprendre à être
 					autonome.
 				</p>
-				<!-- <a class="main__btn__presentation" href="/">En savoir plus</a> -->
+				 <a class="main__btn__presentation" href="/info">En savoir plus</a>
 				<BtnAllCours />
 			</section>
 			<section class="homepage__rightside">
