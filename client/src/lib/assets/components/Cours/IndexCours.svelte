@@ -204,7 +204,6 @@
             />
         </div>
 
-<<<<<<< HEAD
         <!-- MAIN -->
         {#if authStore.user?.role === 'admin' || authStore.user?.id === cours.authorId}
             <div class="card top">
@@ -221,23 +220,6 @@
                     <button class="button" onclick={saveCours}>Enregistrer les modifications</button
                     >
                 {/if}
-=======
-		<!-- MAIN -->
-		{#if authStore.user?.role === 'admin' || authStore.user?.id === cours.authorId}
-			<div class="card top">
-				<button class="button" onclick={changeVisibility}
-					>Rendre le cours {visibility ? 'priver' : 'public'}</button
-				>
-				<button
-					class="button"
-					onclick={() => {
-						handleModify();
-					}}>{textButton}</button
-				>
-				{#if modifier}
-					<button class="button" onclick={saveCours}>Enregistrer les modifications</button>
-				{/if}
->>>>>>> main-dev
 
                 <button class="button" onclick={modalDeleteCours}>Supprimer le cours</button>
             </div>

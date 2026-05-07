@@ -10,7 +10,6 @@
     let borderColor = $state('#000000');
     let backgroundColor = $state('#FFFFFF');
 
-<<<<<<< HEAD
     function onSumbit(event: SubmitEvent) {
         props.confirm({ name, description, textColor, borderColor, backgroundColor });
         event.preventDefault();
@@ -31,28 +30,6 @@
         backgroundColor = '#FFFFFF';
         props.cancel();
     }
-=======
-	function onSumbit(event: SubmitEvent) {
-		props.confirm({ name, description, textColor, borderColor, backgroundColor });
-		event.preventDefault();
-		name = '';
-		description = '';
-
-		textColor = '#000000';
-		borderColor = '#000000';
-		backgroundColor = '#FFFFFF';
-	}
-
-	function cancel() {
-		name = '';
-		description = '';
-
-		textColor = '#000000';
-		borderColor = '#000000';
-		backgroundColor = '#FFFFFF';
-		props.cancel();
-	}
->>>>>>> main-dev
 </script>
 
 <dialog class="overlay" id="modalCreateCategory">
