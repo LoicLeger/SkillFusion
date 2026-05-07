@@ -249,7 +249,6 @@
 	function openModalCreateCategory() {
 		const modal = document.getElementById('modalCreateCategory') as IModal;
 		if (modal) {
-			console.log('ca ne amrche pas .....');
 			modal.show();
 		}
 	}
