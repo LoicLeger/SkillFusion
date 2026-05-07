@@ -3,28 +3,28 @@
 	import api from '$lib/services/api.service';
 
 	const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
-		event.preventDefault();
-		const formData = new FormData(event.target as HTMLFormElement);
-		const pseudo = formData.get('pseudo');
-		const email = formData.get('email');
-		const password = formData.get('password');
-		const confirmPassword = formData.get('confirm-password');
-		const response = await api('auth/register', 'POST', {
-			pseudo,
-			email,
-			password,
-			confirmPassword
-		});
-		if (response.status != 201) {
-			if (response.data.error == 'Pseudo déjà utilisé') {
-				errorPseudo = true;
-			}
-			if (response.data.error == 'Email déjà utilisé') {
-				errorEmail = true;
-			}
-		} else {
-			goto('/connexion');
-		}
+	    event.preventDefault();
+	    const formData = new FormData(event.target as HTMLFormElement);
+	    const pseudo = formData.get('pseudo');
+	    const email = formData.get('email');
+	    const password = formData.get('password');
+	    const confirmPassword = formData.get('confirm-password');
+	    const response = await api('auth/register', 'POST', {
+	        pseudo,
+	        email,
+	        password,
+	        confirmPassword
+	    });
+	    if (response.status != 201) {
+	        if (response.data.error == 'Pseudo déjà utilisé') {
+	            errorPseudo = true;
+	        }
+	        if (response.data.error == 'Email déjà utilisé') {
+	            errorEmail = true;
+	        }
+	    } else {
+	        goto('/connexion');
+	    }
 	};
 
 	let errorEmail = $state(false);

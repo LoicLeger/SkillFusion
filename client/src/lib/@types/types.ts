@@ -118,7 +118,7 @@ export interface ICoursActived {
 	id: number;
 	userId: number;
 	coursId: number;
-	IsEnd: Boolean;
+	IsEnd: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	user: IUser;

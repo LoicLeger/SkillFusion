@@ -6,23 +6,23 @@
 	let error = $state('');
 
 	async function handleSubmit(e) {
-		e.preventDefault();
-		message = '';
-		error = '';
+	    e.preventDefault();
+	    message = '';
+	    error = '';
 
-		const res = await fetch('http://localhost:3000/auth/forgot-password', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email })
-		});
+	    const res = await fetch('http://localhost:3000/auth/forgot-password', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify({ email })
+	    });
 
-		const data = await res.json();
+	    const data = await res.json();
 
-		if (res.ok) {
-			message = data.message;
-		} else {
-			error = data.message ?? 'Une erreur est survenue.';
-		}
+	    if (res.ok) {
+	        message = data.message;
+	    } else {
+	        error = data.message ?? 'Une erreur est survenue.';
+	    }
 	}
 </script>
 

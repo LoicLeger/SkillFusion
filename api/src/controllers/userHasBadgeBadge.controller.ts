@@ -1,8 +1,7 @@
 import type { Request, Response } from 'express';
 import { prisma } from '../models/client';
-import z from 'zod';
 import { parseIdFromParams } from './utils';
-import { ConflictError, NotFoundError } from '../lib/errors';
+import { NotFoundError } from '../lib/errors';
 
 export default {
     // Requête pour récuperer tous les badges

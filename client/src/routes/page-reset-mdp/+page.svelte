@@ -9,28 +9,28 @@
 	let error = $state('');
 
 	async function handleSubmit(e) {
-		e.preventDefault();
-		error = '';
-		message = '';
+	    e.preventDefault();
+	    error = '';
+	    message = '';
 
-		if (password !== confirm) {
-			error = 'Les mots de passe ne correspondent pas.';
-			return;
-		}
+	    if (password !== confirm) {
+	        error = 'Les mots de passe ne correspondent pas.';
+	        return;
+	    }
 
-		const res = await fetch('http://localhost:3000/auth/reset-password', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ token, password })
-		});
+	    const res = await fetch('http://localhost:3000/auth/reset-password', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify({ token, password })
+	    });
 
-		const data = await res.json();
+	    const data = await res.json();
 
-		if (res.ok) {
-			message = data.message;
-		} else {
-			error = data.message ?? 'Une erreur est survenue.';
-		}
+	    if (res.ok) {
+	        message = data.message;
+	    } else {
+	        error = data.message ?? 'Une erreur est survenue.';
+	    }
 	}
 </script>
 

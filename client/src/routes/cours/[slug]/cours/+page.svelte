@@ -34,120 +34,120 @@
 	let commentContent = $state();
 
 	$effect(() => {
-		if (modifier) {
-			textAreaAdjust(document.getElementById('text_area') as ITextArea);
-		}
+	    if (modifier) {
+	        textAreaAdjust(document.getElementById('text_area') as ITextArea);
+	    }
 	});
 
 	onMount(async () => {
-		isLoading = true;
-		user = authStore.user;
-		const response = await api('api/cours?slug=' + page.params.slug, 'GET');
-		cours = response.data;
-		if (cours) {
-			getCours();
-			isLoading = false;
-		}
-		getAuth();
+	    isLoading = true;
+	    user = authStore.user;
+	    const response = await api('api/cours?slug=' + page.params.slug, 'GET');
+	    cours = response.data;
+	    if (cours) {
+	        getCours();
+	        isLoading = false;
+	    }
+	    getAuth();
 	});
 
 	async function submitComment(): Promise<void> {
-		const response = await api('api/cours?slug=' + page.params.slug, 'GET');
-		cours = response.data;
-		const commentContentElement = document.getElementById('inputComment') as ITextArea;
-		commentContent = commentContentElement.value;
-		const data = { description: commentContent, authorId: authStore.user?.id, coursId: cours?.id };
-		await api('api/comments', 'POST', data);
-		const refresh = await api('api/cours?slug=' + page.params.slug);
-		cours = refresh.data;
-		commentContentElement.value = '';
+	    const response = await api('api/cours?slug=' + page.params.slug, 'GET');
+	    cours = response.data;
+	    const commentContentElement = document.getElementById('inputComment') as ITextArea;
+	    commentContent = commentContentElement.value;
+	    const data = { description: commentContent, authorId: authStore.user?.id, coursId: cours?.id };
+	    await api('api/comments', 'POST', data);
+	    const refresh = await api('api/cours?slug=' + page.params.slug);
+	    cours = refresh.data;
+	    commentContentElement.value = '';
 	}
 	async function DeleteComment(data: number) {
-		await api('api/comments/' + data, 'DELETE');
-		const refresh = await api('api/cours?slug=' + page.params.slug);
-		cours = refresh.data;
+	    await api('api/comments/' + data, 'DELETE');
+	    const refresh = await api('api/cours?slug=' + page.params.slug);
+	    cours = refresh.data;
 	}
 
 	function handleModify() {
-		modifier = !modifier;
+	    modifier = !modifier;
 	}
 
 	async function getCours() {
-		isLoading = true;
-		const response = await api('api/cours?slug=' + page.params.slug, 'GET');
-		cours = response.data;
-		if (cours) {
-			currentPageId = cours.content.find((content) => content.numberPage == currentPage);
-			if (currentPageId) {
-				const response = await api('api/cours-contents/' + currentPageId.id, 'GET');
-				coursContent = response.data as ICoursContent;
-				if (coursContent) {
-					coursContent.content = DOMPurify.sanitize(coursContent.content);
-					isLoading = false;
-				}
-			}
-		}
+	    isLoading = true;
+	    const response = await api('api/cours?slug=' + page.params.slug, 'GET');
+	    cours = response.data;
+	    if (cours) {
+	        currentPageId = cours.content.find((content) => content.numberPage == currentPage);
+	        if (currentPageId) {
+	            const response = await api('api/cours-contents/' + currentPageId.id, 'GET');
+	            coursContent = response.data as ICoursContent;
+	            if (coursContent) {
+	                coursContent.content = DOMPurify.sanitize(coursContent.content);
+	                isLoading = false;
+	            }
+	        }
+	    }
 	}
 
 	function goToPrevious() {
-		if (currentPage > 1) {
-			currentPage--;
-			getCours();
-		}
+	    if (currentPage > 1) {
+	        currentPage--;
+	        getCours();
+	    }
 	}
 
 	function goToNext() {
-		if (cours && currentPage < cours.numberPage) {
-			currentPage++;
-			getCours();
-		}
+	    if (cours && currentPage < cours.numberPage) {
+	        currentPage++;
+	        getCours();
+	    }
 	}
 
 	async function valider() {
-		const textArea: ITextArea = document.getElementById('text_area') as ITextArea;
-		const response = await api('api/cours-contents/' + currentPageId?.id, 'PATCH', {
-			content: textArea.value
-		});
-		handleModify();
-		getCours();
+	    const textArea: ITextArea = document.getElementById('text_area') as ITextArea;
+	    const response = await api('api/cours-contents/' + currentPageId?.id, 'PATCH', {
+	        content: textArea.value
+	    });
+	    handleModify();
+	    getCours();
 	}
 
 	function textAreaAdjust(element: ITextArea) {
-		element.style.height = '1px';
-		element.style.height = 25 + element.scrollHeight + 'px';
+	    element.style.height = '1px';
+	    element.style.height = 25 + element.scrollHeight + 'px';
 	}
 
 	async function createPage() {
-		const response = await api('api/cours-contents', 'POST', {
-			content: `Nouvelle page n°${currentPage + 1}`,
-			numberPage: currentPage + 1,
-			coursId: cours?.id
-		});
-		currentPage++;
-		getCours();
+	    const response = await api('api/cours-contents', 'POST', {
+	        content: `Nouvelle page n°${currentPage + 1}`,
+	        numberPage: currentPage + 1,
+	        coursId: cours?.id
+	    });
+	    currentPage++;
+	    getCours();
 	}
 	async function endCours() {
-		const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: true };
-		await api('api/cours-active/' + cours?.id, 'PATCH', data);
-		goto('/cours/' + page.params.slug);
+	    const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: true };
+	    await api('api/cours-active/' + cours?.id, 'PATCH', data);
+	    goto('/cours/' + page.params.slug);
 	}
 
 	function modalDeletePage() {
-		const modal = document.getElementById('ModalValidator') as IModal;
-		modal.show();
+	    const modal = document.getElementById('ModalValidator') as IModal;
+	    modal.show();
 	}
 
 	function closeDeletePageModale() {
-		const modal = document.getElementById('ModalValidator') as IModal;
-		modal.close();
+	    const modal = document.getElementById('ModalValidator') as IModal;
+	    modal.close();
 	}
 	async function deletePage() {
-		const response = await api('api/cours-contents/' + currentPageId?.id, 'DELETE');
-		closeDeletePageModale();
-		if (currentPage != 1) {
-			currentPage--;
-		}
-		getCours();
+	    const response = await api('api/cours-contents/' + currentPageId?.id, 'DELETE');
+	    closeDeletePageModale();
+	    if (currentPage != 1) {
+	        currentPage--;
+	    }
+	    getCours();
 	}
 
 	// Fonction pour signaler un commentaire
@@ -156,13 +156,13 @@
 	let commentToReport = $state<number | null>(null);
 
 	function signalerComment(commentId: number) {
-		commentToReport = commentId;
-		reportModal = true;
+	    commentToReport = commentId;
+	    reportModal = true;
 	}
 
 	function closeReport() {
-		reportModal = false;
-		commentToReport = null;
+	    reportModal = false;
+	    commentToReport = null;
 	}
 </script>
 
@@ -188,7 +188,7 @@
 					<button
 						class="button_tools flex-end"
 						onclick={() => {
-							handleModify();
+						    handleModify();
 						}}>{textButton}</button
 					>
 
@@ -216,7 +216,7 @@
 						class="button_tools"
 						disabled={cours.numberPage == 1}
 						onclick={() => {
-							modalDeletePage();
+						    modalDeletePage();
 						}}>Supprimer une Page</button
 					>
 				{/if}
@@ -227,7 +227,7 @@
 					<button
 						class="button_tools"
 						onclick={() => {
-							createPage();
+						    createPage();
 						}}>Ajouter une Page</button
 					>
 				{/if}
@@ -261,9 +261,9 @@
 
 										<span class="comment__date">
 											{new Date(c.updatedAt).toLocaleDateString('fr-FR', {
-												day: '2-digit',
-												month: 'long',
-												year: 'numeric'
+											    day: '2-digit',
+											    month: 'long',
+											    year: 'numeric'
 											})}
 										</span>
 									</div>

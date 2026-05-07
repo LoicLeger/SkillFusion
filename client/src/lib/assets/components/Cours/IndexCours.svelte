@@ -21,147 +21,147 @@
 	let textButton = $derived(modifier ? 'Annuler' : 'Modifier');
 
 	let editData = $state({
-		title: '',
-		littleSummary: '',
-		difficulty: 0
+	    title: '',
+	    littleSummary: '',
+	    difficulty: 0
 	});
 
 	$effect(() => {
-		if (cours && modifier) {
-			editData.title = cours.title;
-			editData.littleSummary = cours.littleSummary ?? '';
-			editData.difficulty = cours.difficulty;
-		}
+	    if (cours && modifier) {
+	        editData.title = cours.title;
+	        editData.littleSummary = cours.littleSummary ?? '';
+	        editData.difficulty = cours.difficulty;
+	    }
 	});
 
 	onMount(async () => {
-		getAuth();
-		user = authStore.user;
-		await getCours();
-		AlreadyHaveNoted();
+	    getAuth();
+	    user = authStore.user;
+	    await getCours();
+	    AlreadyHaveNoted();
 	});
 	async function getCours() {
-		const response = await api('api/cours?slug=' + page.params.slug);
-		cours = response.data;
+	    const response = await api('api/cours?slug=' + page.params.slug);
+	    cours = response.data;
 	}
 
 	async function AlreadyHaveNoted() {
-		const response = await api('api/opinions/' + cours?.id + '/user/' + authStore.user?.id, 'GET');
-		alreadyOpinion = response.data;
+	    const response = await api('api/opinions/' + cours?.id + '/user/' + authStore.user?.id, 'GET');
+	    alreadyOpinion = response.data;
 	}
 
 	async function patchOpinions(note: number, content: string) {
-		const response = await api('api/opinions/' + cours?.id + '/user/' + authStore.user?.id, 'GET');
-		const data = { content: content, note: note, coursId: cours?.id, userId: authStore?.user?.id };
-		await api('api/opinions/' + response.data.opinion.id, 'PATCH', data);
-		closeDeleteOpinionModale();
-		const refresh = await api('api/cours?slug=' + page.params.slug);
-		cours = refresh.data;
+	    const response = await api('api/opinions/' + cours?.id + '/user/' + authStore.user?.id, 'GET');
+	    const data = { content: content, note: note, coursId: cours?.id, userId: authStore?.user?.id };
+	    await api('api/opinions/' + response.data.opinion.id, 'PATCH', data);
+	    closeDeleteOpinionModale();
+	    const refresh = await api('api/cours?slug=' + page.params.slug);
+	    cours = refresh.data;
 	}
 
 	async function addCoursActiveToStudent() {
-		const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: false };
-		await api('api/cours-active ', 'POST', data);
+	    const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: false };
+	    await api('api/cours-active ', 'POST', data);
 	}
 
 	function getStars(note: number) {
-		const stars = [];
-		for (let i = 1; i <= 5; i++) {
-			if (note >= i) stars.push('full');
-			else if (note >= i - 0.5) stars.push('half');
-			else stars.push('empty');
-		}
-		return stars;
+	    const stars = [];
+	    for (let i = 1; i <= 5; i++) {
+	        if (note >= i) stars.push('full');
+	        else if (note >= i - 0.5) stars.push('half');
+	        else stars.push('empty');
+	    }
+	    return stars;
 	}
 	function modalAddOpinion() {
-		const modal = document.getElementById('ModalOpinion') as IModal;
-		modal.show();
+	    const modal = document.getElementById('ModalOpinion') as IModal;
+	    modal.show();
 	}
 	function closeDeleteOpinionModale() {
-		const modal = document.getElementById('ModalOpinion') as IModal;
-		modal.close();
+	    const modal = document.getElementById('ModalOpinion') as IModal;
+	    modal.close();
 	}
 	async function ValidateDataModal(note: number, content: string) {
-		const data = { content: content, note: note, coursId: cours?.id, userId: authStore?.user?.id };
-		await api('api/opinions', 'POST', data);
-		closeDeleteOpinionModale();
-		const refresh = await api('api/cours?slug=' + page.params.slug);
-		cours = refresh.data;
-		const response = await api('api/opinions/' + cours?.id + '/user/' + authStore.user?.id, 'GET');
-		alreadyOpinion = response.data;
+	    const data = { content: content, note: note, coursId: cours?.id, userId: authStore?.user?.id };
+	    await api('api/opinions', 'POST', data);
+	    closeDeleteOpinionModale();
+	    const refresh = await api('api/cours?slug=' + page.params.slug);
+	    cours = refresh.data;
+	    const response = await api('api/opinions/' + cours?.id + '/user/' + authStore.user?.id, 'GET');
+	    alreadyOpinion = response.data;
 	}
 
 	function modalDeleteCours() {
-		const modal = document.getElementById('DeleteCours') as IModal;
-		modal.show();
+	    const modal = document.getElementById('DeleteCours') as IModal;
+	    modal.show();
 	}
 
 	function closeDeleteCoursModale() {
-		const modal = document.getElementById('DeleteCours') as IModal;
-		modal.close();
+	    const modal = document.getElementById('DeleteCours') as IModal;
+	    modal.close();
 	}
 
 	function modalDeleteOpinion() {
-		const modal = document.getElementById('DeleteOpinion') as IModal;
-		modal.show();
+	    const modal = document.getElementById('DeleteOpinion') as IModal;
+	    modal.show();
 	}
 
 	function closeDeleteOpinion() {
-		const modal = document.getElementById('DeleteOpinion') as IModal;
-		modal.close();
+	    const modal = document.getElementById('DeleteOpinion') as IModal;
+	    modal.close();
 	}
 
 	async function deleteOpinion() {
-		const response = await api('api/opinions/' + alreadyOpinion.opinion?.id, 'DELETE');
-		await getCours();
-		await AlreadyHaveNoted();
-		closeDeleteOpinion();
+	    const response = await api('api/opinions/' + alreadyOpinion.opinion?.id, 'DELETE');
+	    await getCours();
+	    await AlreadyHaveNoted();
+	    closeDeleteOpinion();
 	}
 	async function deleteCours() {
-		const response = await api('api/cours/' + cours?.id, 'DELETE');
-		closeDeleteCoursModale();
-		goto('/tableau-de-bord');
+	    const response = await api('api/cours/' + cours?.id, 'DELETE');
+	    closeDeleteCoursModale();
+	    goto('/tableau-de-bord');
 	}
 	async function changeVisibility() {
-		await api('api/cours/' + cours?.id + '/visibility', 'POST');
-		const response = await api('api/cours?slug=' + page.params.slug);
-		cours = response.data;
+	    await api('api/cours/' + cours?.id + '/visibility', 'POST');
+	    const response = await api('api/cours?slug=' + page.params.slug);
+	    cours = response.data;
 	}
 
 	async function saveCours() {
-		const data = {
-			title: editData.title,
-			slug: editData.title.toLowerCase().replaceAll(' ', '-'),
-			littleSummary: editData.littleSummary,
-			difficulty: editData.difficulty,
-			authorId: cours?.authorId,
-			categoryId: cours?.categoryId,
-			tools: cours?.tools.map((t) => t.tools.id) ?? [],
-			learningObjectives: cours?.learningObjectives.map((o) => o.objectif.id) ?? [],
-			content: cours?.content.map((c) => c.id) ?? []
-		};
+	    const data = {
+	        title: editData.title,
+	        slug: editData.title.toLowerCase().replaceAll(' ', '-'),
+	        littleSummary: editData.littleSummary,
+	        difficulty: editData.difficulty,
+	        authorId: cours?.authorId,
+	        categoryId: cours?.categoryId,
+	        tools: cours?.tools.map((t) => t.tools.id) ?? [],
+	        learningObjectives: cours?.learningObjectives.map((o) => o.objectif.id) ?? [],
+	        content: cours?.content.map((c) => c.id) ?? []
+	    };
 
-		const response = await api('api/cours/' + cours?.id, 'PATCH', data);
+	    const response = await api('api/cours/' + cours?.id, 'PATCH', data);
 
-		if (response.status === 200) {
-			goto('/cours/' + data.slug);
-		}
+	    if (response.status === 200) {
+	        goto('/cours/' + data.slug);
+	    }
 	}
 
 	function handleModify() {
-		modifier = !modifier;
-		getCours();
+	    modifier = !modifier;
+	    getCours();
 	}
 
 	function addLearningObjective() {
-		const data = { title: 'Nouvel objectif', coursId: cours?.id };
-		api('api/learning-objectifs', 'POST', data).then((response) => {
-			cours?.learningObjectives.push({ objectif: response.data });
-		});
+	    const data = { title: 'Nouvel objectif', coursId: cours?.id };
+	    api('api/learning-objectifs', 'POST', data).then((response) => {
+	        cours?.learningObjectives.push({ objectif: response.data });
+	    });
 	}
 
 	async function updateTool(toolId: number, newName: string) {
-		await api('api/tools/' + toolId, 'PATCH', { name: newName });
+	    await api('api/tools/' + toolId, 'PATCH', { name: newName });
 	}
 </script>
 
@@ -194,7 +194,7 @@
 				<button
 					class="button"
 					onclick={() => {
-						handleModify();
+					    handleModify();
 					}}>{textButton}</button
 				>
 				{#if modifier}

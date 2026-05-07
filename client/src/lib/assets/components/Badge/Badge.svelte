@@ -5,10 +5,10 @@
 	let y = $state(0);
 
 	function show(e) {
-		const rect = e.currentTarget.getBoundingClientRect();
-		x = rect.left + rect.width / 2;
-		y = rect.top - 8;
-		visible = true;
+	    const rect = e.currentTarget.getBoundingClientRect();
+	    x = rect.left + rect.width / 2;
+	    y = rect.top - 8;
+	    visible = true;
 	}
 </script>
 

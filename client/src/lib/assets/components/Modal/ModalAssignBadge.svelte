@@ -1,7 +1,6 @@
 <script lang="ts">
 	import api from '$lib/services/api.service';
 	import { onMount } from 'svelte';
-	import type { IInput } from '$lib/@types/html';
 	import type { IBadge } from '$lib/@types/types';
 	import Badge from '../Badge/Badge.svelte';
 
@@ -9,8 +8,8 @@
 	let badges: IBadge[] = $state([]);
 
 	onMount(async () => {
-		const response = await api('api/badges');
-		badges = response.data;
+	    const response = await api('api/badges');
+	    badges = response.data;
 	});
 </script>
 

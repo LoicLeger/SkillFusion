@@ -11,24 +11,24 @@
 	let backgroundColor = $state('#FFFFFF');
 
 	function onSumbit(event: SubmitEvent) {
-		props.confirm({ name, description, textColor, borderColor, backgroundColor });
-		event.preventDefault();
-		name = '';
-		description = '';
+	    props.confirm({ name, description, textColor, borderColor, backgroundColor });
+	    event.preventDefault();
+	    name = '';
+	    description = '';
 
-		textColor = '#000000';
-		borderColor = '#000000';
-		backgroundColor = '#FFFFFF';
+	    textColor = '#000000';
+	    borderColor = '#000000';
+	    backgroundColor = '#FFFFFF';
 	}
 
 	function cancel() {
-		name = '';
-		description = '';
+	    name = '';
+	    description = '';
 
-		textColor = '#000000';
-		borderColor = '#000000';
-		backgroundColor = '#FFFFFF';
-		props.cancel();
+	    textColor = '#000000';
+	    borderColor = '#000000';
+	    backgroundColor = '#FFFFFF';
+	    props.cancel();
 	}
 </script>
 

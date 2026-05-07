@@ -11,12 +11,12 @@
 	let backgroundColor = $derived(props.badge?.backgroundColor);
 
 	function onSumbit(event: SubmitEvent) {
-		event.preventDefault();
-		props.confirm({ name, description, textColor, borderColor, backgroundColor });
+	    event.preventDefault();
+	    props.confirm({ name, description, textColor, borderColor, backgroundColor });
 	}
 
 	function cancel() {
-		props.cancel();
+	    props.cancel();
 	}
 </script>
 

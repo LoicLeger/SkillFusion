@@ -1,23 +1,23 @@
 <script>
 	async function exportData() {
-		const response = await fetch('http://localhost:3000/api/users/me/export', {
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem('token')}`
-			}
-		});
+	    const response = await fetch('http://localhost:3000/api/users/me/export', {
+	        headers: {
+	            Authorization: `Bearer ${localStorage.getItem('token')}`
+	        }
+	    });
 
-		if (!response.ok) {
-			console.error("Erreur lors de l'export");
-			return;
-		}
+	    if (!response.ok) {
+	        console.error("Erreur lors de l'export");
+	        return;
+	    }
 
-		const blob = await response.blob();
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = 'mes-donnees-skillfusion.json';
-		a.click();
-		URL.revokeObjectURL(url);
+	    const blob = await response.blob();
+	    const url = URL.createObjectURL(blob);
+	    const a = document.createElement('a');
+	    a.href = url;
+	    a.download = 'mes-donnees-skillfusion.json';
+	    a.click();
+	    URL.revokeObjectURL(url);
 	}
 </script>
 

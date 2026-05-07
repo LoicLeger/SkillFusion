@@ -5,8 +5,8 @@
 	let description = $derived(props.badge?.description);
 
 	function onSumbit(event: SubmitEvent) {
-		event.preventDefault();
-		props.confirm({ name, description });
+	    event.preventDefault();
+	    props.confirm({ name, description });
 	}
 </script>
 

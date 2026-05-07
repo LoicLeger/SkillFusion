@@ -13,6 +13,8 @@
         "test": "npm run test:unit && npm run test:spec",
         "dev": "tsx --watch --env-file=.env app.ts",
         "lint": "prettier --check . && eslint .",
+        "lint:fix": "eslint . --fix",
+        "prettier:fix": "prettier --write .",
         "format": "prettier --write .",
         "db:deploy": "npx prisma migrate deploy",
         "db:seed": "npx tsx src/models/seeding.ts",

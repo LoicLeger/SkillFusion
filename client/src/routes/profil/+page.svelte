@@ -34,137 +34,131 @@
 	let badgeToDelete: number | null = $state(null);
 
 	onMount(async () => {
-		getAuth();
-		userLocal = authStore.user;
-		try {
-			if (userId) {
-				const res = await api(`api/users/${userId}`, 'GET');
-				user.set(res.data);
-			} else {
-				const res = await api('auth/me', 'GET');
-				user.set(res.data);
-			}
-		} catch (e) {
-			console.error(e);
-		}
-		getBadge();
+	    getAuth();
+	    userLocal = authStore.user;
+	    try {
+	        if (userId) {
+	            const res = await api(`api/users/${userId}`, 'GET');
+	            user.set(res.data);
+	        } else {
+	            const res = await api('auth/me', 'GET');
+	            user.set(res.data);
+	        }
+	    } catch (e) {
+	        console.error(e);
+	    }
+	    getBadge();
 	});
 
 	async function handleSubmit(event: SubmitEvent) {
-		event.preventDefault();
-		const formData = new FormData(event.target);
-		const updatedUser = {
-			lastname: formData.get('name'),
-			firstname: formData.get('firstname'),
-			email: formData.get('email'),
-			password: formData.get('password')
-		};
+	    event.preventDefault();
+	    const formData = new FormData(event.target);
+	    const updatedUser = {
+	        lastname: formData.get('name'),
+	        firstname: formData.get('firstname'),
+	        email: formData.get('email'),
+	        password: formData.get('password')
+	    };
 
-		// Supprimer les champs vides pour éviter de les envoyer à l'API
-		const currentUser = get(user);
+	    // Supprimer les champs vides pour éviter de les envoyer à l'API
+	    const currentUser = get(user);
 
-		if (!updatedUser.password) {
-			delete updatedUser.password; // Ne pas inclure le champ password si il est vide
-		}
+	    if (!updatedUser.password) {
+	        delete updatedUser.password; // Ne pas inclure le champ password si il est vide
+	    }
 
-		if (updatedUser.email === currentUser.email) {
-			delete updatedUser.email;
-		}
+	    if (updatedUser.email === currentUser.email) {
+	        delete updatedUser.email;
+	    }
 
-		if (!updatedUser.firstname) {
-			delete updatedUser.firstname;
-		}
+	    if (!updatedUser.firstname) {
+	        delete updatedUser.firstname;
+	    }
 
-		if (!updatedUser.lastname) {
-			delete updatedUser.lastname;
-		}
+	    if (!updatedUser.lastname) {
+	        delete updatedUser.lastname;
+	    }
 
-		errorEmail = false;
+	    errorEmail = false;
 
-		try {
-			const targetId = userId ?? authStore?.user?.id;
+	    try {
+	        const targetId = userId ?? authStore?.user?.id;
 
-			const response = await api(`api/users/${targetId}`, 'PATCH', updatedUser);
-			// Vérification du statut de la réponse
-			if (response.status !== 200) {
-				if (response.data.error === 'Email déjà utilisé') {
-					errorEmail = true;
-					setTimeout(() => (errorEmail = false), 5000); // Message effacé après 5 secondes
-				}
-			} else {
-				errorEmail = false;
-				succesMessage = 'Informations mises à jour avec succès !'; // Message de succès
-				// Réinitialiser le message après quelques secondes
-				setTimeout(() => (succesMessage = null), 5000); // Message effacé après 5 secondes
-			}
-		} catch (error) {
-			console.error('Erreur lors de la mise à jour des informations utilisateur :', error);
-			// Gestion d'une erreur générique
-			succesMessage = 'Une erreur est survenue. Veuillez réessayer.';
-		}
-	}
-
-	async function handleCancel(event) {
-		event?.preventDefault();
-		const currentUser = $user;
-		user.set({ ...currentUser });
+	        const response = await api(`api/users/${targetId}`, 'PATCH', updatedUser);
+	        // Vérification du statut de la réponse
+	        if (response.status !== 200) {
+	            if (response.data.error === 'Email déjà utilisé') {
+	                errorEmail = true;
+	                setTimeout(() => (errorEmail = false), 5000); // Message effacé après 5 secondes
+	            }
+	        } else {
+	            errorEmail = false;
+	            succesMessage = 'Informations mises à jour avec succès !'; // Message de succès
+	            // Réinitialiser le message après quelques secondes
+	            setTimeout(() => (succesMessage = null), 5000); // Message effacé après 5 secondes
+	        }
+	    } catch (error) {
+	        console.error('Erreur lors de la mise à jour des informations utilisateur :', error);
+	        // Gestion d'une erreur générique
+	        succesMessage = 'Une erreur est survenue. Veuillez réessayer.';
+	    }
 	}
 
 	async function getBadge() {
-		let response = null;
-		if (userLocal?.role === 'admin' && userId) {
-			response = await api('api/badges/user/' + userId);
-		} else {
-			response = await api('api/badges/user/' + userLocal?.id);
-		}
-		badges = response.data;
+	    let response = null;
+	    if (userLocal?.role === 'admin' && userId) {
+	        response = await api('api/badges/user/' + userId);
+	    } else {
+	        response = await api('api/badges/user/' + userLocal?.id);
+	    }
+	    badges = response.data;
 	}
 
 	async function deleteBadge(id: number) {
-		await api('api/userHAsBadge/' + id, 'DELETE');
-		getBadge();
+	    await api('api/userHAsBadge/' + id, 'DELETE');
+	    getBadge();
 	}
 
 	function openModalDeleteBadge(id: number) {
-		badgeToDelete = id;
-		const modal = document.getElementById('modalDeleteBadge') as IModal;
-		if (modal) {
-			modal.show();
-		}
+	    badgeToDelete = id;
+	    const modal = document.getElementById('modalDeleteBadge') as IModal;
+	    if (modal) {
+	        modal.show();
+	    }
 	}
 
 	function cancelDeleteBadge() {
-		const modal = document.getElementById('modalDeleteBadge') as IModal;
-		if (modal) {
-			modal.close();
-		}
+	    const modal = document.getElementById('modalDeleteBadge') as IModal;
+	    if (modal) {
+	        modal.close();
+	    }
 	}
 
 	async function confirmDeleteBadge() {
-		await api('api/userHAsBadge/' + badgeToDelete, 'DELETE');
-		badgeToDelete = null;
-		cancelDeleteBadge();
-		getBadge();
+	    await api('api/userHAsBadge/' + badgeToDelete, 'DELETE');
+	    badgeToDelete = null;
+	    cancelDeleteBadge();
+	    getBadge();
 	}
 
 	function openModalAssignBadge() {
-		const modal = document.getElementById('modalAssignBadge') as IModal;
-		if (modal) {
-			modal.show();
-		}
+	    const modal = document.getElementById('modalAssignBadge') as IModal;
+	    if (modal) {
+	        modal.show();
+	    }
 	}
 
 	function cancelAssignBadge() {
-		const modal = document.getElementById('modalAssignBadge') as IModal;
-		if (modal) {
-			modal.close();
-		}
+	    const modal = document.getElementById('modalAssignBadge') as IModal;
+	    if (modal) {
+	        modal.close();
+	    }
 	}
 
 	async function confirmAssignBadge(id: number) {
-		await api('api/userHAsBadge', 'POST', { userId: Number(userId), badgeId: id });
-		cancelAssignBadge();
-		getBadge();
+	    await api('api/userHAsBadge', 'POST', { userId: Number(userId), badgeId: id });
+	    cancelAssignBadge();
+	    getBadge();
 	}
 </script>
 

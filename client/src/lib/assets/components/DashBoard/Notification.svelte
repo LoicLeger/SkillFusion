@@ -3,12 +3,12 @@
 	const { notification, seenNotification, deleteNotification } = $props();
 
 	let datetime = $derived(
-		new Date(notification.createdAt).toLocaleDateString('fr-FR', {
-			weekday: 'long',
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		})
+	    new Date(notification.createdAt).toLocaleDateString('fr-FR', {
+	        weekday: 'long',
+	        year: 'numeric',
+	        month: 'long',
+	        day: 'numeric'
+	    })
 	);
 </script>
 
