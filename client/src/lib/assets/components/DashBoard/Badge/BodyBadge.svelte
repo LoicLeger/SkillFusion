@@ -1,61 +1,24 @@
 <script>
 	const { badge } = $props();
-	let visible = $state(false);
-	let x = $state(0);
-	let y = $state(0);
 
-	function show(e) {
-		const rect = e.currentTarget.getBoundingClientRect();
-		x = rect.left + rect.width / 2;
-		y = rect.top - 8;
-		visible = true;
-	}
 </script>
 
 <div class="badge_item">
-	<div class="tooltip-trigger" onmouseenter={show} onmouseleave={() => (visible = false)}>
-		<span class={`icon-${badge.icon}`}></span>
+	<span class={`icon-${badge.icon}`}></span>
+	<div>
+		<p>{badge.name}</p>
+		<p>{badge.description}</p>
 	</div>
 </div>
-
-{#if visible}
-	<div class="tooltip" style="left: {x}px; top: {y}px;">
-		{badge.name} · {badge.description}
-	</div>
-{/if}
 
 <style>
 	.badge_item {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		justify-content: center;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-		border: 2px lightgray solid;
 		border-radius: var(--border-radius);
 		padding: 10px;
-	}
-
-	.tooltip-trigger {
-		position: relative;
-		display: inline-block;
-		cursor: pointer;
-	}
-
-	.tooltip {
-		position: fixed;
-		transform: translate(-50%, -100%);
-		background: #333;
-		color: #fff;
-		padding: 4px 8px;
-		border-radius: 4px;
-		white-space: nowrap;
-		font-size: 0.75rem;
-		pointer-events: none;
-		z-index: 9999;
-	}
-
-	.tooltip.visible {
-		opacity: 1;
 	}
 
 	.icon-one-star {
