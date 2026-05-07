@@ -103,5 +103,4 @@
 	.cancel {
 		background: #ddd;
 	}
-
 </style>

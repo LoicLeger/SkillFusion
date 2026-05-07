@@ -294,7 +294,6 @@
 		gap: 10px;
 	}
 
-
 	/* ── List rows (cours terminés) ─────────────────────────── */
 	.list-row {
 		display: flex;
@@ -353,7 +352,6 @@
 		flex-shrink: 0;
 	}
 
-
 	/* ── Responsive ──────────────────────────────────────────── */
 	@media (max-width: 1024px) {
 		.dashboard {
@@ -395,7 +393,5 @@
 		.badges-grid {
 			grid-template-columns: repeat(4, 1fr);
 		}
-
-
 	}
 </style>
