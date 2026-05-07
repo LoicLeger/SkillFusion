@@ -9,7 +9,10 @@
 	import type { IModal } from '$lib/@types/html';
 	import type { IPropsComfirmeNewCours } from '$lib/@types/typeUtils';
 	import Notification from './Notification.svelte';
+<<<<<<< HEAD
+=======
 	import { goto } from '$app/navigation';
+>>>>>>> main-dev
 
 	let cours: ICours[] = $state([]);
 	let notifications: INotification[] = $state([]);
@@ -34,9 +37,14 @@
 	}
 
 	async function comfirmModalNewCours(data: IPropsComfirmeNewCours) {
+<<<<<<< HEAD
+		await api('api/cours', 'POST', data);
+		cancelModalNewCours();
+=======
 		const cours = await api('api/cours', 'POST', data);
 		cancelModalNewCours();
 		goto('/cours/' + cours.data.slug);
+>>>>>>> main-dev
 	}
 
 	// ── État ────────────────────────────────────────────────────
@@ -49,7 +57,11 @@
 		await api('api/notifications/' + id, 'PATCH', { seen: true });
 	}
 
+<<<<<<< HEAD
+	async function deleteNotification(event, id: number) {
+=======
 	async function deleteNotification(event: SubmitEvent, id: number) {
+>>>>>>> main-dev
 		event.preventDefault();
 		await api('api/notifications/' + id, 'DELETE');
 		const responseCours = await api('api/cours/instructor/' + authStore?.user?.id);

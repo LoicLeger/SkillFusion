@@ -12,8 +12,12 @@
 	import { goto } from '$app/navigation';
 	import BodyUser from './User/BodyUser.svelte';
 	import ModalModifyBadge from './Badge/ModalModifyBadge.svelte';
+<<<<<<< HEAD
+	import ModalModifyCategory from './Article/ModalModifyCategory.svelte';
+=======
 	import ModalModifyCategory from './Category/ModalModifyCategory.svelte';
 	import ModalCreateCategory from './Category/ModalCreateCategory.svelte';
+>>>>>>> main-dev
 
 	let users: IUser[] = $state([]);
 	let roles: IRole[] = $state([]);
@@ -244,6 +248,8 @@
 		cancelDeleteBadge();
 	}
 
+<<<<<<< HEAD
+=======
 	/* Fonction pour la craetion d'une categories */
 
 	function openModalCreateCategory() {
@@ -278,6 +284,7 @@
 		cancelCreateCategory();
 	}
 
+>>>>>>> main-dev
 	/* Fonction pour la modification d'une categories */
 
 	function openModalModifyCategory(category: ICategory) {
@@ -476,11 +483,15 @@
 		<div class="panel">
 			<div class="panel__head">
 				<h2 class="panel__title">Gestion des catégories</h2>
+<<<<<<< HEAD
+				<button class="btn-add" title="Ajouter une catégorie">+</button>
+=======
 				<button
 					class="btn-add"
 					title="Ajouter une catégorie"
 					onclick={() => openModalCreateCategory()}>+</button
 				>
+>>>>>>> main-dev
 			</div>
 
 			<div class="panel__filters">
@@ -504,13 +515,19 @@
 		</div>
 	</div>
 	<ModalModifyBadge cancel={cancelModifyBadge} confirm={confirmModifyBadge} badge={badgeToUpdate} />
+<<<<<<< HEAD
+=======
 
+>>>>>>> main-dev
 	<ModalModifyCategory
 		cancel={cancelModifyCategory}
 		confirm={confirmModifyCategory}
 		badge={categoryToUpdate}
 	/>
+<<<<<<< HEAD
+=======
 	<ModalCreateCategory cancel={cancelCreateCategory} confirm={confirmCreateCategory} />
+>>>>>>> main-dev
 	<ModalValidator
 		id="modalDeleteUser"
 		message="Êtes-vous sûr de vouloir supprimer cet utilisateur ?"

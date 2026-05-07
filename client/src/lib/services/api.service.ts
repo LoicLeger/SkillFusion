@@ -89,7 +89,6 @@ export default async function api(endpoint: string, method = 'GET', body?: {}) {
 					data = null;
 				}
 			}
-
 			return { data, status: retry.status };
 		} else {
 			localStorage.removeItem('token');

@@ -1,8 +1,8 @@
-import type { Request, Response } from "express"
-import { prisma } from "../models/client"
-import z from "zod";
-import { parseIdFromParams } from "./utils";
-import { ConflictError, NotFoundError } from "../lib/errors";
+import type { Request, Response } from 'express';
+import { prisma } from '../models/client';
+import z from 'zod';
+import { parseIdFromParams } from './utils';
+import { ConflictError, NotFoundError } from '../lib/errors';
 
 export default {
     // Requête pour récuperer tous les outils
@@ -33,7 +33,7 @@ export default {
             data: {
                 name: data.name,
                 description: data.description,
-            }
+            },
         });
         res.status(201).json(createdTool);
     },
@@ -52,7 +52,7 @@ export default {
             data: {
                 name,
                 description,
-            }
+            },
         });
         res.json(updatedTool);
     },
@@ -61,7 +61,7 @@ export default {
     deleteTool: async (req: Request, res: Response) => {
         const toolId = await parseIdFromParams(req.params.id);
         await prisma.tool.delete({
-            where: { id: toolId }
+            where: { id: toolId },
         });
         res.status(204).end();
     },

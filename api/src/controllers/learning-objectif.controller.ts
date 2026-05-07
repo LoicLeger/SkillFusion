@@ -1,8 +1,8 @@
-import type { Request, Response } from "express"
-import { prisma } from "../models/client"
-import z from "zod";
-import { parseIdFromParams } from "./utils";
-import { ConflictError, NotFoundError } from "../lib/errors";
+import type { Request, Response } from 'express';
+import { prisma } from '../models/client';
+import z from 'zod';
+import { parseIdFromParams } from './utils';
+import { ConflictError, NotFoundError } from '../lib/errors';
 
 export default {
     // Requête pour récuperer tous les objectifs d'apprentissage
@@ -14,7 +14,9 @@ export default {
     // Requête pour récuperer un objectif d'apprentissage par son id
     getOneLearningObjectif: async (req: Request, res: Response) => {
         const learningObjectifId = await parseIdFromParams(req.params.id);
-        const learningObjectif = await prisma.learningObjective.findUnique({ where: { id: learningObjectifId } });
+        const learningObjectif = await prisma.learningObjective.findUnique({
+            where: { id: learningObjectifId },
+        });
         if (!learningObjectif) {
             throw new NotFoundError(`Learning Objectif with id ${learningObjectifId} not found`);
         }
@@ -33,7 +35,7 @@ export default {
             data: {
                 title: data.title,
                 description: data.description,
-            }
+            },
         });
         res.status(201).json(createdLearningObjectif);
     },
@@ -43,8 +45,8 @@ export default {
         const learningObjectifId = await parseIdFromParams(req.params.id);
         const updateLearningObjectifBodySchema = z.object({
             title: z.string().min(1),
-            description: z.string().min(1).optional(),      
-            });
+            description: z.string().min(1).optional(),
+        });
         const { title, description } = await updateLearningObjectifBodySchema.parseAsync(req.body);
 
         const updatedLearningObjectif = await prisma.learningObjective.update({
@@ -52,7 +54,7 @@ export default {
             data: {
                 title,
                 description,
-            }
+            },
         });
         res.json(updatedLearningObjectif);
     },

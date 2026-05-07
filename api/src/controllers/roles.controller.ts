@@ -1,8 +1,8 @@
-import type { Request, Response } from "express"
-import { prisma } from "../models/client"
-import z from "zod";
-import { parseIdFromParams } from "./utils";
-import { ConflictError, NotFoundError } from "../lib/errors";
+import type { Request, Response } from 'express';
+import { prisma } from '../models/client';
+import z from 'zod';
+import { parseIdFromParams } from './utils';
+import { ConflictError, NotFoundError } from '../lib/errors';
 
 export default {
     // Requête pour récuperer tous les rôles
@@ -29,7 +29,7 @@ export default {
         });
         const data = await createRoleBodySchema.parseAsync(req.body);
 
-         const alreadyExistingRole = await prisma.role.findFirst({ where: { name: data.name, } });
+        const alreadyExistingRole = await prisma.role.findFirst({ where: { name: data.name } });
         if (alreadyExistingRole) {
             throw new ConflictError(`Role name already taken : ${data.name}`);
         }
@@ -38,10 +38,9 @@ export default {
             data: {
                 name: data.name,
                 frName: data.frName,
-            }
+            },
         });
         res.status(201).json(createdRole);
-
     },
 
     // Requête pour mettre à jour un rôle
@@ -57,7 +56,7 @@ export default {
         if (!roleToUpdate) {
             throw new NotFoundError(`Role with id ${roleId} not found`);
         }
-        const alreadyExistingRole = await prisma.role.findFirst({ where:{ name: data.name } });
+        const alreadyExistingRole = await prisma.role.findFirst({ where: { name: data.name } });
         if (alreadyExistingRole) {
             throw new ConflictError(`Role name already taken : ${data.name}`);
         }
@@ -67,7 +66,7 @@ export default {
             data: {
                 name: data.name,
                 frName: data.frName,
-            }
+            },
         });
         res.json(updatedRole);
     },

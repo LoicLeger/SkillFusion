@@ -26,7 +26,11 @@
 		<form onsubmit={onSumbit}>
 			<div class="input">
 				<label for="name">Nom</label>
+<<<<<<< HEAD:client/src/lib/assets/components/DashBoard/Article/ModalModifyCategory.svelte
+				<input id="name" placeholder="Nom du badge" bind:value={name} />
+=======
 				<input id="name" placeholder="Nom de la catégorie" bind:value={name} />
+>>>>>>> main-dev:client/src/lib/assets/components/DashBoard/Category/ModalModifyCategory.svelte
 			</div>
 			<div class="input">
 				<label for="description">Description</label>

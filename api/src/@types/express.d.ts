@@ -1,8 +1,8 @@
-import { Request } from "express";
+import { Request } from 'express';
 
 export interface AuthenticatedRequest extends Request {
-  user?: {
-    userId: number;
-    role: number;
-  };
+    user?: {
+        userId: number;
+        role: number;
+    };
 }

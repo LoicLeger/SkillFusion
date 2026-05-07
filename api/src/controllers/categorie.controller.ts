@@ -1,14 +1,14 @@
-import type { Request, Response } from "express"
-import { prisma } from "../models/client"
-import z from "zod";
-import { parseIdFromParams } from "./utils";
-import { ConflictError, NotFoundError } from "../lib/errors";
-import { AuthenticatedRequest } from "../@types/express";
+import type { Request, Response } from 'express';
+import { prisma } from '../models/client';
+import z from 'zod';
+import { parseIdFromParams } from './utils';
+import { ConflictError, NotFoundError } from '../lib/errors';
+import { AuthenticatedRequest } from '../@types/express';
 
 export default {
     // Requête pour récuperer toutes les catégories
     getAll: async (req: Request, res: Response) => {
-        const categories = await prisma.category.findMany({orderBy:{id:'asc'}});
+        const categories = await prisma.category.findMany({ orderBy: { id: 'asc' } });
         res.json(categories);
     },
 
@@ -33,7 +33,9 @@ export default {
         });
         const data = await createCategoryBodySchema.parseAsync(req.body);
 
-        const alreadyExistingCategory = await prisma.category.findFirst({ where: { name: data.name } });
+        const alreadyExistingCategory = await prisma.category.findFirst({
+            where: { name: data.name },
+        });
         if (alreadyExistingCategory) {
             throw new ConflictError(`Category name already taken : ${data.name}`);
         }
@@ -45,7 +47,7 @@ export default {
                 textColor: data.textColor,
                 borderColor: data.borderColor,
                 backgroundColor: data.backgroundColor, // c'est dans le schema prisma
-            }
+            },
         });
         res.status(201).json(createdCategory);
     },
@@ -58,10 +60,11 @@ export default {
             description: z.string().optional(),
             textColor: z.string().optional(),
             borderColor: z.string().optional(),
-            backgroundColor: z.string().optional(), 
+            backgroundColor: z.string().optional(),
         });
 
-        const { name, description, textColor, borderColor, backgroundColor } = await updateCategoryBodySchema.parseAsync(req.body);
+        const { name, description, textColor, borderColor, backgroundColor } =
+            await updateCategoryBodySchema.parseAsync(req.body);
 
         const categoryToUpdate = await prisma.category.findUnique({ where: { id: categoryId } });
         if (!categoryToUpdate) {
@@ -69,15 +72,14 @@ export default {
         }
 
         //const alreadyExistingCategory = await prisma.category.findFirst({ where: { name: name } });
-        // en phase de test, je veux bien qu'on vérifie si on peut mettre le meme nom que celui qu'on modifie sans recevoir d'erreur, si erreur, je propose : 
-         const alreadyExistingCategory = await prisma.category.findFirst({ 
-            where: { name: name, id: { not: categoryId } } })// ← exclut la catégorie en cours de modification/});
-
+        // en phase de test, je veux bien qu'on vérifie si on peut mettre le meme nom que celui qu'on modifie sans recevoir d'erreur, si erreur, je propose :
+        const alreadyExistingCategory = await prisma.category.findFirst({
+            where: { name: name, id: { not: categoryId } },
+        }); // ← exclut la catégorie en cours de modification/});
 
         if (alreadyExistingCategory) {
             throw new ConflictError(`Category name already taken : ${name}`);
         }
-
 
         const updatedCategory = await prisma.category.update({
             where: { id: categoryId },
@@ -87,7 +89,7 @@ export default {
                 textColor: textColor ?? categoryToUpdate.textColor,
                 borderColor: borderColor ?? categoryToUpdate.borderColor,
                 backgroundColor: backgroundColor ?? categoryToUpdate.backgroundColor, // Présent dans le schema prisma
-            }
+            },
         });
         res.json(updatedCategory);
     },
@@ -103,4 +105,4 @@ export default {
         await prisma.category.delete({ where: { id: categoryId } });
         res.status(204).end();
     },
-}
+};

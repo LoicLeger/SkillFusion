@@ -1,11 +1,10 @@
-import type { Request, Response } from "express"
-import { prisma } from "../models/client"
-import z from "zod";
-import { parseIdFromParams } from "./utils";
-import { ForbiddenError, NotFoundError } from "../lib/errors";
-import type { AuthenticatedRequest } from "../@types/express";
-import { ROLES } from "../middlewares/rbac.middleware";
-
+import type { Request, Response } from 'express';
+import { prisma } from '../models/client';
+import z from 'zod';
+import { parseIdFromParams } from './utils';
+import { ForbiddenError, NotFoundError } from '../lib/errors';
+import type { AuthenticatedRequest } from '../@types/express';
+import { ROLES } from '../middlewares/rbac.middleware';
 
 export default {
     // Requête pour récuperer toutes les opinions
@@ -17,11 +16,13 @@ export default {
     getByUser: async (req: Request, res: Response) => {
         const coursId = await parseIdFromParams(req.params.coursId);
         const userId = await parseIdFromParams(req.params.id);
-        const opinion = await prisma.opinion.findFirst({ where: { userId: userId, coursId: coursId } })
+        const opinion = await prisma.opinion.findFirst({
+            where: { userId: userId, coursId: coursId },
+        });
         if (!opinion) {
-            return res.json({ IsOpinionExisting: false, opinion: { note: 0 } })
+            return res.json({ IsOpinionExisting: false, opinion: { note: 0 } });
         }
-        res.json({ IsOpinionExisting: true, opinion: opinion })
+        res.json({ IsOpinionExisting: true, opinion: opinion });
     },
 
     // Requête pour récuperer une opinion par son id
@@ -45,12 +46,11 @@ export default {
         const userId = req.user!.userId;
 
         const alreadyExistingOpinion = await prisma.opinion.findFirst({
-            where: { coursId: data.coursId, userId }
+            where: { coursId: data.coursId, userId },
         });
         if (alreadyExistingOpinion) {
             return res.status(204).end();
         }
-
 
         const createdOpinion = await prisma.opinion.create({
             data: {
@@ -58,11 +58,10 @@ export default {
                 note: data.note,
                 coursId: data.coursId,
                 userId,
-            }
+            },
         });
 
         res.status(201).json(createdOpinion);
-
     },
 
     // Requête pour mettre à jour une opinion
@@ -88,12 +87,11 @@ export default {
             data: {
                 content: data.content,
                 note: data.note,
-            }
+            },
         });
         res.json(updatedOpinion);
         return res.json(updatedOpinion);
     },
-
 
     // Requête pour supprimer une opinion
     deleteOpinion: async (req: AuthenticatedRequest, res: Response) => {
