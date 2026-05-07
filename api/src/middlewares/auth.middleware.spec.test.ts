@@ -39,7 +39,7 @@ describe("verifyToken", () => {
         lastname: "Doe",
         email: "john@skillfusion.io",
         password: "hashedpassword",
-        role: 0,
+        roleId: 1,
         pseudo: "johndoe",
       },
     });

@@ -30,6 +30,7 @@ before(() => {
   waitForPostgres();
 
   execSync(`npx prisma migrate deploy`, { stdio: "inherit" });
+  execSync(`npx tsx src/models/seeding.ts`, { stdio: "inherit" }); 
 
   server = app.listen(process.env.PORT);
 });
@@ -37,6 +38,7 @@ before(() => {
 beforeEach(async (t) => {
   (t as TestContext).mock.method(console, "info", () => {});
   await truncateTables();
+  await seedRoles();
 });
 
 after(async () => {
@@ -55,4 +57,14 @@ async function truncateTables() {
       END LOOP;
     END $$;
   `);
+}
+
+async function seedRoles() {
+  await prisma.role.createMany({
+    data: [
+      { name: "student", frName: "Etudiant" },
+      { name: "instructor", frName: "Formateur" },
+      { name: "admin", frName: "Administrateur" },
+    ],
+  });
 }

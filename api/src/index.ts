@@ -66,6 +66,13 @@ app.get('/', (req, res) => {
   res.send('Welcome to the SkillFusion API');
 });
 
+// Route de test pour vérifier le comportement de l'error handler
+if (process.env.NODE_ENV === 'test') {
+  app.get('/test/unhandled-error', (req, res) => {
+    throw new Error('Intentional unhandled error for testing');
+  });
+}
+
 app.use(globalErrorHandler);
 
 export default app;
