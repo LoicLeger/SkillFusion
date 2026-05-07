@@ -1,15 +1,15 @@
-import type { Request, Response } from "express"
-import argon2 from "argon2";
-import { includes, z } from "zod";
-import { prisma, User } from "../models/client";
-import { config } from "../config";
-import type { Token } from "../@types/index.d.ts";
-import { BadRequestError, ConflictError, UnauthorizedError } from "../lib/errors";
-import { generateAuthTokens } from "../lib/token";
-import jwt from "jsonwebtoken";
-import type { AuthenticatedRequest } from "../@types/express";
-import crypto from "crypto";
-import { sendVerificationEmail, sendResetPasswordEmail } from "../lib/mailer";
+import type { Request, Response } from 'express';
+import argon2 from 'argon2';
+import { includes, z } from 'zod';
+import { prisma, User } from '../models/client';
+import { config } from '../config';
+import type { Token } from '../@types/index.d.ts';
+import { BadRequestError, ConflictError, UnauthorizedError } from '../lib/errors';
+import { generateAuthTokens } from '../lib/token';
+import jwt from 'jsonwebtoken';
+import type { AuthenticatedRequest } from '../@types/express';
+import crypto from 'crypto';
+import { sendVerificationEmail, sendResetPasswordEmail } from '../lib/mailer';
 
 // Token management functions --------------------------------------------------------------------
 
@@ -182,7 +182,7 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
     const existingRefreshToken = await prisma.refreshToken.findUnique({
         where: { token: receivedRefreshToken },
-        include: { user: {include:{role:true}} },
+        include: { user: { include: { role: true } } },
     });
 
     if (!existingRefreshToken) {
@@ -195,7 +195,14 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
     setRefreshTokenCookie(res, refreshToken);
 
-    res.json({ accessToken,user:{ id: existingRefreshToken.user.id, pseudo: existingRefreshToken.user.pseudo, role: existingRefreshToken.user.role.name } });
+    res.json({
+        accessToken,
+        user: {
+            id: existingRefreshToken.user.id,
+            pseudo: existingRefreshToken.user.pseudo,
+            role: existingRefreshToken.user.role.name,
+        },
+    });
 }
 
 export async function verifyEmail(req: Request, res: Response) {

@@ -346,10 +346,10 @@ function me() {
     const e = o.__wbindgen_externrefs,
         t = e.grow(4);
     (e.set(0, void 0),
-    e.set(t + 0, void 0),
-    e.set(t + 1, null),
-    e.set(t + 2, !0),
-    e.set(t + 3, !1));
+        e.set(t + 0, void 0),
+        e.set(t + 1, null),
+        e.set(t + 2, !0),
+        e.set(t + 3, !1));
 }
 0 &&
     (module.exports = {

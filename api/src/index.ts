@@ -20,8 +20,8 @@ import notification from './routers/notification.router';
 import coursActive from './routers/cour-active.router';
 import tool from './routers/tool.router';
 import learningObjectifRouter from './routers/learning-objectif.router';
-import rolesRouter from "./routers/roles.router"
-import userHasBadge from "./routers/userHasBadge.router"
+import rolesRouter from './routers/roles.router';
+import userHasBadge from './routers/userHasBadge.router';
 
 const app = express();
 
@@ -51,22 +51,20 @@ app.use(express.json());
 app.use(xss());
 app.use(globalLimiter);
 
-
-app.use("/auth", authRouter)
-app.use("/api", coursRouter)
-app.use("/api", categorieRouter)
-app.use("/api", badgeRouter)
-app.use("/api", commentRouter)
-app.use("/api", opinionRouter)
-app.use("/api", courContent)
-app.use("/api", usersRouter);
-app.use("/api", notification);
-app.use("/api", coursActive);
-app.use("/api", tool);
-app.use("/api", learningObjectifRouter);
-app.use("/api",rolesRouter)
-app.use("/api",userHasBadge)
-
+app.use('/auth', authRouter);
+app.use('/api', coursRouter);
+app.use('/api', categorieRouter);
+app.use('/api', badgeRouter);
+app.use('/api', commentRouter);
+app.use('/api', opinionRouter);
+app.use('/api', courContent);
+app.use('/api', usersRouter);
+app.use('/api', notification);
+app.use('/api', coursActive);
+app.use('/api', tool);
+app.use('/api', learningObjectifRouter);
+app.use('/api', rolesRouter);
+app.use('/api', userHasBadge);
 
 app.get('/', (req, res) => {
     res.send('Welcome to the SkillFusion API');
