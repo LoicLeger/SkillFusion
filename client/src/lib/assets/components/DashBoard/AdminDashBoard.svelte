@@ -12,7 +12,8 @@
 	import { goto } from '$app/navigation';
 	import BodyUser from './User/BodyUser.svelte';
 	import ModalModifyBadge from './Badge/ModalModifyBadge.svelte';
-	import ModalModifyCategory from './Article/ModalModifyCategory.svelte';
+	import ModalModifyCategory from './Category/ModalModifyCategory.svelte';
+	import ModalCreateCategory from './Category/ModalCreateCategory.svelte';
 
 	let users: IUser[] = $state([]);
 	let roles: IRole[] = $state([]);
@@ -243,6 +244,40 @@
 		cancelDeleteBadge();
 	}
 
+	/* Fonction pour la craetion d'une categories */
+
+	function openModalCreateCategory() {
+		const modal = document.getElementById('modalCreateCategory') as IModal;
+		if (modal) {
+			modal.show();
+		}
+	}
+
+	function cancelCreateCategory() {
+		const modal = document.getElementById('modalCreateCategory') as IModal;
+		if (modal) {
+			modal.close();
+		}
+	}
+
+	async function confirmCreateCategory(data: { name: string; description: string }) {
+		const response = await api(`api/categories`, 'POST', { ...data });
+
+		if (response.status === 201 || response.status === 200) {
+			successMessage = 'La categorie a été crée avec succès';
+			errorMessage = '';
+			setTimeout(() => ((successMessage = ''), 5000));
+		} else {
+			errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+			successMessage = '';
+			setTimeout(() => (errorMessage = ''), 5000);
+		}
+		categoryToUpdate = null;
+		let refreshCategories = await api('api/categories');
+		categories = refreshCategories.data;
+		cancelCreateCategory();
+	}
+
 	/* Fonction pour la modification d'une categories */
 
 	function openModalModifyCategory(category: ICategory) {
@@ -441,7 +476,11 @@
 		<div class="panel">
 			<div class="panel__head">
 				<h2 class="panel__title">Gestion des catégories</h2>
-				<button class="btn-add" title="Ajouter une catégorie">+</button>
+				<button
+					class="btn-add"
+					title="Ajouter une catégorie"
+					onclick={() => openModalCreateCategory()}>+</button
+				>
 			</div>
 
 			<div class="panel__filters">
@@ -465,11 +504,13 @@
 		</div>
 	</div>
 	<ModalModifyBadge cancel={cancelModifyBadge} confirm={confirmModifyBadge} badge={badgeToUpdate} />
+
 	<ModalModifyCategory
 		cancel={cancelModifyCategory}
 		confirm={confirmModifyCategory}
 		badge={categoryToUpdate}
 	/>
+	<ModalCreateCategory cancel={cancelCreateCategory} confirm={confirmCreateCategory} />
 	<ModalValidator
 		id="modalDeleteUser"
 		message="Êtes-vous sûr de vouloir supprimer cet utilisateur ?"

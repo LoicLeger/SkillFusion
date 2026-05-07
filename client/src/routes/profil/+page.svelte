@@ -2,16 +2,24 @@
 	import Footer from '$lib/assets/components/Footer.svelte';
 	import Header from '$lib/assets/components/Header.svelte';
 	import BtnExportRGPD from '$lib/assets/components/BtnExportRGPD.svelte';
+	import '../../app.css';
 
 	import BtnDeleteAccount from '$lib/assets/components/BtnDeleteAccount.svelte';
 	import { onMount } from 'svelte';
 	import api from '$lib/services/api.service';
 	import { writable } from 'svelte/store';
-	import { authStore } from '$lib/services/localstorage.service.svelte';
+	import { authStore, getAuth } from '$lib/services/localstorage.service.svelte';
 	import { page } from '$app/state';
 	import { get } from 'svelte/store';
+	import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
+	import type { IUserHasBadge } from '$lib/@types/types';
+	import Badge from '$lib/assets/components/Badge/Badge.svelte';
+	import ModalValidator from '$lib/assets/components/Modal/ModalValidator.svelte';
+	import type { IModal } from '$lib/@types/html';
+	import ModalAssignBadge from '$lib/assets/components/Modal/ModalAssignBadge.svelte';
 
 	let user = writable({ firstname: '', lastname: '', email: '', password: '' });
+	let userLocal: IUserLocalStorage | null = $state(null);
 
 	let errorEmail = $state(false);
 	let succesMessage: string | null = $state(null);
@@ -22,7 +30,12 @@
 	let isAdmin = $derived(authStore.user?.role === 'admin');
 	let isAdminViewingOther = $derived(!isSelf && authStore.user?.role === 'admin');
 
+	let badges: IUserHasBadge[] = $state([]);
+	let badgeToDelete: number | null = $state(null);
+
 	onMount(async () => {
+		getAuth();
+		userLocal = authStore.user;
 		try {
 			if (userId) {
 				const res = await api(`api/users/${userId}`, 'GET');
@@ -34,6 +47,7 @@
 		} catch (e) {
 			console.error(e);
 		}
+		getBadge();
 	});
 
 	async function handleSubmit(event: SubmitEvent) {
@@ -94,6 +108,63 @@
 		event?.preventDefault();
 		const currentUser = $user;
 		user.set({ ...currentUser });
+	}
+
+	async function getBadge() {
+		let response = null;
+		if (userLocal?.role === 'admin' && userId) {
+			response = await api('api/badges/user/' + userId);
+		} else {
+			response = await api('api/badges/user/' + userLocal?.id);
+		}
+		badges = response.data;
+	}
+
+	async function deleteBadge(id: number) {
+		await api('api/userHAsBadge/' + id, 'DELETE');
+		getBadge();
+	}
+
+	function openModalDeleteBadge(id: number) {
+		badgeToDelete = id;
+		const modal = document.getElementById('modalDeleteBadge') as IModal;
+		if (modal) {
+			modal.show();
+		}
+	}
+
+	function cancelDeleteBadge() {
+		const modal = document.getElementById('modalDeleteBadge') as IModal;
+		if (modal) {
+			modal.close();
+		}
+	}
+
+	async function confirmDeleteBadge() {
+		await api('api/userHAsBadge/' + badgeToDelete, 'DELETE');
+		badgeToDelete = null;
+		cancelDeleteBadge();
+		getBadge();
+	}
+
+	function openModalAssignBadge() {
+		const modal = document.getElementById('modalAssignBadge') as IModal;
+		if (modal) {
+			modal.show();
+		}
+	}
+
+	function cancelAssignBadge() {
+		const modal = document.getElementById('modalAssignBadge') as IModal;
+		if (modal) {
+			modal.close();
+		}
+	}
+
+	async function confirmAssignBadge(id: number) {
+		await api('api/userHAsBadge', 'POST', { userId: Number(userId), badgeId: id });
+		cancelAssignBadge();
+		getBadge();
 	}
 </script>
 
@@ -189,29 +260,33 @@
 				</div>
 			</div>
 		</form>
-		<div class="badges-card">
-			<h2 class="badges-title">Mes badges</h2>
-			<div class="badges-list">
-				<div class="badge-item">
-					<div class="badge-icon badge-icon--gold">☆</div>
-					<span class="badge-label">Première réalisation</span>
-				</div>
-				<div class="badge-item">
-					<div class="badge-icon badge-icon--green">✓</div>
-					<span class="badge-label">Cours terminé</span>
-				</div>
-				<div class="badge-item">
-					<div class="badge-icon badge-icon--blue">↝</div>
-					<span class="badge-label">En progression</span>
-				</div>
-				<div class="badge-item">
-					<div class="badge-icon badge-icon--gray">☆</div>
-					<span class="badge-label">À débloquer</span>
+		{#if userLocal?.role != 'instructor' && userId}
+			<div class="badges-card">
+				<h2 class="badges-title">Mes badges</h2>
+				{#if userLocal?.role === 'admin'}
+					<button onclick={() => openModalAssignBadge()}>Ajouter un badge</button>
+				{/if}
+				<div class="badges-list">
+					{#each badges as badge}
+						<div>
+							<Badge badge={badge.badge} --color={badge.badge.color} />
+							{#if userLocal?.role === 'admin'}
+								<button onclick={() => openModalDeleteBadge(badge.id)}>X</button>
+							{/if}
+						</div>
+					{/each}
 				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 </div>
+<ModalValidator
+	id="modalDeleteBadge"
+	message="Êtes-vous sûr de vouloir supprimer ce badge ?"
+	cancel={cancelDeleteBadge}
+	confirm={confirmDeleteBadge}
+/>
+<ModalAssignBadge cancel={cancelAssignBadge} confirm={confirmAssignBadge} />
 
 <Footer />
 
@@ -396,53 +471,6 @@
 		gap: 24px;
 	}
 
-	.badge-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.badge-icon {
-		width: 52px;
-		height: 52px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.3rem;
-		border: 2px solid;
-	}
-
-	.badge-icon--gold {
-		border-color: #f59e0b;
-		color: #f59e0b;
-		background: #fffbeb;
-	}
-	.badge-icon--green {
-		border-color: #22c55e;
-		color: #22c55e;
-		background: #f0fdf4;
-	}
-	.badge-icon--blue {
-		border-color: #1d4e89;
-		color: #1d4e89;
-		background: #eff6ff;
-	}
-	.badge-icon--gray {
-		border-color: #d1d5db;
-		color: #d1d5db;
-		background: #f9fafb;
-	}
-
-	.badge-label {
-		font-size: 0.72rem;
-		color: #6b7280;
-		text-align: center;
-		max-width: 60px;
-		line-height: 1.3;
-	}
-
 	@media screen and (max-width: 768px) {
 		.profil-form {
 			flex-direction: column;
@@ -481,10 +509,6 @@
 			flex-wrap: wrap;
 			justify-content: center;
 			gap: 16px;
-		}
-
-		.badge-item {
-			width: 70px;
 		}
 
 		.badges-card {
