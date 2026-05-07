@@ -25,16 +25,16 @@ export default async function api(endpoint:string, method = "GET", body?:{}) {
 import { setAuth } from './localstorage.service.svelte';
 
 interface IUser {
-	id: number;
-	pseudo: string;
-	role: string;
+    id: number;
+    pseudo: string;
+    role: string;
 }
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 async function refreshAccessToken(): Promise<{
-	user: IUser;
-	accessToken: { token: string; expiresIn: number };
+    user: IUser;
+    accessToken: { token: string; expiresIn: number };
 } | null> {
     const response = await fetch(`${BASE_URL}/auth/refresh`, {
         method: 'POST',

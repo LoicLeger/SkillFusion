@@ -1,7 +1,7 @@
 interface IUser {
-	id: number;
-	pseudo: string;
-	role: string;
+    id: number;
+    pseudo: string;
+    role: string;
 }
 
 export const authStore: { user: IUser | null; token: string | null } = $state({

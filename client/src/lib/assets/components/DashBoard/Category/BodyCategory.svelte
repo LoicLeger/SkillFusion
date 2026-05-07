@@ -1,21 +1,21 @@
 <script>
-	import Category from '../../Category/Category.svelte';
+    import Category from '../../Category/Category.svelte';
 
-	const { category } = $props();
+    const { category } = $props();
 </script>
 
 <div class="category_item">
-	<Category
-		{category}
-		--text_color={category.textColor}
-		--border_color={category.borderColor}
-		--background_color={category.backgroundColor}
-	/>
+    <Category
+        {category}
+        --text_color={category.textColor}
+        --border_color={category.borderColor}
+        --background_color={category.backgroundColor}
+    />
 </div>
 
 <style>
-	.category_item {
-		display: flex;
-		padding: 10px;
-	}
+    .category_item {
+        display: flex;
+        padding: 10px;
+    }
 </style>

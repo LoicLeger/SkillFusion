@@ -1,57 +1,57 @@
 :root {
-	--background-color: #f7f4ef;
-	--background-white: #ffffff;
+    --background-color: #f7f4ef;
+    --background-white: #ffffff;
 
-	--button-text-color: #fff;
-	--button-backgroung-color: #1d4e89;
-	--button-backgroung-color-hover: #629adf;
-	--border-radius: 12px;
-	--h1-color: #1d4e89;
-	--h2-color: #f5a623;
-	--h3-color: #2c3e50;
+    --button-text-color: #fff;
+    --button-backgroung-color: #1d4e89;
+    --button-backgroung-color-hover: #629adf;
+    --border-radius: 12px;
+    --h1-color: #1d4e89;
+    --h2-color: #f5a623;
+    --h3-color: #2c3e50;
 
-	--color-notification-not-seen: #ecd7b2;
+    --color-notification-not-seen: #ecd7b2;
 
-	--color-font-delete-button: #a93226;
-	--color-background-delete-button: #fdedec;
-	--color-font-hover-delete-button: #fdedec;
-	--color-font-background-delete-button: #a93226;
+    --color-font-delete-button: #a93226;
+    --color-background-delete-button: #fdedec;
+    --color-font-hover-delete-button: #fdedec;
+    --color-font-background-delete-button: #a93226;
 
-	--color-font-modify-button: #1d4e89;
-	--color-background-modify-button: #ebf2fa;
-	--color-font-hover-modify-button: white;
-	--color-font-background-modify-button: #1d4e89;
+    --color-font-modify-button: #1d4e89;
+    --color-background-modify-button: #ebf2fa;
+    --color-font-hover-modify-button: white;
+    --color-font-background-modify-button: #1d4e89;
 
-	--size-icon-mobile: 32px;
+    --size-icon-mobile: 32px;
 }
 body {
-	min-height: 100vh;
+    min-height: 100vh;
 }
 h1 {
-	font-family: 'DM Serif Display', serif;
-	font-weight: 500;
-	color: #1d4e89;
-	font-size: 30px;
-	margin: 5px 0px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 500;
+    color: #1d4e89;
+    font-size: 30px;
+    margin: 5px 0px;
 }
 h2 {
-	font-family: 'DM Sans', sans-serif;
-	font-weight: 500;
-	color: #f5a623;
-	font-size: 15px;
-	margin: 5px 0px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #f5a623;
+    font-size: 15px;
+    margin: 5px 0px;
 }
 h3 {
-	font-family: 'DM Sans', sans-serif;
-	font-weight: 500;
-	color: #2c3e50;
-	font-size: 18px;
-	margin: 5px 0px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 18px;
+    margin: 5px 0px;
 }
 p,
 a {
-	font-family: 'DM Sans', sans-serif;
-	font-weight: 400;
-	color: #57534e;
-	font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    color: #57534e;
+    font-size: 16px;
 }
