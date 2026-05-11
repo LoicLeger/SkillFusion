@@ -81,7 +81,7 @@
         <div class="panel">
             <div class="panel__head">
                 <h2 class="panel__title">Mes succès</h2>
-                <span class="panel__count">/{userBadges.length}</span>
+                <span class="panel__count">{userBadges.length}</span>
             </div>
 
             <div class="badges-grid">

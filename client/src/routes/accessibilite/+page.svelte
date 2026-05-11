@@ -4,6 +4,9 @@
     import '../../app.css';
 </script>
 
+<svelte:head>
+    <title>Déclaration d'accessibilité</title>
+</svelte:head>
 <Header />
 
 <main class="accessibilite">
@@ -52,7 +55,7 @@
 
     <h2>Établissement de cette déclaration</h2>
     <p>
-        Cette déclaration a été établie le 23 avril 2026.<br />
+        Cette déclaration a été établie le 11 mai 2026.<br />
         Méthodologie utilisée : Auto-évaluation réalisée par l'équipe de développement, avec l'aide d'outils
         d'audit d'accessibilité.
     </p>
@@ -64,12 +67,17 @@
     </p>
     <ul>
         <li>
-            Par email : <a href="mailto:accessibilite@skillfusion.fr"
-                >accessibilite@skillfusion.fr</a
+            Par email : <a href="mailto:skillfusion.noreply@gmail.com"
+                >skillfusion.noreply@gmail.com</a
             >
         </li>
-        <li>Par téléphone : 01 23 45 67 89</li>
-        <li>Par courrier : SkillFusion, 123 Rue de l'Innovation, 75001 Paris</li>
+        <li>Par téléphone : 01 02 03 04 05</li>
+        <li>
+            Par courrier : SkillFusion<br />
+            123 Avenue Aurélie F0F<br />
+            23754642672 MaxiLearn<br />
+            Planète Mars (pas loin après la lune)
+        </li>
     </ul>
 
     <h2>Défenseur des droits</h2>

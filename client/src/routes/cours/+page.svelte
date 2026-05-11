@@ -73,6 +73,9 @@
     );
 </script>
 
+<svelte:head>
+    <title>Tous les cours</title>
+</svelte:head>
 <App>
     <Header />
     <Main>

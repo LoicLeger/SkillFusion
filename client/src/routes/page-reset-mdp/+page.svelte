@@ -34,6 +34,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Réinitialisation du mot de passe</title>
+</svelte:head>
+
 <div class="reset-password-container">
     <h1>Nouveau mot de passe</h1>
 

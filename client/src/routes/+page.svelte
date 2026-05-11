@@ -18,9 +18,11 @@
         courses = coursesResponse.data;
     });
 </script>
+
 <svelte:head>
-    <title>blablabla</title>
+    <title>Acceuil</title>
 </svelte:head>
+
 <App>
     <Header />
     <Main>

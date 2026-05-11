@@ -18,6 +18,10 @@
     import Peinture from '$lib/assets/img/Peinture.png';
 </script>
 
+<svelte:head>
+    <title>À propos de SkillFusion</title>
+</svelte:head>
+
 <App>
     <Header />
 
@@ -489,7 +493,8 @@
         anchor-name: --carousel;
         overscroll-behavior-x: contain;
         scroll-padding-inline: 10px;
-        width: 97%;
+        width: 93%;
+        margin-left: 20px;
 
         /* markers */
         scroll-marker-group: after;

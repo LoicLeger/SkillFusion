@@ -19,6 +19,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Tableau de bord</title>
+</svelte:head>
+
 <App>
     <Header />
     <Main>

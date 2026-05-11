@@ -185,6 +185,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Profil</title>
+</svelte:head>
+
 <Header />
 
 <div class="profil-container">

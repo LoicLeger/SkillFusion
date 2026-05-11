@@ -3,6 +3,10 @@
     import Header from '$lib/assets/components/Header.svelte';
 </script>
 
+<svelte:head>
+    <title>Plan du site</title>
+</svelte:head>
+
 <Header />
 
 <main class="plan-site">

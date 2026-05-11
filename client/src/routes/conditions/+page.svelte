@@ -3,6 +3,10 @@
     import Header from '$lib/assets/components/Header.svelte';
 </script>
 
+<svelte:head>
+    <title>Conditions générales d'utilisation</title>
+</svelte:head>
+
 <Header />
 
 <main class="conditions">
@@ -25,8 +29,8 @@
 
     <h2>3. Utilisation des services</h2>
     <p>
-        SkillFusion propose un catalogue de cours classés par catégories (Bricolage, petits travaux,
-        gros œuvres). Les utilisateurs peuvent suivre des cours à leur rythme et accéder à leur
+        SkillFusion propose un catalogue de cours classés par catégories (Menuiserie, Electricité,
+        plomberie, etc.). Les utilisateurs peuvent suivre des cours à leur rythme et accéder à leur
         tableau de bord personnel.
     </p>
 

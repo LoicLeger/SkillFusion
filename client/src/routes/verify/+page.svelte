@@ -28,6 +28,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Vérification de l'email</title>
+</svelte:head>
+
 <div class="verify-container">
     {#if loading}
         <p class="loading">Vérification en cours...</p>

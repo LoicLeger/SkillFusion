@@ -165,6 +165,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>{cours?.title}</title>
+</svelte:head>
+
 <App>
     <Header />
     <Main class="main-cours">

@@ -3,6 +3,10 @@
     import Header from '$lib/assets/components/Header.svelte';
 </script>
 
+<svelte:head>
+    <title>Protection des données</title>
+</svelte:head>
+
 <Header />
 
 <main class="protection-donnees">
@@ -13,8 +17,9 @@
     <h2>1. Responsable du traitement</h2>
     <p>
         <strong>SkillFusion</strong><br />
-        123 Rue de l'Innovation, 75001 Paris, France<br />
-        Email : contact@skillfusion.fr
+        123 Avenue Aurélie F0F<br />
+        23754642672 MaxiLearn<br />
+        Planète Mars (pas loin après la lune)
     </p>
 
     <h2>2. Données collectées</h2>
@@ -23,7 +28,7 @@
         <li>Données d'identification (nom, prénom, email)</li>
         <li>Données de connexion (identifiant, mot de passe hashé)</li>
         <li>Données de progression dans les cours</li>
-        <li>Données de navigation (cookies, logs)</li>
+        <li>Données de navigation (cookies)</li>
     </ul>
 
     <h2>3. Finalités du traitement</h2>
@@ -79,7 +84,7 @@
         <li>Droit d'opposition</li>
         <li>Droit à la limitation du traitement</li>
     </ul>
-    <p>Pour exercer ces droits, contactez-nous à contact@skillfusion.fr</p>
+    <p>Pour exercer ces droits, contactez-nous à skillfusion.noreply@gmail.com</p>
 
     <h2>10. Réclamation</h2>
     <p>

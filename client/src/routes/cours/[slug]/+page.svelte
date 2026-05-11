@@ -6,6 +6,10 @@
     import Main from '$lib/assets/components/Main.svelte';
 </script>
 
+<svelte:head>
+    <title>Cours</title>
+</svelte:head>
+
 <App>
     <Header />
     <Main>
