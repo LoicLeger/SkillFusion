@@ -129,6 +129,7 @@
 <Footer />
 
 <style>
+<<<<<<< HEAD
     .contact {
         max-width: 800px;
         margin: 0 auto;
@@ -212,4 +213,89 @@
     a:hover {
         text-decoration: underline;
     }
+=======
+	.contact {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+		line-height: 1.6;
+	}
+
+	h1 {
+		text-align: center;
+		margin-bottom: 30px;
+	}
+
+	h2 {
+		margin-top: 30px;
+		margin-bottom: 20px;
+		color: #333;
+	}
+
+	.contact-info {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 20px;
+		margin-bottom: 30px;
+	}
+
+	.contact-item {
+		background-color: #f8f9fa;
+		padding: 15px;
+		border-radius: 5px;
+	}
+
+	.contact-form {
+		background-color: #f8f9fa;
+		padding: 20px;
+		border-radius: 5px;
+	}
+
+	.form-group {
+		margin-bottom: 15px;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 5px;
+		font-weight: bold;
+	}
+
+	input,
+	select,
+	textarea {
+		width: 100%;
+		padding: 8px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 14px;
+	}
+
+	textarea {
+		resize: vertical;
+	}
+
+	.submit-btn {
+		background-color: #007bff;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 16px;
+	}
+
+	.submit-btn:hover {
+		background-color: #0056b3;
+	}
+
+	a {
+		color: #007bff;
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+>>>>>>> main
 </style>

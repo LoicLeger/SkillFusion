@@ -47,7 +47,7 @@ const config = {
                 // Requêtes HTTP (fetch, XHR) :
                 // - 'self' → appels vers ton propre domaine
                 // - URL Railway → ton API en production
-                'connect-src': ['self', 'https://skillfusion-production.up.railway.app']
+                'connect-src': ['self', 'http://localhost:3000', 'https://skillfusion-production.up.railway.app'],
             }
         }
     }

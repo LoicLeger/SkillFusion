@@ -87,6 +87,7 @@
 <Footer />
 
 <style>
+<<<<<<< HEAD
     .conditions {
         max-width: 800px;
         margin: 0 auto;
@@ -117,4 +118,36 @@
     li {
         margin-bottom: 5px;
     }
+=======
+	.conditions {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+		line-height: 1.6;
+	}
+
+	h1 {
+		text-align: center;
+		margin-bottom: 30px;
+	}
+
+	h2 {
+		margin-top: 30px;
+		margin-bottom: 10px;
+		color: #333;
+	}
+
+	p {
+		margin-bottom: 15px;
+	}
+
+	ul {
+		margin-bottom: 15px;
+		padding-left: 20px;
+	}
+
+	li {
+		margin-bottom: 5px;
+	}
+>>>>>>> main
 </style>

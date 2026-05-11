@@ -23,7 +23,6 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token, password })
         });
-
         const data = await res.json();
 
         if (res.ok) {

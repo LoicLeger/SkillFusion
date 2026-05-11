@@ -30,7 +30,7 @@
         <a class="logo_site" href="/"> <img src={logoSkillFusion} alt="SkillFusion" /></a>
         <!-- Bouton de connxion/d'inscription -->
         <div class="header__actions">
-            <DarkMode />
+            <!-- <DarkMode /> -->
             {#if user}
                 <a href="/profil" class="header__pseudo" data-sveltekit-reload>{user.pseudo}</a>
                 <button class="header__btn-logout" onclick={logout}>⏻</button>
