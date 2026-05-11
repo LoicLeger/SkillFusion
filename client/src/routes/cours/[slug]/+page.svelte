@@ -196,221 +196,226 @@
     <Header />
     <Main>
         <div class="back-cours">
-    <a href="/cours" class="back-link">← Tous les cours</a>
-</div>
-
-{#if cours}
-    <div class="page">
-        <!-- HEADER -->
-        <div class="header">
-            {#if modifier}
-                <input class="edit-input" bind:value={editData.title} />
-            {:else}
-                <h1>{cours.title}</h1>
-            {/if}
-            <Category
-                category={cours.category}
-                --border_color={cours.category.borderColor}
-                --text_color={cours.category.textColor}
-            />
+            <a href="/cours" class="back-link">← Tous les cours</a>
         </div>
 
-        <!-- MAIN -->
-        {#if authStore.user?.role === 'admin' || authStore.user?.id === cours.authorId}
-            <div class="card top">
-                <button class="button" onclick={changeVisibility}
-                    >Rendre le cours {visibility ? 'priver' : 'public'}</button
-                >
-                <button
-                    class="button"
-                    onclick={() => {
-                        handleModify();
-                    }}>{textButton}</button
-                >
-                {#if modifier}
-                    <button class="button" onclick={saveCours}>Enregistrer les modifications</button
-                    >
-                {/if}
-
-                <button class="button" onclick={modalDeleteCours}>Supprimer le cours</button>
-            </div>
-        {/if}
-        <div class="layout">
-            <div class="card side mobile-only">
-                <div class="section">
-                    <p class="label">Difficulté</p>
-                    <LevelBar class="difficulty-bar" level={cours.difficulty} />
-                </div>
-            </div>
-            <!-- LEFT -->
-            <div class="left">
-                <div class="card">
-                    <div class="card-title">Résumé</div>
+        {#if cours}
+            <div class="page">
+                <!-- HEADER -->
+                <div class="header">
                     {#if modifier}
-                        <textarea class="edit-textarea" bind:value={editData.littleSummary}
-                        ></textarea>
+                        <input class="edit-input" bind:value={editData.title} />
                     {:else}
-                        <p>{cours.littleSummary}</p>
+                        <h1>{cours.title}</h1>
                     {/if}
+                    <Category
+                        category={cours.category}
+                        --border_color={cours.category.borderColor}
+                        --text_color={cours.category.textColor}
+                    />
                 </div>
 
-                <!-- MOBILE OBJECTIFS -->
-                <div class="card mobile-only">
-                    <div class="card-title">Objectifs</div>
-                    <ul class="list">
-                        {#each cours.learningObjectives as obj (obj.id)}
-                            <li>{obj.objectif.title}</li>
-                        {/each}
-                    </ul>
-                </div>
+                <!-- MAIN -->
+                {#if authStore.user?.role === 'admin' || authStore.user?.id === cours.authorId}
+                    <div class="card top">
+                        <button class="button" onclick={changeVisibility}
+                            >Rendre le cours {visibility ? 'priver' : 'public'}</button
+                        >
+                        <button
+                            class="button"
+                            onclick={() => {
+                                handleModify();
+                            }}>{textButton}</button
+                        >
+                        {#if modifier}
+                            <button class="button" onclick={saveCours}
+                                >Enregistrer les modifications</button
+                            >
+                        {/if}
 
-                <!-- AVIS -->
-                <div class="opinion">
-                    <div class="card opinions">
-                        <div class="opinions_presentation">
-                            <div class="card-title dark">Avis des apprenants</div>
-                            {#if authStore.user?.role === 'student'}
-                                {#if alreadyOpinion?.IsOpinionExisting == true}
-                                    <button class="btn-add" onclick={modalAddOpinion}>
-                                        Modifier mon avis sur le cours
-                                    </button>
-                                    <button class="btn-add" onclick={modalDeleteOpinion}
-                                        >Supprimer mon avis</button
-                                    >
-                                {:else}
-                                    <button class="btn-add" onclick={modalAddOpinion}>
-                                        Mettre un avis sur ce cours
-                                    </button>
-                                {/if}
+                        <button class="button" onclick={modalDeleteCours}>Supprimer le cours</button
+                        >
+                    </div>
+                {/if}
+                <div class="layout">
+                    <div class="card side mobile-only">
+                        <div class="section">
+                            <p class="label">Difficulté</p>
+                            <LevelBar class="difficulty-bar" level={cours.difficulty} />
+                        </div>
+                    </div>
+                    <!-- LEFT -->
+                    <div class="left">
+                        <div class="card">
+                            <div class="card-title">Résumé</div>
+                            {#if modifier}
+                                <textarea class="edit-textarea" bind:value={editData.littleSummary}
+                                ></textarea>
+                            {:else}
+                                <p>{cours.littleSummary}</p>
                             {/if}
                         </div>
-                        {#each cours.opinions as opinion, i (opinion.id)}
-                            <div class="review {i === 0 ? 'first' : ''}">
-                                <div class="review-top">
-                                    <div class="avatar"></div>
 
-                                    <div>
-                                        <div class="name">{opinion.user.pseudo}</div>
-                                        <div class="stars">
-                                            {#each getStars(opinion.note) as type}
-                                                <span class="star-{type}">★</span>
-                                            {/each}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="text">{opinion.content}</div>
-                            </div>
-                        {/each}
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="right">
-                <div class="card side desktop-only">
-                    <div class="section">
-                        <p class="label">Difficulté</p>
-                        {#if modifier}
-                            <div class="section">
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="4"
-                                    bind:value={editData.difficulty}
-                                />
-                                <span class="difficulty-value">{editData.difficulty}</span>
-                            </div>
-                        {:else}
-                            <LevelBar class="difficulty-bar" level={cours.difficulty} />
-                        {/if}
-                    </div>
-
-                    <div class="section desktop-only">
-                        <p class="label">OBJECTIFS PÉDAGOGIQUES</p>
-                        {#if modifier}
-                            <ul class="list">
-                                {#each cours.learningObjectives as obj (obj.id)}
-                                    <li>
-                                        <input class="edit-input" value={obj.objectif.title} />
-                                    </li>
-                                {/each}
-                            </ul>
-                            <button class="btn-add" onclick={addLearningObjective}
-                                >Ajouter un objectif</button
-                            >
-                        {:else}
+                        <!-- MOBILE OBJECTIFS -->
+                        <div class="card mobile-only">
+                            <div class="card-title">Objectifs</div>
                             <ul class="list">
                                 {#each cours.learningObjectives as obj (obj.id)}
                                     <li>{obj.objectif.title}</li>
                                 {/each}
                             </ul>
-                        {/if}
-                    </div>
-                    <div class="tool-mobile">
-                        <div class="section">
-                            <p class="label">OUTILS NÉCESSAIRES</p>
-                            {#if modifier}
-                                <ul class="list">
-                                    {#each cours.tools as tool (tool.id)}
-                                        <li>
-                                            <input
-                                                class="edit-input"
-                                                value={tool.tools.name}
-                                                onblur={(e) =>
-                                                    updateTool(
-                                                        tool.tools.id,
-                                                        e.currentTarget.value
-                                                    )}
-                                            />
-                                        </li>
-                                    {/each}
-                                </ul>
-                            {:else}
-                                <ul class="list">
-                                    {#each cours.tools as tool (tool.id)}
-                                        <li>{tool.tools.name}</li>
-                                    {/each}
-                                </ul>
-                            {/if}
+                        </div>
+
+                        <!-- AVIS -->
+                        <div class="opinion">
+                            <div class="card opinions">
+                                <div class="opinions_presentation">
+                                    <div class="card-title dark">Avis des apprenants</div>
+                                    {#if authStore.user?.role === 'student'}
+                                        {#if alreadyOpinion?.IsOpinionExisting == true}
+                                            <button class="btn-add" onclick={modalAddOpinion}>
+                                                Modifier mon avis sur le cours
+                                            </button>
+                                            <button class="btn-add" onclick={modalDeleteOpinion}
+                                                >Supprimer mon avis</button
+                                            >
+                                        {:else}
+                                            <button class="btn-add" onclick={modalAddOpinion}>
+                                                Mettre un avis sur ce cours
+                                            </button>
+                                        {/if}
+                                    {/if}
+                                </div>
+                                {#each cours.opinions as opinion, i (opinion.id)}
+                                    <div class="review {i === 0 ? 'first' : ''}">
+                                        <div class="review-top">
+                                            <div class="avatar"></div>
+
+                                            <div>
+                                                <div class="name">{opinion.user.pseudo}</div>
+                                                <div class="stars">
+                                                    {#each getStars(opinion.note) as type}
+                                                        <span class="star-{type}">★</span>
+                                                    {/each}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text">{opinion.content}</div>
+                                    </div>
+                                {/each}
+                            </div>
                         </div>
                     </div>
-                </div>
-                {#if user}
-                    <a
-                        onclick={addCoursActiveToStudent}
-                        class="cta"
-                        href="/cours/{cours.slug}/cours">Démarrer le cours →</a
-                    >
-                {:else}
-                    <p>Pour commencer le cours, vous devez être connectés :</p>
-                    <div class="btn-content">
-                        <a href="/connexion" class="header__btn-login">Connexion</a>
-                        <a href="/inscription" class="header__btn-register">S'inscrire</a>
+
+                    <!-- RIGHT -->
+                    <div class="right">
+                        <div class="card side desktop-only">
+                            <div class="section">
+                                <p class="label">Difficulté</p>
+                                {#if modifier}
+                                    <div class="section">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="4"
+                                            bind:value={editData.difficulty}
+                                        />
+                                        <span class="difficulty-value">{editData.difficulty}</span>
+                                    </div>
+                                {:else}
+                                    <LevelBar class="difficulty-bar" level={cours.difficulty} />
+                                {/if}
+                            </div>
+
+                            <div class="section desktop-only">
+                                <p class="label">OBJECTIFS PÉDAGOGIQUES</p>
+                                {#if modifier}
+                                    <ul class="list">
+                                        {#each cours.learningObjectives as obj (obj.id)}
+                                            <li>
+                                                <input
+                                                    class="edit-input"
+                                                    value={obj.objectif.title}
+                                                />
+                                            </li>
+                                        {/each}
+                                    </ul>
+                                    <button class="btn-add" onclick={addLearningObjective}
+                                        >Ajouter un objectif</button
+                                    >
+                                {:else}
+                                    <ul class="list">
+                                        {#each cours.learningObjectives as obj (obj.id)}
+                                            <li>{obj.objectif.title}</li>
+                                        {/each}
+                                    </ul>
+                                {/if}
+                            </div>
+                            <div class="tool-mobile">
+                                <div class="section">
+                                    <p class="label">OUTILS NÉCESSAIRES</p>
+                                    {#if modifier}
+                                        <ul class="list">
+                                            {#each cours.tools as tool (tool.id)}
+                                                <li>
+                                                    <input
+                                                        class="edit-input"
+                                                        value={tool.tools.name}
+                                                        onblur={(e) =>
+                                                            updateTool(
+                                                                tool.tools.id,
+                                                                e.currentTarget.value
+                                                            )}
+                                                    />
+                                                </li>
+                                            {/each}
+                                        </ul>
+                                    {:else}
+                                        <ul class="list">
+                                            {#each cours.tools as tool (tool.id)}
+                                                <li>{tool.tools.name}</li>
+                                            {/each}
+                                        </ul>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        {#if user}
+                            <a
+                                onclick={addCoursActiveToStudent}
+                                class="cta"
+                                href="/cours/{cours.slug}/cours">Démarrer le cours →</a
+                            >
+                        {:else}
+                            <p>Pour commencer le cours, vous devez être connectés :</p>
+                            <div class="btn-content">
+                                <a href="/connexion" class="header__btn-login">Connexion</a>
+                                <a href="/inscription" class="header__btn-register">S'inscrire</a>
+                            </div>
+                        {/if}
                     </div>
-                {/if}
+                </div>
             </div>
-        </div>
-    </div>
-    <ModalValidator
-        id="DeleteCours"
-        message="Voulez vous supprimer la page ?"
-        cancel={closeDeleteCoursModale}
-        confirm={deleteCours}
-    />
-    <ModalValidator
-        id="DeleteOpinion"
-        message="Êtes vous sur de vouloir supprimer votre avis ?"
-        cancel={closeDeleteOpinion}
-        confirm={deleteOpinion}
-    />
-{/if}
-<ModalOpinion
-    message="Veuillez laisser votre avis : "
-    cancel={closeDeleteOpinionModale}
-    confirm={alreadyOpinion?.IsOpinionExisting == false ? ValidateDataModal : patchOpinions}
-    opinion={alreadyOpinion}
-/>
+            <ModalValidator
+                id="DeleteCours"
+                message="Voulez vous supprimer la page ?"
+                cancel={closeDeleteCoursModale}
+                confirm={deleteCours}
+            />
+            <ModalValidator
+                id="DeleteOpinion"
+                message="Êtes vous sur de vouloir supprimer votre avis ?"
+                cancel={closeDeleteOpinion}
+                confirm={deleteOpinion}
+            />
+        {/if}
+        <ModalOpinion
+            message="Veuillez laisser votre avis : "
+            cancel={closeDeleteOpinionModale}
+            confirm={alreadyOpinion?.IsOpinionExisting == false ? ValidateDataModal : patchOpinions}
+            opinion={alreadyOpinion}
+        />
     </Main>
     <Footer />
 </App>
@@ -698,4 +703,3 @@
         }
     }
 </style>
-
