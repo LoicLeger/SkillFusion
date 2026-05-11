@@ -173,7 +173,6 @@
     <Header />
     <Main class="main-cours">
         {#if cours && coursContent}
-        
             <div class="cours_header">
                 <h1>{cours.title}</h1>
                 <div class="header-right">
