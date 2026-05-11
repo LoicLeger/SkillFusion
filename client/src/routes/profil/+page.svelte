@@ -15,6 +15,8 @@
     import ModalValidator from '$lib/assets/components/Modal/ModalValidator.svelte';
     import type { IModal } from '$lib/@types/html';
     import ModalAssignBadge from '$lib/assets/components/Modal/ModalAssignBadge.svelte';
+    import App from '$lib/assets/components/App.svelte';
+    import Main from '$lib/assets/components/Main.svelte';
 
     let user: IUser | null = $state(null);
     let userLocal: IUserLocalStorage | null = $state(null);
@@ -221,76 +223,99 @@
 <svelte:head>
     <title>Profil</title>
 </svelte:head>
-
-<Header />
-
-<div class="profil-container">
-    <a class="back" href="/tableau-de-bord">⬅ Retour au tableau de bord</a>
-    <h1 class="title-page">Mes informations</h1>
-    {#if isAdminViewingOther}
-        <p class="text-sm text-gray-500">Mode lecture admin</p>
-    {/if}
-    <div class="profil-wrapper">
-        <form class="profil-form" onsubmit={handleSubmit}>
-            <div class="form-fields">
-                <div class="form-group">
-                    <span class="form-name">
-                        <label for="name">Nom </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={user?.firstname}
-                            disabled={!isSelf}
-                            placeholder="Dupont"
-                        />
-                    </span>
-                    <span class="form-firstname">
-                        <label for="firstname">Prénom </label>
-                        <input
-                            type="text"
-                            id="firstname"
-                            name="firstname"
-                            value={user?.firstname}
-                            disabled={!isSelf}
-                            placeholder="Jean"
-                        />
-                    </span>
+<App>
+    <Header />
+    <Main>
+        <a class="back" href="/tableau-de-bord">⬅ Retour au tableau de bord</a>
+        <h1 class="title-page">Mes informations</h1>
+        {#if isAdminViewingOther}
+            <p class="text-sm text-gray-500">Mode lecture admin</p>
+        {/if}
+        <div class="profil-wrapper">
+            <form class="profil-form" onsubmit={handleSubmit}>
+                <div class="form-fields">
+                    <div class="form-group">
+                        <span class="form-name">
+                            <label for="name">Nom </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={user?.firstname}
+                                disabled={!isSelf}
+                                placeholder="Dupont"
+                            />
+                        </span>
+                        <span class="form-firstname">
+                            <label for="firstname">Prénom </label>
+                            <input
+                                type="text"
+                                id="firstname"
+                                name="firstname"
+                                value={user?.firstname}
+                                disabled={!isSelf}
+                                placeholder="Jean"
+                            />
+                        </span>
+                    </div>
+                    <div class="form-groups">
+                        <span class="form-email">
+                            <label for="email">E-mail</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={user?.email}
+                                disabled={!isSelf}
+                                placeholder="jean.dupont@email.com"
+                            />
+                            {#if errorEmail}
+                                <p style="color:red;">Email déjà utilisé</p>
+                            {/if}
+                        </span>
+                        <span class="form-password">
+                            <label for="password">Mot de passe</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Modifier mon mot de passe"
+                                disabled={!isSelf}
+                            />
+                        </span>
+                    </div>
+                    {#if isSelf}
+                        <div class="btn-modify">
+                            <button class="btn-update" type="submit"
+                                >Enregistrer les modifications</button
+                            >
+                            <button class="btn-cancel" type="submit">Annuler</button>
+                            <BtnExportRGPD />
+                            <BtnDeleteAccount />
+                        </div>
+                    {/if}
+                    {#if succesMessage}
+                        <p style="color:green; font-weight: bold; margin-top: 20px;">
+                            {succesMessage}
+                        </p>
+                    {/if}
                 </div>
-                <div class="form-groups">
-                    <span class="form-email">
-                        <label for="email">E-mail</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={user?.email}
-                            disabled={!isSelf}
-                            placeholder="jean.dupont@email.com"
-                        />
-                        {#if errorEmail}
-                            <p style="color:red;">Email déjà utilisé</p>
-                        {/if}
-                    </span>
-                    <span class="form-password">
-                        <label for="password">Mot de passe</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Modifier mon mot de passe"
-                            disabled={!isSelf}
-                        />
-                    </span>
-                </div>
-                {#if isSelf}
-                    <div class="btn-modify">
-                        <button class="btn-update" type="submit"
-                            >Enregistrer les modifications</button
+
+                <div class="avatar-box">
+                    <button class="avatar-edit" type="button">✎</button>
+                    <div class="avatar-icon">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#1d4e89"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
                         >
-                        <button class="btn-cancel" type="submit">Annuler</button>
-                        <BtnExportRGPD />
-                        <BtnDeleteAccount />
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
                     </div>
                 {/if}
                 {#if succesMessage}
@@ -363,24 +388,54 @@
                         </div>
                     {/each}
                 </div>
-            </div>
-        {/if}
-    </div>
-</div>
-<ModalValidator
-    id="modalDeleteBadge"
-    message="Êtes-vous sûr de vouloir supprimer ce badge ?"
-    cancel={cancelDeleteBadge}
-    confirm={confirmDeleteBadge}
-/>
-<ModalAssignBadge cancel={cancelAssignBadge} confirm={confirmAssignBadge} />
-<ModalValidator
-    id="modalModifyRole"
-    message="Vous allez changer le role de l'utilisateur"
-    cancel={cancelModifyRole}
-    confirm={confirmModifyRole}
-/>
-<Footer />
+            </form>
+            {#if userLocal?.role == 'admin' && page.url.searchParams.get('id')}
+                <div class="div-role">
+                    <label for="role">Role de l'utilisateur</label>
+                    <select bind:value={userRole} onchange={openModalModifyRole}>
+                        {#each roles as role (role.id)}
+                            <option value={role.id}>{role.frName}</option>
+                        {/each}
+                    </select>
+                </div>
+            {/if}
+
+            {#if userLocal?.role != 'instructor' && page.url.searchParams.get('id')}
+                <div class="badges-card">
+                    <h2 class="badges-title">Mes badges</h2>
+                    {#if userLocal?.role === 'admin'}
+                        <button onclick={() => openModalAssignBadge()}>Ajouter un badge</button>
+                    {/if}
+                    <div class="badges-list">
+                        {#each badges as badge (badge.id)}
+                            <div>
+                                <Badge badge={badge.badge} --color={badge.badge.color} />
+                                {#if userLocal?.role === 'admin'}
+                                    <button onclick={() => openModalDeleteBadge(badge.id)}>X</button
+                                    >
+                                {/if}
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+        </div>
+        <ModalValidator
+            id="modalDeleteBadge"
+            message="Êtes-vous sûr de vouloir supprimer ce badge ?"
+            cancel={cancelDeleteBadge}
+            confirm={confirmDeleteBadge}
+        />
+        <ModalAssignBadge cancel={cancelAssignBadge} confirm={confirmAssignBadge} />
+        <ModalValidator
+            id="modalModifyRole"
+            message="Vous allez changer le role de l'utilisateur"
+            cancel={cancelModifyRole}
+            confirm={confirmModifyRole}
+        />
+    </Main>
+    <Footer />
+</App>
 
 <style>
     :global(body) {
