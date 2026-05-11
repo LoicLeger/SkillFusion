@@ -1,16 +1,15 @@
 <script>
     const props = $props();
 
-    let title=$state("")
-    let summary=$state("")
+    let title = $state('');
+    let summary = $state('');
 
-
-    $effect(()=>{
-        title=props.cours?.title 
-        summary=props.cours?.summary
-    })
-    function confirm(){
-        props.confirm()
+    $effect(() => {
+        title = props.cours?.title;
+        summary = props.cours?.summary;
+    });
+    function confirm() {
+        props.confirm();
     }
 </script>
 
@@ -39,11 +38,11 @@
                 <div>
                     <label for="difficulty">Difficulté cours : </label>
                     <select id="difficulty">
-                        <option value=0 selected>Débutant</option>
-                        <option value=1>Facile</option>
-                        <option value=2>Intermédiaire</option>
-                        <option value=3>Difficile</option>
-                        <option value=4>Expert</option>
+                        <option value="0" selected>Débutant</option>
+                        <option value="1">Facile</option>
+                        <option value="2">Intermédiaire</option>
+                        <option value="3">Difficile</option>
+                        <option value="4">Expert</option>
                     </select>
                 </div>
             </form>
