@@ -24,6 +24,15 @@
 
     --size-icon-mobile: 32px;
 }
+
+:root.dark {
+    --background-color: #1a1a2e;
+    --background-white: #16213e;
+    --h1-color: #90caf9;
+    --button-backgroung-color: #0f3460;
+    --color-text: #fbf5ec;     
+}
+
 body {
     min-height: 100vh;
 }

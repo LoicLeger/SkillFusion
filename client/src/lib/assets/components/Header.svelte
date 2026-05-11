@@ -6,6 +6,8 @@
     import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
     import { goto } from '$app/navigation';
     import api from '$lib/services/api.service';
+    import DarkMode from './Dark/DarkMode.svelte';
+    import "../../../app.css";
 
     let user: IUserLocalStorage | null = $state(null);
 
@@ -28,6 +30,7 @@
         <a class="logo_site" href="/"> <img src={logoSkillFusion} alt="SkillFusion" /></a>
         <!-- Bouton de connxion/d'inscription -->
         <div class="header__actions">
+            <DarkMode />
             {#if user}
                 <a href="/profil" class="header__pseudo" data-sveltekit-reload>{user.pseudo}</a>
                 <button class="header__btn-logout" onclick={logout}>⏻</button>
@@ -49,12 +52,12 @@
 
 <style>
     .header {
-        background-color: white;
+        background-color: var(--background-white);
         position: relative;
-        --blue: #1d4e89;
-        --blue-light: #ebf2fa;
-        --amber: #f5a623;
-        --dark: #2c3e50;
+        --blue: var(--h1-color);
+        --blue-light: var(--color-background-modify-button);
+        --amber: var(--h2-color);
+        --dark: var(--h3-color);
         --gray: #6b7280;
         --border: rgba(44, 62, 80, 0.1);
         --white: #ffffff;
@@ -89,7 +92,7 @@
         border-radius: var(--radius);
         font-size: 14px;
         font-weight: 500;
-        color: #1d4e89;
+        color: var(--h1-color);
         text-decoration: none;
         transition:
             background 0.15s,
@@ -114,7 +117,7 @@
         flex-shrink: 0;
     }
     nav a {
-        background-color: #ebf2fa;
+        background-color: var(--color-background-modify-button);
     }
     .header__btn-login {
         padding: 8px 18px;

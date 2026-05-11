@@ -1,4 +1,6 @@
 <script>
+    import "../../../app.css";
+
     const currentYear = new Date().getFullYear();
 
     const links = [
@@ -27,14 +29,14 @@
 
 <style>
     .footer {
-        background-color: white;
-        --blue: #1d4e89;
-        --blue-light: #ebf2fa;
-        --amber: #f5a623;
-        --dark: #2c3e50;
+        background-color: var(--background-white);
+        --blue: var(--h1-color);
+        --blue-light: var(--color-background-modify-button);
+        --amber: var(--h2-color);
+        --dark: var(--h3-color);
         --gray: #6b7280;
         --border: rgba(44, 62, 80, 0.1);
-        --white: #ffffff;
+        --white: var(--background-white);
         --font: 'DM Sans', sans-serif;
 
         background: var(--white);
