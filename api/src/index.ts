@@ -41,14 +41,15 @@ app.use(helmet());
         crossOriginResourcePolicy: { policy: 'cross-origin' },
     })
 ); */
-//app.use(cors({ origin: config.allowedOrigins }));
-app.use(
+
+app.use(cors());
+/* app.use(
     cors({
         origin: config.corsOriginUrl,
         credentials: true,
         allowedHeaders: ['Authorization', 'Content-Type'],
     })
-);
+); */
 app.use(cookieParser());
 app.use(express.json({ limit: '5mb' })); // Limite à 5mb pour la photo
 app.use(xss());
