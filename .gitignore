@@ -9,6 +9,7 @@ api/generated/prisma
 
 client/build
 client/.svelte-kit
+api/uploads
 
 # OS
 .DS_Store

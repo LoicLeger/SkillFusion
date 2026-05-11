@@ -152,6 +152,7 @@ export async function getAuthenticatedUser(req: AuthenticatedRequest, res: Respo
         firstname: user.firstname,
         lastname: user.lastname,
         role: user.roleId,
+        urlProfilImage: user.urlProfilImage,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
     });

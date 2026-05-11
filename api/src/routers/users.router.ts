@@ -2,6 +2,8 @@ import { Router } from 'express';
 import usersController from '../controllers/users.controller';
 import { verifyToken } from '../middlewares/auth.middleware';
 import { checkRoles, ROLES } from '../middlewares/rbac.middleware';
+import { uploadAvatar } from '../middlewares/upload.middleware';
+
 
 export const router = Router();
 
@@ -19,6 +21,7 @@ router.post('/users', verifyToken, checkRoles([ROLES.ADMIN]), usersController.cr
 
 // PATCH — ownership vérifié dans le controller
 router.patch('/users/:id', verifyToken, usersController.updateUser);
+router.patch('/users/:id/avatar', verifyToken, uploadAvatar.single('avatar'), usersController.uploadAvatar);
 
 // Routes - Delete
 router.delete('/users/me', verifyToken, usersController.deleteMyAccount);

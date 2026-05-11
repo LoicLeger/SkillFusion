@@ -47,10 +47,11 @@ app.use(
     })
 );
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' })); // Limite à 5mb pour la photo
 app.use(xss());
 app.use(globalLimiter);
 
+app.use('/uploads', express.static('uploads'));
 app.use('/auth', authRouter);
 app.use('/api', coursRouter);
 app.use('/api', categorieRouter);

@@ -255,4 +255,34 @@ export default {
         await prisma.user.delete({ where: { id: userId } });
         res.status(204).send();
     },
+
+    uploadAvatar: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = await parseIdFromParams(req.params.id);
+
+        if (userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
+            throw new ForbiddenError("Vous n'êtes pas autorisé");
+        }
+
+        if (!req.file) {
+            throw new Error('Aucun fichier reçu');
+        }
+
+        const urlProfilImage = `/uploads/${req.file.filename}`;
+
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: {
+                pseudo: data.pseudo,
+                email: data.email,
+                password: hashedPassword,
+                firstname: data.firstname,
+                lastname: data.lastname,
+                urlProfilImage: data.urlProfilImage,
+                roleId: data.roleId,
+            },
+            omit: { password: true },
+            include: { role: true },
+        });
+        res.status(200).json(updatedUser);
+    }
 };
