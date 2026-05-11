@@ -1,4 +1,5 @@
 import { setAuth } from './localstorage.service.svelte';
+import { goto } from '$app/navigation';
 
 interface IUser {
     id: number;
@@ -69,7 +70,7 @@ export default async function api(endpoint: string, method = 'GET', body: object
         } else {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/connexion';
+            goto('/connexion');
             return { data: null, status: 401 };
         }
     }

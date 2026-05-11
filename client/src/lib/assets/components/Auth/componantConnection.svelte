@@ -3,12 +3,25 @@
     import api from '$lib/services/api.service';
     import { setAuth } from '$lib/services/localstorage.service.svelte';
 
+    let errorMessage = $state('');
+
     const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
-        event.preventDefault();
+        errorMessage = '';
         const formData = new FormData(event.target as HTMLFormElement);
         const email = formData.get('email');
         const password = formData.get('password');
         const token = await api('auth/login', 'POST', { email, password });
+
+        if (!token?.data?.accessToken) {
+            errorMessage = 'Email ou mot de passe incorrect.';
+
+            setTimeout(() => {
+                errorMessage = '';
+            }, 5000);
+
+            return;
+        }
+
         setAuth(token.data.user, token.data.accessToken.token);
         goto('/');
     };
@@ -19,6 +32,9 @@
     <h1>Connexion</h1>
     <span class="introduction"><p>Content de te revoir !</p></span>
     <form class="connection-form" onsubmit={onSubmitForm}>
+        {#if errorMessage}
+            <p class="msg-error">{errorMessage}</p>
+        {/if}
         <label for="email">Identifiant</label>
         <input type="email" id="email" name="email" placeholder="Email ou pseudo" required />
 
@@ -122,6 +138,16 @@
     .btn-reset-password {
         text-decoration: none;
         color: #1d4e89;
+    }
+
+    .msg-error {
+        background: #fee2e2;
+        color: #dc2626;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 0.875rem;
+        margin-bottom: 10px;
+        text-align: center;
     }
 
     @media (min-width: 1024px) {
