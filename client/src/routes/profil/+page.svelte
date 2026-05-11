@@ -12,13 +12,13 @@
     import { page } from '$app/state';
     import { get } from 'svelte/store';
     import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
-    import type { IUserHasBadge } from '$lib/@types/types';
+    import type { IRole, IUser, IUserHasBadge } from '$lib/@types/types';
     import Badge from '$lib/assets/components/Badge/Badge.svelte';
     import ModalValidator from '$lib/assets/components/Modal/ModalValidator.svelte';
     import type { IModal } from '$lib/@types/html';
     import ModalAssignBadge from '$lib/assets/components/Modal/ModalAssignBadge.svelte';
 
-    let user = writable({ firstname: '', lastname: '', email: '', password: '' });
+    let user: IUser | null = $state(null);
     let userLocal: IUserLocalStorage | null = $state(null);
 
     let errorEmail = $state(false);
@@ -32,16 +32,21 @@
     let badges: IUserHasBadge[] = $state([]);
     let badgeToDelete: number | null = $state(null);
 
+    let roles: IRole[] = $state([]);
+    let userRole = $state();
     onMount(async () => {
         getAuth();
         userLocal = authStore.user;
         try {
             if (userId) {
                 const res = await api(`api/users/${userId}`, 'GET');
-                user.set(res.data);
+                user = res.data;
+                const responseRole = await api('api/roles');
+                roles = responseRole.data;
+                userRole = user?.role.id;
             } else {
                 const res = await api('auth/me', 'GET');
-                user.set(res.data);
+                user = res.data;
             }
         } catch (e) {
             console.error(e);
@@ -60,7 +65,7 @@
         };
 
         // Supprimer les champs vides pour éviter de les envoyer à l'API
-        const currentUser = get(user);
+        const currentUser = user;
 
         if (!updatedUser.password) {
             delete updatedUser.password; // Ne pas inclure le champ password si il est vide
@@ -154,6 +159,30 @@
         cancelAssignBadge();
         getBadge();
     }
+
+    function openModalModifyRole() {
+        const modal = document.getElementById('modalModifyRole') as IModal;
+        if (modal) {
+            modal.show();
+        }
+    }
+
+    function cancelModifyRole() {
+        const modal = document.getElementById('modalModifyRole') as IModal;
+        if (modal) {
+            modal.close();
+        }
+    }
+
+    async function confirmModifyRole() {
+        await api('api/users/' + userId, 'PATCH', { roleId: userRole });
+        const res = await api(`api/users/${userId}`, 'GET');
+        user = res.data;
+        const responseRole = await api('api/roles');
+        roles = responseRole.data;
+        userRole = user?.role.id;
+                cancelModifyRole();
+    }
 </script>
 
 <Header />
@@ -174,7 +203,7 @@
                             type="text"
                             id="name"
                             name="name"
-                            bind:value={$user.lastname}
+                            value={user?.firstname}
                             disabled={!isSelf}
                             placeholder="Dupont"
                         />
@@ -185,7 +214,7 @@
                             type="text"
                             id="firstname"
                             name="firstname"
-                            bind:value={$user.firstname}
+                            value={user?.firstname}
                             disabled={!isSelf}
                             placeholder="Jean"
                         />
@@ -198,7 +227,7 @@
                             type="email"
                             id="email"
                             name="email"
-                            value={$user?.email}
+                            value={user?.email}
                             disabled={!isSelf}
                             placeholder="jean.dupont@email.com"
                         />
@@ -250,6 +279,17 @@
                 </div>
             </div>
         </form>
+        {#if userLocal?.role == 'admin'}
+            <div class="div-role">
+                <label for="role">Role de l'utilisateur</label>
+                <select bind:value={userRole} onchange={openModalModifyRole}>
+                    {#each roles as role}
+                        <option value={role.id}>{role.frName}</option>
+                    {/each}
+                </select>
+            </div>
+        {/if}
+
         {#if userLocal?.role != 'instructor' && userId}
             <div class="badges-card">
                 <h2 class="badges-title">Mes badges</h2>
@@ -277,7 +317,12 @@
     confirm={confirmDeleteBadge}
 />
 <ModalAssignBadge cancel={cancelAssignBadge} confirm={confirmAssignBadge} />
-
+<ModalValidator
+    id="modalModifyRole"
+    message="Vous allez changer le role de l'utilisateur"
+    cancel={cancelModifyRole}
+    confirm={confirmModifyRole}
+/>
 <Footer />
 
 <style>
@@ -439,6 +484,19 @@
 
     .avatar-edit:hover {
         background-color: #f3f4f6;
+    }
+
+    .div-role {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        background-color: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
     }
 
     .badges-card {

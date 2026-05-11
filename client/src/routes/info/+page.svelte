@@ -10,12 +10,12 @@
     import photoCS from '$lib/assets/img/CELIK-Samed.png';
     import photo_ad from '$lib/assets/img/photo_ad.png';
 
-    import Menuiserie from '$lib/assets/img/menuiserie.png';
-    import Electricite from '$lib/assets/img/electricite.png';
-    import Chauffage from '$lib/assets/img/chauffage.png';
-    import Plomberie from '$lib/assets/img/plomberie.png';
-    import Carrelage from '$lib/assets/img/carrelage.png';
-    import Peinture from '$lib/assets/img/peinture.png';
+    import Menuiserie from '$lib/assets/img/Menuiserie.png';
+    import Electricite from '$lib/assets/img/Electricite.png';
+    import Chauffage from '$lib/assets/img/Chauffage.png';
+    import Plomberie from '$lib/assets/img/Plomberie.png';
+    import Carrelage from '$lib/assets/img/Carrelage.png';
+    import Peinture from '$lib/assets/img/Peinture.png';
 </script>
 
 <App>
