@@ -12,20 +12,20 @@
     <p>
         <strong>SkillFusion</strong><br />
         Plateforme éducative dédiée à l’apprentissage du bricolage et du Do It Yourself (DIY)<br />
-        Adresse : 123 Rue de l'Innovation, 75001 Paris, France<br />
+        Adresse : 
+        Skillfusion -
+        123 Avenue Aurélie F0F - 
+        23754642672 - MaxiLearn - Planète Mars (pas loin après la lune)<br />
         Téléphone : 01 23 45 67 89<br />
-        Email : contact@skillfusion.fr<br />
+        Email : skillfusion.noreply@gmail.com<br />
         Numéro SIRET : 123 456 789 00012<br />
-        Directeur de la publication : Jean Dupont
     </p>
 
     <h2>Hébergement</h2>
     <p>
         <strong>Hébergeur :</strong><br />
-        OVHcloud<br />
-        Adresse : 2 rue Kellermann, 59100 Roubaix, France<br />
-        Téléphone : 1007<br />
-        Site web : <a href="https://www.ovhcloud.com">www.ovhcloud.com</a>
+        Railway<br />
+        Site web : <a href="https://railway.app">railway.app</a>
     </p>
 
     <h2>Propriété intellectuelle</h2>
@@ -39,7 +39,7 @@
     <p>
         Conformément à la loi Informatique et Libertés du 6 janvier 1978 modifiée et au RGPD, vous
         disposez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos
-        données. Pour exercer ces droits, contactez-nous à l'adresse email ci-dessus.
+        données. Pour exercer ces droits, contactez-nous à l'adresse email ci-dessus ou regardez directement sur votre profil afin de télécharger vos données.
     </p>
 
     <h2>Cookies</h2>

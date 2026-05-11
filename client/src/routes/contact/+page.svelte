@@ -41,7 +41,7 @@
     <div class="contact-info">
         <div class="contact-item">
             <strong>Email :</strong><br />
-            <a href="mailto:contact@skillfusion.fr">contact@skillfusion.fr</a>
+            <a href="mailto:skillfusion.noreply@gmail.com">skillfusion.noreply@gmail.com</a>
         </div>
 
         <div class="contact-item">
