@@ -56,12 +56,12 @@ export default {
             where: {
                 userId_coursId: {
                     userId: req.user!.userId,
-                    coursId: data.coursId
-                }
-            }
+                    coursId: data.coursId,
+                },
+            },
         });
         if (!enrollment && req.user!.role !== ROLES.ADMIN) {
-            throw new ForbiddenError("Vous devez être inscrit à ce cours pour laisser un avis");
+            throw new ForbiddenError('Vous devez être inscrit à ce cours pour laisser un avis');
         }
 
         const createdOpinion = await prisma.opinion.create({

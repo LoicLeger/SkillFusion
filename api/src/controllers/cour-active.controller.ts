@@ -80,12 +80,14 @@ export default {
             where: {
                 userId_coursId: {
                     userId,
-                    coursId: data.coursId
-                }
-            }
+                    coursId: data.coursId,
+                },
+            },
         });
         if (!enrollment && req.user!.role !== ROLES.ADMIN) {
-            throw new ForbiddenError("Vous devez être inscrit à ce cours pour démarrer la progression");
+            throw new ForbiddenError(
+                'Vous devez être inscrit à ce cours pour démarrer la progression'
+            );
         }
         const createdCoursActive = await prisma.coursActived.create({
             data: {
