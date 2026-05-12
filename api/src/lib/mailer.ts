@@ -11,8 +11,8 @@ export const transporter = nodemailer.createTransport({
         pass: config.emailPass,
     },
     family: 4,
-  logger: true,
-  debug: true,
+    logger: true,
+    debug: true,
 } as SMTPTransport.Options);
 
 export async function sendVerificationEmail(email: string, token: string) {
