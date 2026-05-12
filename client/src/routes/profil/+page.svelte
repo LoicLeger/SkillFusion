@@ -21,6 +21,33 @@
     let user: IUser | null = $state(null);
     let userLocal: IUserLocalStorage | null = $state(null);
 
+    let fileInput: HTMLInputElement;
+    let avatarUrl = $state<string | null>(null);
+
+    async function handleAvatarChange(e: Event) {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_SIZE = 200; // px
+                canvas.width = MAX_SIZE;
+                canvas.height = MAX_SIZE;
+
+                const ctx = canvas.getContext('2d')!;
+                ctx.drawImage(img, 0, 0, MAX_SIZE, MAX_SIZE);
+
+                // Compression à 80% en jpeg
+                avatarUrl = canvas.toDataURL('image/jpeg', 0.8);
+            };
+            img.src = event.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    }
+
     let errorEmail = $state(false);
     let succesMessage: string | null = $state(null);
 
@@ -34,6 +61,7 @@
 
     let roles: IRole[] = $state([]);
     let userRole = $state();
+
     onMount(async () => {
         getAuth();
         userLocal = authStore.user;
@@ -41,12 +69,14 @@
             if (userId) {
                 const res = await api(`api/users/${userId}`, 'GET');
                 user = res.data;
+                avatarUrl = user?.urlProfilImage ?? null;
                 const responseRole = await api('api/roles');
                 roles = responseRole.data;
                 userRole = user?.role.id;
             } else {
                 const res = await api('auth/me', 'GET');
                 user = res.data;
+                avatarUrl = user?.urlProfilImage ?? null;
             }
         } catch (e) {
             console.error(e);
@@ -56,16 +86,17 @@
 
     async function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
-        const formData = new FormData(event.target);
+        const formData = new FormData(event.target as HTMLFormElement);
         const updatedUser = {
             lastname: formData.get('name'),
             firstname: formData.get('firstname'),
             email: formData.get('email'),
-            password: formData.get('password')
+            password: formData.get('password'),
+            urlProfilImage: avatarUrl
         };
-
-        // Supprimer les champs vides pour éviter de les envoyer à l'API
         const currentUser = user;
+        if (!currentUser) return;
+        // Supprimer les champs vides pour éviter de les envoyer à l'API
 
         if (!updatedUser.password) {
             delete updatedUser.password; // Ne pas inclure le champ password si il est vide
@@ -97,9 +128,13 @@
                 }
             } else {
                 errorEmail = false;
-                succesMessage = 'Informations mises à jour avec succès !'; // Message de succès
-                // Réinitialiser le message après quelques secondes
-                setTimeout(() => (succesMessage = null), 5000); // Message effacé après 5 secondes
+                succesMessage = 'Informations mises à jour avec succès !';
+
+                // Rafraîchit le user avec les données retournées par l'API
+                user = response.data;
+                avatarUrl = response.data?.urlProfilImage ?? avatarUrl;
+
+                setTimeout(() => (succesMessage = null), 5000);
             }
         } catch (error) {
             console.error('Erreur lors de la mise à jour des informations utilisateur :', error);
@@ -267,54 +302,78 @@
                 </div>
 
                 <div class="avatar-box">
-                    <button class="avatar-edit" type="button">✎</button>
-                    <div class="avatar-icon">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#1d4e89"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </div>
-                </div>
-            </form>
-            {#if userLocal?.role == 'admin' && page.url.searchParams.get('id')}
-                <div class="div-role">
-                    <label for="role">Role de l'utilisateur</label>
-                    <select bind:value={userRole} onchange={openModalModifyRole}>
-                        {#each roles as role (role.id)}
-                            <option value={role.id}>{role.frName}</option>
-                        {/each}
-                    </select>
-                </div>
-            {/if}
+                    <button
+                        class="avatar-edit"
+                        type="button"
+                        disabled={!isSelf}
+                        onclick={() => fileInput.click()}
+                    >
+                        ✎
+                    </button>
 
-            {#if userLocal?.role != 'instructor' && page.url.searchParams.get('id')}
-                <div class="badges-card">
-                    <h2 class="badges-title">Mes badges</h2>
-                    {#if userLocal?.role === 'admin'}
-                        <button onclick={() => openModalAssignBadge()}>Ajouter un badge</button>
-                    {/if}
-                    <div class="badges-list">
-                        {#each badges as badge (badge.id)}
-                            <div>
-                                <Badge badge={badge.badge} --color={badge.badge.color} />
-                                {#if userLocal?.role === 'admin'}
-                                    <button onclick={() => openModalDeleteBadge(badge.id)}>X</button
-                                    >
-                                {/if}
-                            </div>
-                        {/each}
+                    <div class="avatar-icon">
+                        {#if avatarUrl}
+                            <img src={avatarUrl} alt="Photo de profil" class="avatar-img" />
+                        {:else}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#1d4e89"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        {/if}
                     </div>
+
+                    <input
+                        bind:this={fileInput}
+                        type="file"
+                        accept="image/*"
+                        onchange={handleAvatarChange}
+                        style="display:none"
+                    />
                 </div>
-            {/if}
+
+                
+            </form>
         </div>
+
+        {#if userLocal?.role == 'admin' && page.url.searchParams.get('id')}
+                    <div class="div-role">
+                        <label for="role">Role de l'utilisateur</label>
+                        <select bind:value={userRole} onchange={openModalModifyRole}>
+                            {#each roles as role (role.id)}
+                                <option value={role.id}>{role.frName}</option>
+                            {/each}
+                        </select>
+                    </div>
+                {/if}
+
+                {#if userLocal?.role != 'instructor' && page.url.searchParams.get('id')}
+                    <div class="badges-card">
+                        <h2 class="badges-title">Mes badges</h2>
+                        {#if userLocal?.role === 'admin'}
+                            <button onclick={() => openModalAssignBadge()}>Ajouter un badge</button>
+                        {/if}
+                        <div class="badges-list">
+                            {#each badges as badge (badge.id)}
+                                <div>
+                                    <Badge badge={badge.badge} --color={badge.badge.color} />
+                                    {#if userLocal?.role === 'admin'}
+                                        <button onclick={() => openModalDeleteBadge(badge.id)}
+                                            >X</button
+                                        >
+                                    {/if}
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
         <ModalValidator
             id="modalDeleteBadge"
             message="Êtes-vous sûr de vouloir supprimer ce badge ?"
@@ -341,6 +400,12 @@
         text-align: center;
         color: #1d4e89;
         margin-bottom: 20px;
+    }
+
+    .profil-container {
+        max-width: 80%;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
     }
     .form-fields {
         display: flex;
@@ -453,7 +518,6 @@
         align-items: center;
         justify-content: center;
     }
-
     .avatar-icon {
         width: 100%;
         height: 100%;
@@ -462,13 +526,22 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1.2rem;
+        padding: 0;
         background-color: #dbeafe;
+        overflow: hidden; /* 👈 */
     }
 
     .avatar-icon svg {
+        padding: 1.2rem;
         width: 100%;
         height: 100%;
+    }
+
+    .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
     }
 
     .avatar-edit {

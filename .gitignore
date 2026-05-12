@@ -6,6 +6,7 @@ api/generated/prisma
 .vercel
 .netlify
 .wrangler
+.vscode
 
 client/build
 client/.svelte-kit
