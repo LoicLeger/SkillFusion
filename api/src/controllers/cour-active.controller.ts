@@ -84,10 +84,8 @@ export default {
                 },
             },
         });
-        if (!enrollment && req.user!.role !== ROLES.ADMIN) {
-            throw new ForbiddenError(
-                'Vous devez être inscrit à ce cours pour démarrer la progression'
-            );
+        if (enrollment) {
+            return;
         }
         const createdCoursActive = await prisma.coursActived.create({
             data: {

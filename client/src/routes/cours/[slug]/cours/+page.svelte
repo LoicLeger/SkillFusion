@@ -41,7 +41,7 @@
 
     onMount(async () => {
         user = authStore.user;
-        const response = await api('api/cours?slug=' + page.params.slug, 'GET', {});
+        const response = await api('api/cours?slug=' + page.params.slug, 'GET');
         cours = response.data;
         if (cours) {
             getCours();
@@ -52,7 +52,7 @@
     async function submitComment(): Promise<void> {
         errorComment = false;
 
-        const response = await api('api/cours?slug=' + page.params.slug, 'GET', {});
+        const response = await api('api/cours?slug=' + page.params.slug, 'GET');
         cours = response.data;
 
         const commentContentElement = document.getElementById('inputComment') as ITextArea;
@@ -70,14 +70,14 @@
             return;
         }
 
-        const refresh = await api('api/cours?slug=' + page.params.slug, 'GET', {});
+        const refresh = await api('api/cours?slug=' + page.params.slug, 'GET');
         cours = refresh.data;
         commentContentElement.value = '';
     }
 
     async function DeleteComment(data: number) {
         await api('api/comments/' + data, 'DELETE', {});
-        const refresh = await api('api/cours?slug=' + page.params.slug, 'GET', {});
+        const refresh = await api('api/cours?slug=' + page.params.slug, 'GET');
         cours = refresh.data;
     }
 
@@ -86,12 +86,12 @@
     }
 
     async function getCours() {
-        const response = await api('api/cours?slug=' + page.params.slug, 'GET', {});
+        const response = await api('api/cours?slug=' + page.params.slug, 'GET');
         cours = response.data;
         if (cours) {
             currentPageId = cours.content.find((content) => content.numberPage == currentPage);
             if (currentPageId) {
-                const response = await api('api/cours-contents/' + currentPageId.id, 'GET', {});
+                const response = await api('api/cours-contents/' + currentPageId.id, 'GET');
                 coursContent = response.data as ICoursContent;
                 if (coursContent) {
                     coursContent.content = DOMPurify.sanitize(coursContent.content);

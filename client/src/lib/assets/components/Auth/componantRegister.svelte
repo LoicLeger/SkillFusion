@@ -43,7 +43,6 @@
     let errorEmail = $state(false);
     let errorPseudo = $state(false);
     let errorPassword = $state(false);
-
 </script>
 
 <!-- Composant d'inscription -->
@@ -66,7 +65,8 @@
         <input type="password" id="password" name="password" placeholder="••••••••" required />
         {#if errorPassword}
             <p style="color:red;">
-           Le mot de passe doit contenir au moins une minuscule, une majuscule et un caractère spécial (!@#$%&*-+{}?)
+                Le mot de passe doit contenir au moins une minuscule, une majuscule et un caractère
+                spécial (!@#$%&*-+{'{}'}?)
             </p>
         {/if}
         <label for="confirm-password">Confirmer</label>

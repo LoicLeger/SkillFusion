@@ -65,9 +65,9 @@ export default {
     updatingNotification: async (req: AuthenticatedRequest, res: Response) => {
         const notificationId = await parseIdFromParams(req.params.id);
         const updateNotificationBodySchema = z.object({
-            content: z.string().min(1).optional(),
+            seen: z.boolean(),
         });
-        const { content } = await updateNotificationBodySchema.parseAsync(req.body);
+        const { seen } = await updateNotificationBodySchema.parseAsync(req.body);
 
         // Récupération avant update pour vérifier l'appartenance
         const notification = await prisma.notification.findUnique({
@@ -76,14 +76,10 @@ export default {
         if (!notification) {
             throw new NotFoundError(`Notification with id ${notificationId} not found`);
         }
-        // Seul le propriétaire ou un admin peut modifier la notification
-        if (notification.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
-            throw new ForbiddenError("Vous n'êtes pas autorisé à modifier cette notification");
-        }
 
         const updatedNotification = await prisma.notification.update({
             where: { id: notificationId },
-            data: { content },
+            data: { seen },
         });
         res.json(updatedNotification);
     },
@@ -99,11 +95,7 @@ export default {
         if (!notification) {
             throw new NotFoundError(`Notification with id ${notificationId} not found`);
         }
-        // Seul le propriétaire ou un admin peut supprimer la notification
-        if (notification.userId !== req.user!.userId && req.user?.role !== ROLES.ADMIN) {
-            throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer cette notification");
-        }
-
+        
         await prisma.notification.delete({ where: { id: notificationId } });
         res.status(204).send();
     },
