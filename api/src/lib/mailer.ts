@@ -6,12 +6,13 @@ export const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
-    requireTLS: true,
     auth: {
         user: config.emailUser,
         pass: config.emailPass,
     },
     family: 4,
+  logger: true,
+  debug: true,
 } as SMTPTransport.Options);
 
 export async function sendVerificationEmail(email: string, token: string) {
