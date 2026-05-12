@@ -297,25 +297,30 @@
                                 </div>
                                 {#each cours.opinions as opinion, i (opinion.id)}
                                     <div class="review {i === 0 ? 'first' : ''}">
-                                    <div>
-                                        <div class="review-top">
-                                            <div class="avatar"> <img src={opinion.user.urlProfilImage} alt="" class ="avatar-img"></div>
-                                            <div>
-                                                <div class="name">{opinion.user.pseudo}</div>
-                                                <div class="stars">
-                                                    {#each getStars(opinion.note) as type}
-                                                        <span class="star-{type}">★</span>
-                                                    {/each}
+                                        <div>
+                                            <div class="review-top">
+                                                <div class="avatar">
+                                                    <img
+                                                        src={opinion.user.urlProfilImage}
+                                                        alt=""
+                                                        class="avatar-img"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <div class="name">{opinion.user.pseudo}</div>
+                                                    <div class="stars">
+                                                        {#each getStars(opinion.note) as type}
+                                                            <span class="star-{type}">★</span>
+                                                        {/each}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            
-                                        </div>
-                                        <div class="text">{opinion.content}</div>
+                                            <div class="text">{opinion.content}</div>
                                         </div>
                                         {#if opinion.user.id === authStore.user?.id && alreadyOpinion?.IsOpinionExisting == true}
-                                        <div>
-                                            <DeleteButton onclick={modalDeleteOpinion}/>
-                                            <ModifyButton onclick={modalAddOpinion}/>
+                                            <div>
+                                                <DeleteButton onclick={modalDeleteOpinion} />
+                                                <ModifyButton onclick={modalAddOpinion} />
                                             </div>
                                         {/if}
                                     </div>
