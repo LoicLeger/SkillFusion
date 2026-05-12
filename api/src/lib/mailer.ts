@@ -1,13 +1,18 @@
 import nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { config } from '../config';
 
 export const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
     auth: {
         user: config.emailUser,
         pass: config.emailPass,
     },
-});
+    family: 4,
+} as SMTPTransport.Options);
 
 export async function sendVerificationEmail(email: string, token: string) {
     await transporter.sendMail({
