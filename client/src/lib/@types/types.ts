@@ -140,7 +140,7 @@ export interface CoursHasTool {
     createdAt: Date;
     updatedAt: Date;
     cours: ICours;
-    tools: Tool[];
+    tools: Tool;
 }
 export interface CoursHasLearningObjective {
     id: number;
