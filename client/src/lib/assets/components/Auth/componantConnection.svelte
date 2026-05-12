@@ -6,8 +6,8 @@
     const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
         event.preventDefault();
         const formData = new FormData(event.target as HTMLFormElement);
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const email = String(formData.get('email') ?? '');
+        const password = String(formData.get('password') ?? '');
         const token = await api('auth/login', 'POST', { email, password });
         setAuth(token.data.user, token.data.accessToken.token);
         goto('/');

@@ -63,14 +63,6 @@ app.use(cors(corsOptions));
 // Preflight explicite — AVANT les routes
 /* app.options('/*', cors(corsOptions)); */
 
-/* app.use(
-    cors({
-        origin: config.corsOriginUrl,
-        credentials: true,
-        allowedHeaders: ['Authorization', 'Content-Type'],
-    })
-); */
-
 /* app.use(helmet()); */
 /* app.use(
     helmet({
