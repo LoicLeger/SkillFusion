@@ -6,18 +6,28 @@
     import CoursCard from '$lib/assets/components/Cours/CoursCard.svelte';
     import api from '$lib/services/api.service';
     import { onMount } from 'svelte';
-    import type { ICours, ICategory } from '$lib/@types/types';
+    import type { ICours, ICategory, ICoursActived } from '$lib/@types/types';
+    import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
+    import { getAuth, authStore } from '$lib/services/localstorage.service.svelte';
 
     let courses: ICours[] = $state([]);
     let categories: ICategory[] = $state([]);
+    let user: IUserLocalStorage | null = $state(null);
+    let coursEnded: number[] = $state([]);
 
     let sortBy = $state('');
 
     onMount(async () => {
+        getAuth();
         const categoriesResponse = await api('api/categories');
         categories = categoriesResponse.data;
         const coursesResponse = await api('api/cours?visibility=true');
         courses = coursesResponse.data;
+        user = authStore.user;
+        if (user) {
+            const ended = await api('api/cours-active/user/' + user?.id + '/ended');
+            coursEnded = ended.data.map((ended: ICoursActived) => ended.id);
+        }
     });
     let searchQuery = $state('');
     let selectedCategory = $state('Toutes les catégories');
@@ -125,6 +135,7 @@
                     --card__image__color={cours.category.textColor}
                     --border_color={cours.category.borderColor}
                     --text_color={cours.category.textColor}
+                    {coursEnded}
                 />
             {/each}
         </div>
@@ -151,6 +162,7 @@
     /* Recherche */
     .search {
         display: flex;
+        flex-direction: column;
         gap: 0.75rem;
         align-items: center;
         margin-bottom: 2rem;

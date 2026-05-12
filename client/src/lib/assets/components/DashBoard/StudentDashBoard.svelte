@@ -9,7 +9,7 @@
     import Badge from '../Badge/Badge.svelte';
 
     let coursActive: ICours[] = $state([]);
-    let coursTermines: ICours[] = $state([]);
+    let coursEnded: ICours[] = $state([]);
     let userBadges: IUserHasBadge[] = $state([]);
 
     onMount(async () => {
@@ -18,7 +18,7 @@
         const response = await api('api/cours-active/user/' + authStore?.user?.id);
         coursActive = response.data;
         const ended = await api('api/cours-active/user/' + authStore?.user?.id + '/ended');
-        coursTermines = ended.data;
+        coursEnded = ended.data;
         const badges = await api('api/badges/user/' + authStore?.user?.id);
         userBadges = badges.data;
     });
@@ -37,7 +37,7 @@
             <p class="stat-card__label">Cours en cours</p>
         </div>
         <div class="stat-card">
-            <p class="stat-card__value">{coursTermines.length}</p>
+            <p class="stat-card__value">{coursEnded.length}</p>
             <p class="stat-card__label">Cours terminés</p>
         </div>
         <div class="stat-card">
@@ -66,6 +66,7 @@
                         --border_color={c.cours.category.borderColor}
                         --text_color={c.cours.category.textColor}
                         --background-color={c.cours.category.backgroundColor}
+                        coursEnded="false"
                     />
                 {/each}
 
@@ -97,7 +98,7 @@
         <div class="panel panel--wide">
             <div class="panel__head">
                 <h2 class="panel__title">Mes cours terminés</h2>
-                <span class="panel__count">{coursTermines.length}</span>
+                <span class="panel__count">{coursEnded.length}</span>
             </div>
 
             <div class="panel__list--ended">
@@ -124,7 +125,7 @@
                     </a>
                 {/each}
 
-                {#if coursTermines.length === 0}
+                {#if coursEnded.length === 0}
                     <p class="panel__empty">Aucun cours terminé pour l'instant.</p>
                 {/if}
             </div>

@@ -7,15 +7,27 @@
     import { onMount } from 'svelte';
     import App from '$lib/assets/components/App.svelte';
     import Main from '$lib/assets/components/Main.svelte';
-    import type { ICours } from '$lib/@types/types';
+    import type { ICours, ICoursActived } from '$lib/@types/types';
+    import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
+    import { getAuth, authStore } from '$lib/services/localstorage.service.svelte';
     import '../normalize.css';
     import '../app.css';
 
     let courses: ICours[] = $state([]);
+    let user: IUserLocalStorage | null = $state(null);
+    let coursEnded: number[] = $state([]);
 
     onMount(async () => {
+        getAuth();
+        user = authStore.user;
         const coursesResponse = await api('api/cours/homepage');
         courses = coursesResponse.data;
+
+        if (user?.id) {
+            const ended = await api('api/cours-active/user/' + user.id + '/ended');
+            coursEnded = ended.data.map((ended: ICoursActived) => ended.coursId);
+        }
+        console.log(coursEnded);
     });
 </script>
 
@@ -69,6 +81,7 @@
                             --border_color={cours.category.borderColor}
                             --text_color={cours.category.textColor}
                             --background-color={cours.category.backgroundColor}
+                            {coursEnded}
                         />
                     {/each}
                 </div>
