@@ -2,36 +2,31 @@ import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { config } from '../config';
 
-export const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: config.emailUser,
-        pass: config.emailPass,
-    },
-    family: 4,
-    logger: true,
-    debug: true,
-} as SMTPTransport.Options);
+import { Resend } from 'resend';
+const resend = new Resend(config.resendApiKey);
 
 export async function sendVerificationEmail(email: string, token: string) {
-    await transporter.sendMail({
-        from: config.emailUser,
+    const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
+
+    const result = await resend.emails.send({
+        from: config.resendEmail,
         to: email,
         subject: 'Confirme ton inscription sur SkillFusion',
         html: `
             <h2>Bienvenue sur SkillFusion !</h2>
             <p>Clique sur ce lien pour confirmer ton compte :</p>
-            <a href="http://localhost:5173/verify?token=${token}">
+            <a href="${frontendUrl}/verify?token=${token}">
                 Confirmer mon compte
             </a>
             <p>Ce lien est valable 24h.</p>
         `,
     });
+
+    console.log('Resend response:', result);
+    console.log(`Email ${result.id ?? result.messageId ?? 'sent'} has been sent`);
 }
 
-export async function sendResetPasswordEmail(email: string, token: string) {
+/* export async function sendResetPasswordEmail(email: string, token: string) {
     await transporter.sendMail({
         from: config.emailUser,
         to: email,
@@ -78,4 +73,4 @@ export async function sendReportEmail(
 
 		`,
     });
-}
+} */

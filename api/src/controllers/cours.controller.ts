@@ -170,7 +170,7 @@ export default {
         }
 
         // Bypass admin ajouté
-        if (req.user?.userId !== cours.authorId && req.user?.role !== ROLES.ADMIN) {
+        if (req.user?.userId !== cours.authorId || req.user?.role !== ROLES.ADMIN) {
             throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer ce cours");
         }
 

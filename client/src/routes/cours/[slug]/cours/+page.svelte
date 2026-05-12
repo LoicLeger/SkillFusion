@@ -132,12 +132,12 @@
     }
 
     function modalDeletePage() {
-        const modal = document.getElementById('ModalValidator') as IModal;
+        const modal = document.getElementById('validateSuppretionPage') as IModal;
         modal.show();
     }
 
     function closeDeletePageModale() {
-        const modal = document.getElementById('ModalValidator') as IModal;
+        const modal = document.getElementById('validateSuppretionPage') as IModal;
         modal.close();
     }
     async function deletePage() {
@@ -301,6 +301,7 @@
             </div>
         {/if}
         <ModalValidator
+            id="validateSuppretionPage"
             message="Voullez vous supprimer la page ?"
             cancel={closeDeletePageModale}
             confirm={deletePage}
