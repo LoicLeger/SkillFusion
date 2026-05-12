@@ -9,7 +9,7 @@
     import photoLoic from '$lib/assets/img/photo1.jpeg';
     import photoCS from '$lib/assets/img/CELIK-Samed.png';
     import photo_ad from '$lib/assets/img/photo_ad.png';
-    import photoJD from "$lib/assets/img/jacques.jpg"
+    import photoJD from '$lib/assets/img/jacques.jpg';
 
     import Menuiserie from '$lib/assets/img/Menuiserie.png';
     import Electricite from '$lib/assets/img/Electricite.png';
