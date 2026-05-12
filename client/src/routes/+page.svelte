@@ -27,7 +27,6 @@
             const ended = await api('api/cours-active/user/' + user.id + '/ended');
             coursEnded = ended.data.map((ended: ICoursActived) => ended.coursId);
         }
-        console.log(coursEnded);
     });
 </script>
 

@@ -34,7 +34,6 @@ export default {
             coursId: z.number(),
         });
         const data = await createCommentBodySchema.parseAsync(req.body);
-        console.log(data, req.user.userId);
 
         const enrollment = await prisma.coursActived.findFirst({
             where: {
@@ -42,7 +41,6 @@ export default {
                 coursId: data.coursId,
             },
         });
-        console.log(enrollment);
         if (!enrollment && req.user!.role !== ROLES.ADMIN) {
             throw new ForbiddenError('Vous devez être inscrit à ce cours pour commenter');
         }
