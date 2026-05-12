@@ -48,7 +48,7 @@ export async function sendResetPasswordEmail(email: string, token: string) {
         html: `
             <h2>Réinitialisation de mot de passe</h2>
             <p>Clique sur ce lien pour réinitialiser ton mot de passe :</p>
-            <a href="http://localhost:5173/page-reset-mdp?token=${token}">
+            <a href=${frontendUrl}/page-reset-mdp?token=${token}">
                 Réinitialiser mon mot de passe
             </a>
             <p>Ce lien est valable 1 heure.</p>
