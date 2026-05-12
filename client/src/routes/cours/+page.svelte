@@ -144,11 +144,6 @@
 </App>
 
 <style>
-    :global(*, *::before, *::after) {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
     :global(body) {
         font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
         background-color: #f3f0ea;

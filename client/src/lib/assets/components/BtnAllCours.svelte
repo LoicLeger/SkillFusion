@@ -13,8 +13,5 @@
         padding: 8px 18px;
         font-weight: 400;
         text-decoration: none;
-        transition:
-            background 0.15s,
-            color 0.15s;
     }
 </style>

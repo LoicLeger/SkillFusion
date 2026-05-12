@@ -16,13 +16,16 @@
     import ModalValidator from '$lib/assets/components/Modal/ModalValidator.svelte';
     import type { IModal } from '$lib/@types/html';
     import { goto } from '$app/navigation';
+    import DeleteButton from '$lib/assets/components/Button/DeleteButton.svelte';
+    import ModifyButton from '$lib/assets/components/Button/ModifyButton.svelte';
 
     let cours: ICours | null = $state(null);
     let user: IUserLocalStorage | null = $state(null);
-    let visibility = $derived(cours?.visibility);
+    let visibility = $derived(cours!.visibility);
     let alreadyOpinion = $state({ IsOpinionExisting: false, opinion: { note: 0, id: 0 } });
     let modifier = $state(false);
     let textButton = $derived(modifier ? 'Annuler' : 'Modifier');
+    let alreadyStarted: number[] = $state([]);
 
     let editData = $state({
         title: '',
@@ -43,6 +46,7 @@
         user = authStore.user;
         await getCours();
         AlreadyHaveNoted();
+        AlreadyHaveStarted();
     });
     async function getCours() {
         const response = await api('api/cours?slug=' + page.params.slug);
@@ -55,6 +59,18 @@
             'GET'
         );
         alreadyOpinion = response.data;
+    }
+
+    async function AlreadyHaveStarted() {
+        const responseStart = await api('api/cours-active/user/' + authStore.user?.id);
+        alreadyStarted = responseStart.data.map(
+            (data: { id: number; userId: number; coursId: number }) => data.coursId
+        );
+        const responseEnd = await api('api/cours-active/user/' + authStore.user?.id + '/ended');
+        let ended = responseEnd.data.map(
+            (data: { id: number; userId: number; coursId: number }) => data.coursId
+        );
+        alreadyStarted = alreadyStarted.concat(ended);
     }
 
     async function patchOpinions(note: number, content: string) {
@@ -271,15 +287,8 @@
                             <div class="card opinions">
                                 <div class="opinions_presentation">
                                     <div class="card-title dark">Avis des apprenants</div>
-                                    {#if authStore.user?.role === 'student'}
-                                        {#if alreadyOpinion?.IsOpinionExisting == true}
-                                            <button class="btn-add" onclick={modalAddOpinion}>
-                                                Modifier mon avis sur le cours
-                                            </button>
-                                            <button class="btn-add" onclick={modalDeleteOpinion}
-                                                >Supprimer mon avis</button
-                                            >
-                                        {:else}
+                                    {#if authStore.user?.role === 'student' && alreadyStarted.includes(cours?.id)}
+                                        {#if alreadyOpinion?.IsOpinionExisting != true}
                                             <button class="btn-add" onclick={modalAddOpinion}>
                                                 Mettre un avis sur ce cours
                                             </button>
@@ -288,20 +297,32 @@
                                 </div>
                                 {#each cours.opinions as opinion, i (opinion.id)}
                                     <div class="review {i === 0 ? 'first' : ''}">
-                                        <div class="review-top">
-                                            <div class="avatar"></div>
-
-                                            <div>
-                                                <div class="name">{opinion.user.pseudo}</div>
-                                                <div class="stars">
-                                                    {#each getStars(opinion.note) as type}
-                                                        <span class="star-{type}">★</span>
-                                                    {/each}
+                                        <div>
+                                            <div class="review-top">
+                                                <div class="avatar">
+                                                    <img
+                                                        src={opinion.user.urlProfilImage}
+                                                        alt=""
+                                                        class="avatar-img"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <div class="name">{opinion.user.pseudo}</div>
+                                                    <div class="stars">
+                                                        {#each getStars(opinion.note) as type}
+                                                            <span class="star-{type}">★</span>
+                                                        {/each}
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="text">{opinion.content}</div>
                                         </div>
-
-                                        <div class="text">{opinion.content}</div>
+                                        {#if opinion.user.id === authStore.user?.id && alreadyOpinion?.IsOpinionExisting == true}
+                                            <div>
+                                                <DeleteButton onclick={modalDeleteOpinion} />
+                                                <ModifyButton onclick={modalAddOpinion} />
+                                            </div>
+                                        {/if}
                                     </div>
                                 {/each}
                             </div>
@@ -382,11 +403,19 @@
                             </div>
                         </div>
                         {#if user}
-                            <a
-                                onclick={addCoursActiveToStudent}
-                                class="cta"
-                                href="/cours/{cours.slug}/cours">Démarrer le cours →</a
-                            >
+                            {#if alreadyStarted.includes(cours?.id)}
+                                <a
+                                    onclick={addCoursActiveToStudent}
+                                    class="cta"
+                                    href="/cours/{cours.slug}/cours">Continuer le cours →</a
+                                >
+                            {:else}
+                                <a
+                                    onclick={addCoursActiveToStudent}
+                                    class="cta"
+                                    href="/cours/{cours.slug}/cours">Démarrer le cours →</a
+                                >
+                            {/if}
                         {:else}
                             <p>Pour commencer le cours, vous devez être connectés :</p>
                             <div class="btn-content">
@@ -622,8 +651,11 @@
     /* REVIEWS */
     .review {
         border-top: 1px solid #eee;
+        justify-content: space-between;
         padding-top: 12px;
         margin-top: 12px;
+        display: flex;
+        flex-direction: row;
     }
 
     .review.first {
@@ -671,6 +703,12 @@
         display: block;
     }
 
+    .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .page {

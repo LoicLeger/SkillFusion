@@ -1,6 +1,4 @@
 <script lang="ts">
-    import '../normalize.css';
-    import '../app.css';
     import api from '$lib/services/api.service';
     import Header from '$lib/assets/components/Header.svelte';
     import Footer from '$lib/assets/components/Footer.svelte';
@@ -12,6 +10,8 @@
     import type { ICours, ICoursActived } from '$lib/@types/types';
     import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
     import { getAuth, authStore } from '$lib/services/localstorage.service.svelte';
+    import '../normalize.css';
+    import '../app.css';
 
     let courses: ICours[] = $state([]);
     let user: IUserLocalStorage | null = $state(null);

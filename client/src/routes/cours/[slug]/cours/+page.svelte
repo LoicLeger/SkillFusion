@@ -31,6 +31,7 @@
     let textButton = $derived(modifier ? 'Annuler' : 'Modifier');
 
     let commentContent = $state();
+    let errorComment = $state(false);
 
     $effect(() => {
         if (modifier) {
@@ -40,7 +41,7 @@
 
     onMount(async () => {
         user = authStore.user;
-        const response = await api('api/cours?slug=' + page.params.slug, 'GET');
+        const response = await api('api/cours?slug=' + page.params.slug, 'GET', {});
         cours = response.data;
         if (cours) {
             getCours();
@@ -49,23 +50,34 @@
     });
 
     async function submitComment(): Promise<void> {
-        const response = await api('api/cours?slug=' + page.params.slug, 'GET');
+        errorComment = false;
+
+        const response = await api('api/cours?slug=' + page.params.slug, 'GET', {});
         cours = response.data;
+
         const commentContentElement = document.getElementById('inputComment') as ITextArea;
         commentContent = commentContentElement.value;
+
         const data = {
             description: commentContent,
             authorId: authStore.user?.id,
             coursId: cours?.id
         };
-        await api('api/comments', 'POST', data);
-        const refresh = await api('api/cours?slug=' + page.params.slug);
+
+        const response2 = await api('api/comments', 'POST', data);
+        if (response2.status !== 201) {
+            errorComment = true;
+            return;
+        }
+
+        const refresh = await api('api/cours?slug=' + page.params.slug, 'GET', {});
         cours = refresh.data;
         commentContentElement.value = '';
     }
+
     async function DeleteComment(data: number) {
-        await api('api/comments/' + data, 'DELETE');
-        const refresh = await api('api/cours?slug=' + page.params.slug);
+        await api('api/comments/' + data, 'DELETE', {});
+        const refresh = await api('api/cours?slug=' + page.params.slug, 'GET', {});
         cours = refresh.data;
     }
 
@@ -74,12 +86,12 @@
     }
 
     async function getCours() {
-        const response = await api('api/cours?slug=' + page.params.slug, 'GET');
+        const response = await api('api/cours?slug=' + page.params.slug, 'GET', {});
         cours = response.data;
         if (cours) {
             currentPageId = cours.content.find((content) => content.numberPage == currentPage);
             if (currentPageId) {
-                const response = await api('api/cours-contents/' + currentPageId.id, 'GET');
+                const response = await api('api/cours-contents/' + currentPageId.id, 'GET', {});
                 coursContent = response.data as ICoursContent;
                 if (coursContent) {
                     coursContent.content = DOMPurify.sanitize(coursContent.content);
@@ -141,7 +153,7 @@
         modal.close();
     }
     async function deletePage() {
-        await api('api/cours-contents/' + currentPageId?.id, 'DELETE');
+        await api('api/cours-contents/' + currentPageId?.id, 'DELETE', {});
         closeDeletePageModale();
         if (currentPage != 1) {
             currentPage--;
@@ -294,9 +306,13 @@
                         placeholder="Posez votre question ou laissez un commentaire..."
                         rows="3"
                     ></textarea>
+
                     <div class="comment-form__footer">
                         <button class="comment-form__btn" onclick={submitComment}>Envoyer</button>
                     </div>
+                    {#if errorComment}
+                        <p style="color:red;">Vous devez être inscrit à ce cours pour commenter.</p>
+                    {/if}
                 </div>
             </div>
         {/if}

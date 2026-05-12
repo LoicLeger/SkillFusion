@@ -52,6 +52,18 @@ export default {
             return res.status(204).end();
         }
 
+        const enrollment = await prisma.userHasCours.findUnique({
+            where: {
+                userId_coursId: {
+                    userId: req.user!.userId,
+                    coursId: data.coursId,
+                },
+            },
+        });
+        if (!enrollment && req.user!.role !== ROLES.ADMIN) {
+            throw new ForbiddenError('Vous devez être inscrit à ce cours pour laisser un avis');
+        }
+
         const createdOpinion = await prisma.opinion.create({
             data: {
                 content: data.content,

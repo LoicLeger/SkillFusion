@@ -13,7 +13,7 @@
         const token = await api('auth/login', 'POST', { email, password });
 
         if (!token?.data?.accessToken) {
-            errorMessage = 'Email ou mot de passe incorrect.';
+            errorMessage = 'Identifiant ou mot de passe incorrect.';
 
             setTimeout(() => {
                 errorMessage = '';

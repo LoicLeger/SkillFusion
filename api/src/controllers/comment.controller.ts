@@ -35,6 +35,18 @@ export default {
         });
         const data = await createCommentBodySchema.parseAsync(req.body);
 
+        const enrollment = await prisma.userHasCours.findUnique({
+            where: {
+                userId_coursId: {
+                    userId: req.user!.userId,
+                    coursId: data.coursId,
+                },
+            },
+        });
+        if (!enrollment && req.user!.role !== ROLES.ADMIN) {
+            throw new ForbiddenError('Vous devez être inscrit à ce cours pour commenter');
+        }
+
         const createdComment = await prisma.comment.create({
             data: {
                 description: data.description,

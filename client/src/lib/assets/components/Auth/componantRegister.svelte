@@ -7,8 +7,21 @@
         const formData = new FormData(event.target as HTMLFormElement);
         const pseudo = formData.get('pseudo');
         const email = formData.get('email');
-        const password = formData.get('password');
+        const password = formData.get('password') as string;
         const confirmPassword = formData.get('confirm-password');
+
+        // Réinitialiser les erreurs à chaque tentative
+        errorPassword = false;
+        errorPseudo = false;
+        errorEmail = false;
+
+        // Valider le mot de passe avec la même regex que l'API
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%.&*\-+{}?]).{8,100}$/;
+        if (!passwordRegex.test(password)) {
+            errorPassword = true;
+            return;
+        }
+
         const response = await api('auth/register', 'POST', {
             pseudo,
             email,
@@ -29,6 +42,8 @@
 
     let errorEmail = $state(false);
     let errorPseudo = $state(false);
+    let errorPassword = $state(false);
+
 </script>
 
 <!-- Composant d'inscription -->
@@ -49,7 +64,11 @@
 
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" placeholder="••••••••" required />
-
+        {#if errorPassword}
+            <p style="color:red;">
+           Le mot de passe doit contenir au moins une minuscule, une majuscule et un caractère spécial (!@#$%&*-+{}?)
+            </p>
+        {/if}
         <label for="confirm-password">Confirmer</label>
         <input
             type="password"
