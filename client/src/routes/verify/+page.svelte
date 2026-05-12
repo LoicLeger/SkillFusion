@@ -9,19 +9,33 @@
         const token = new URLSearchParams(window.location.search).get('token');
 
         if (!token) {
-            message = 'Token manquant.';
+            message = 'Token manquant dans l\'URL.';
             loading = false;
             return;
         }
 
-        const res = await fetch(`http://localhost:3000/auth/verify-email?token=${token}`);
-        const data = await res.json();
+        try {
+            // Appel API pour vérifier le token avec la base de données
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/verify-email?token=${encodeURIComponent(token)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        if (res.ok) {
-            success = true;
-            message = data.message;
-        } else {
-            message = data.message ?? 'Lien invalide ou expiré.';
+            const data = await response.json();
+
+            if (response.ok) {
+                success = true;
+                message = data.message || 'Ton compte a été vérifié avec succès ! Tu peux maintenant te connecter.';
+            } else {
+                success = false;
+                message = data.error || data.message || 'Lien invalide ou expiré.';
+            }
+        } catch (error) {
+            console.error('Erreur lors de la vérification:', error);
+            success = false;
+            message = 'Erreur de connexion. Veuillez réessayer.';
         }
 
         loading = false;

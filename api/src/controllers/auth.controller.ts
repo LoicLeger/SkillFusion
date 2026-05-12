@@ -214,7 +214,9 @@ export async function verifyEmail(req: Request, res: Response) {
     });
 
     if (!user) {
-        throw new BadRequestError('Token invalide ou expiré');
+        // Rediriger vers le frontend avec un message d'erreur
+        const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
+        return res.redirect(`${frontendUrl}/verify?error=invalid_token`);
     }
 
     await prisma.user.update({
@@ -222,7 +224,9 @@ export async function verifyEmail(req: Request, res: Response) {
         data: { verified: true, verifyToken: null },
     });
 
-    res.json({ message: 'Compte vérifié ! Tu peux maintenant te connecter.' });
+    // Rediriger vers le frontend avec un message de succès
+    const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
+    res.redirect(`${frontendUrl}/verify?success=true`);
 }
 
 // Demande de réinitialisation
