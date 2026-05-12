@@ -87,11 +87,8 @@ export default {
         const updateCourContentBodySchema = z.object({
             content: z.string().min(1).optional(),
             numberPage: z.number().min(1).int().optional(),
-            coursId: z.number().int().optional(),
         });
-        const { content, numberPage, coursId } = await updateCourContentBodySchema.parseAsync(
-            req.body
-        );
+        const { content, numberPage } = await updateCourContentBodySchema.parseAsync(req.body);
 
         // Vérification que le contenu existe et que le cours appartient à l'instructeur connecté
         const courContent = await prisma.coursContent.findUnique({ where: { id: courContentId } });

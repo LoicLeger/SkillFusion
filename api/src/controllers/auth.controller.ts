@@ -39,7 +39,7 @@ export async function registerUser(req: Request, res: Response) {
         email: z.email(),
         password: z
             .string()
-            .min(2)
+            .min(8)
             .max(100)
             .regex(/[a-z]/)
             .regex(/[A-Z]/)

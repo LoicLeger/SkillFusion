@@ -11,7 +11,6 @@
     import { authStore, getAuth } from '$lib/services/localstorage.service.svelte';
     import ModalValidator from '../Modal/ModalValidator.svelte';
     import type { IModal, ITextArea } from '$lib/@types/html';
-    import { marked } from 'marked';
 
     let cours: ICours | null = $state(null);
     let user: IUserLocalStorage | null = $state(null);
@@ -123,13 +122,13 @@
     }
 
     async function deleteOpinion() {
-        const response = await api('api/opinions/' + alreadyOpinion.opinion?.id, 'DELETE');
+        await api('api/opinions/' + alreadyOpinion.opinion?.id, 'DELETE');
         await getCours();
         await AlreadyHaveNoted();
         closeDeleteOpinion();
     }
     async function deleteCours() {
-        const response = await api('api/cours/' + cours?.id, 'DELETE');
+        await api('api/cours/' + cours?.id, 'DELETE');
 
         closeDeleteCoursModale();
     }
@@ -199,7 +198,7 @@
                 <div class="card mobile-only">
                     <div class="card-title">Objectifs</div>
                     <ul class="list">
-                        {#each cours.learningObjectives as obj}
+                        {#each cours.learningObjectives as obj (obj.id)}
                             <li>{obj.objectif.title}</li>
                         {/each}
                     </ul>
@@ -258,7 +257,7 @@
                     <div class="section desktop-only">
                         <p class="label">OBJECTIFS PÉDAGOGIQUES</p>
                         <ul class="list">
-                            {#each cours.learningObjectives as obj}
+                            {#each cours.learningObjectives as obj (obj.id)}
                                 <li>{obj.objectif.title}</li>
                             {/each}
                         </ul>
@@ -267,7 +266,7 @@
                         <div class="section">
                             <p class="label">OUTILS NÉCESSAIRES</p>
                             <ul class="list">
-                                {#each cours.tools as tool}
+                                {#each cours.tools as tool (tool.id)}
                                     <li>{tool.tools.name}</li>
                                 {/each}
                             </ul>
