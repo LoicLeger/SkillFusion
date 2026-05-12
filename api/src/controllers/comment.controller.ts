@@ -5,7 +5,7 @@ import { parseIdFromParams } from './utils';
 import type { AuthenticatedRequest } from '../@types/express';
 import { ForbiddenError, NotFoundError } from '../lib/errors';
 import { ROLES } from '../middlewares/rbac.middleware';
-import { sendReportEmail } from '../lib/mailer';
+import { /* sendReportEmail */ } from '../lib/mailer';
 
 export default {
     // Requête pour récuperer tous les commentaires

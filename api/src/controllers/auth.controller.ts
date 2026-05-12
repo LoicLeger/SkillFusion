@@ -9,7 +9,7 @@ import { generateAuthTokens } from '../lib/token';
 import jwt from 'jsonwebtoken';
 import type { AuthenticatedRequest } from '../@types/express';
 import crypto from 'crypto';
-import { sendVerificationEmail, sendResetPasswordEmail } from '../lib/mailer';
+import { sendVerificationEmail, /* sendResetPasswordEmail */ } from '../lib/mailer';
 
 // Token management functions --------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ export async function registerUser(req: Request, res: Response) {
             .max(100)
             .regex(/[a-z]/)
             .regex(/[A-Z]/)
-            .regex(/[!@#$%&*-+{}?]/),
+            .regex(/[!@#$%&.*-+{}?]/),
         confirmPassword: z.string(),
     });
 
