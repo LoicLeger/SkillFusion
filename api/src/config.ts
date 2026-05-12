@@ -10,6 +10,14 @@ if (!process.env.CORS_ORIGIN_URL) {
     throw new Error('CORS_ORIGIN_URL environment variable is required');
 }
 
+if (!process.env.JWT_ACCES_EXPIRES_IN || Number.isNaN(Number(process.env.JWT_ACCES_EXPIRES_IN))) {
+    throw new Error('JWT_ACCES_EXPIRES_IN environment variable is required and must be a valid number');
+}
+
+if (!process.env.JWT_REFRESH_EXPIRES_IN || Number.isNaN(Number(process.env.JWT_REFRESH_EXPIRES_IN))) {
+    throw new Error('JWT_REFRESH_EXPIRES_IN environment variable is required and must be a valid number');
+}
+
 export const config = {
     port: parseInt(process.env.PORT || '3000'),
     allowedOrigins: process.env.ALLOWED_ORIGINS!,

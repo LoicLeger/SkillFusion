@@ -8,8 +8,8 @@
     const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
         errorMessage = '';
         const formData = new FormData(event.target as HTMLFormElement);
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const email = String(formData.get('email') ?? '');
+        const password = String(formData.get('password') ?? '');
         const token = await api('auth/login', 'POST', { email, password });
 
         if (!token?.data?.accessToken) {

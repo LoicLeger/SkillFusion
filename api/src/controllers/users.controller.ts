@@ -43,7 +43,7 @@ export default {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 urlProfilImage: user.urlProfilImage,
-                role: user.role.name,
+                role: user.role?.name ?? 'user',
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
             },
