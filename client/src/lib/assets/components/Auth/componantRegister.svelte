@@ -16,7 +16,7 @@
         errorEmail = false;
 
         // Valider le mot de passe avec la même regex que l'API
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*\-+{}?]).{2,100}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%.&*\-+{}?]).{8,100}$/;
         if (!passwordRegex.test(password)) {
             errorPassword = true;
             return;
