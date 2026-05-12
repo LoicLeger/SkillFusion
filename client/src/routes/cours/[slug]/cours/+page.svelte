@@ -91,7 +91,7 @@
         if (cours) {
             currentPageId = cours.content.find((content) => content.numberPage == currentPage);
             if (currentPageId) {
-                const response = await api('api/cours-contents/' + currentPageId.id, 'GET',{});
+                const response = await api('api/cours-contents/' + currentPageId.id, 'GET', {});
                 coursContent = response.data as ICoursContent;
                 if (coursContent) {
                     coursContent.content = DOMPurify.sanitize(coursContent.content);
@@ -153,7 +153,7 @@
         modal.close();
     }
     async function deletePage() {
-        await api('api/cours-contents/' + currentPageId?.id, 'DELETE', {} );
+        await api('api/cours-contents/' + currentPageId?.id, 'DELETE', {});
         closeDeletePageModale();
         if (currentPage != 1) {
             currentPage--;
