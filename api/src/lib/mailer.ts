@@ -20,8 +20,6 @@ export async function sendVerificationEmail(email: string, token: string) {
     });
 }
 
-
-
 export async function sendResetPasswordEmail(email: string, token: string) {
     const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
     const result = await resend.emails.send({
