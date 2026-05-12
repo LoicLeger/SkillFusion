@@ -6,6 +6,10 @@ if (!process.env.ALLOWED_ORIGINS) {
     throw new Error('ALLOWED_ORIGINS environment variable is required');
 }
 
+if (!process.env.CORS_ORIGIN_URL) {
+    throw new Error('CORS_ORIGIN_URL environment variable is required');
+}
+
 export const config = {
     port: parseInt(process.env.PORT || '3000'),
     allowedOrigins: process.env.ALLOWED_ORIGINS!,
@@ -15,5 +19,5 @@ export const config = {
     jwtRefreshExpireIn: Number(process.env.JWT_REFRESH_EXPIRES_IN),
     emailUser: process.env.EMAIL_USER ?? '',
     emailPass: process.env.EMAIL_PASS ?? '',
-    corsOriginUrl: process.env.CORS_ORIGIN_URL ?? '',
+    corsOriginUrl: process.env.CORS_ORIGIN_URL!,
 };

@@ -35,7 +35,34 @@ const globalLimiter = rateLimit({
     message: { message: 'Trop de requêtes, veuillez réessayer plus tard.' },
 });
 
-app.use(cors({origin:"*"}));
+const allowedOrigins = [
+  config.corsOriginUrl,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+];
+
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  credentials: true,
+  allowedHeaders: ['Authorization', 'Content-Type'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+};
+
+app.use(cors(corsOptions));
+
+// Preflight explicite — AVANT les routes
+app.options('*', cors(corsOptions));
+
 /* app.use(
     cors({
         origin: config.corsOriginUrl,
