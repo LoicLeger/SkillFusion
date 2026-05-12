@@ -108,7 +108,6 @@
         .card__title {
             align-self: flex-start;
         }
-        
     }
     @media (min-width: 1024px) {
         .cours-card {
