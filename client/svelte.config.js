@@ -51,7 +51,7 @@ const config = {
                     'self',
                     'http://localhost:3000',
                     'https://skillfusion-production.up.railway.app',
-                    "https://formspree.io"
+                    'https://formspree.io'
                 ]
             }
         }
