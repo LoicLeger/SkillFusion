@@ -11,7 +11,6 @@
         padding: 20px;
         flex-grow: 1;
         background-color: var(--background-color);
-        padding: auto;
     }
 
     .main-cours {
