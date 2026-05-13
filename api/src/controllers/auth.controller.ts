@@ -208,15 +208,15 @@ export async function refreshAccessToken(req: Request, res: Response) {
 
 export async function verifyEmail(req: Request, res: Response) {
     const { token } = req.query as { token: string };
-    console.log(token)
+    console.log(token);
 
     const user = await prisma.user.findFirst({
         where: { verifyToken: token },
     });
-    console.log(user)
+    console.log(user);
     if (!user) {
         // Rediriger vers le frontend avec un message d'erreur
-        return res.status(403).end()
+        return res.status(403).end();
     }
 
     await prisma.user.update({
