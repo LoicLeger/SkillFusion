@@ -12,7 +12,6 @@
         const email = String(formData.get('email') ?? '');
         const password = String(formData.get('password') ?? '');
         const token = await api('auth/login', 'POST', { email, password });
-        console.log();
 
         if (!token?.data?.accessToken) {
             errorMessage = 'Identifiant ou mot de passe incorrect.';
