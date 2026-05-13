@@ -35,8 +35,8 @@
         {#if errorMessage}
             <p class="msg-error">{errorMessage}</p>
         {/if}
-        <label for="email">Identifiant</label>
-        <input type="email" id="email" name="email" placeholder="Email ou pseudo" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="exemple@email.com" required />
 
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" placeholder="••••••••" />
