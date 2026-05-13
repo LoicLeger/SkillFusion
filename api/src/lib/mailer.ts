@@ -5,7 +5,7 @@ const resend = new Resend(config.resendApiKey);
 
 export async function sendVerificationEmail(email: string, token: string) {
     const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
-    const result = await resend.emails.send({
+    await resend.emails.send({
         from: config.resendEmail,
         to: email,
         subject: 'Confirme ton inscription sur SkillFusion',
@@ -22,7 +22,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
 export async function sendResetPasswordEmail(email: string, token: string) {
     const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
-    const result = await resend.emails.send({
+    await resend.emails.send({
         from: config.resendEmail,
         to: email,
         subject: 'Réinitialisation de ton mot de passe SkillFusion',
@@ -46,8 +46,7 @@ export async function sendReportEmail(
     reporterPseudo: string,
     commentAuthorPseudo: string
 ) {
-    const frontendUrl = config.corsOriginUrl || 'http://localhost:5173';
-    const result = await resend.emails.send({
+    await resend.emails.send({
         from: config.resendEmail,
         to: config.resendEmail,
         subject: '🚨 Nouveau signalement de commentaire',

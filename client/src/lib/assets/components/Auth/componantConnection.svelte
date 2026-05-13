@@ -6,11 +6,13 @@
     let errorMessage = $state('');
 
     const onSubmitForm = async (event: SubmitEvent): Promise<void> => {
+        event.preventDefault();
         errorMessage = '';
         const formData = new FormData(event.target as HTMLFormElement);
         const email = String(formData.get('email') ?? '');
         const password = String(formData.get('password') ?? '');
         const token = await api('auth/login', 'POST', { email, password });
+        console.log();
 
         if (!token?.data?.accessToken) {
             errorMessage = 'Identifiant ou mot de passe incorrect.';

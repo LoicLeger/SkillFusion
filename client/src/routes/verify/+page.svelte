@@ -18,7 +18,6 @@
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/verify-email?token=${token}`
             );
-            console.log(response);
 
             if (response.ok) {
                 success = true;

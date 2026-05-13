@@ -2,11 +2,9 @@
     const props = $props();
 
     let title = $state('');
-    let summary = $state('');
 
     $effect(() => {
         title = props.cours?.title;
-        summary = props.cours?.summary;
     });
     function confirm() {
         props.confirm();

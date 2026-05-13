@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { xss } from 'express-xss-sanitizer';
-import helmet from 'helmet';
+/* import helmet from 'helmet'; */
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 
@@ -59,10 +59,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Preflight explicite — AVANT les routes
-/* app.options('/*', cors(corsOptions)); */
-
-/* app.use(helmet()); */
 /* app.use(
     helmet({
         crossOriginResourcePolicy: { policy: 'cross-origin' },

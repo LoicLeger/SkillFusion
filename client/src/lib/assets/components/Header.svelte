@@ -6,7 +6,7 @@
     import type { IUserLocalStorage } from '$lib/@types/type.localStorage';
     import { goto } from '$app/navigation';
     import api from '$lib/services/api.service';
-    import DarkMode from './Dark/DarkMode.svelte';
+    /*   import DarkMode from './Dark/DarkMode.svelte'; */
     import '../../../app.css';
 
     let user: IUserLocalStorage | null = $state(null);
