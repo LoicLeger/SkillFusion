@@ -50,7 +50,8 @@ const config = {
                 'connect-src': [
                     'self',
                     'http://localhost:3000',
-                    'https://skillfusion-production.up.railway.app'
+                    'https://skillfusion-production.up.railway.app',
+                    "https://formspree.io"
                 ]
             }
         }

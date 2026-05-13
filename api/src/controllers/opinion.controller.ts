@@ -52,14 +52,13 @@ export default {
             return res.status(204).end();
         }
 
-        const enrollment = await prisma.userHasCours.findUnique({
+        const enrollment = await prisma.coursActived.findFirst({
             where: {
-                userId_coursId: {
                     userId: req.user!.userId,
                     coursId: data.coursId,
                 },
             },
-        });
+        );
         if (!enrollment && req.user!.role !== ROLES.ADMIN) {
             throw new ForbiddenError('Vous devez être inscrit à ce cours pour laisser un avis');
         }

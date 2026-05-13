@@ -428,7 +428,7 @@
             </div>
             <ModalValidator
                 id="DeleteCours"
-                message="Voulez vous supprimer la page ?"
+                message="Voulez vous supprimer le cours?"
                 cancel={closeDeleteCoursModale}
                 confirm={deleteCours}
             />

@@ -168,9 +168,8 @@ export default {
         if (!cours) {
             throw new NotFoundError('Cours not found');
         }
-
         // Bypass admin ajouté
-        if (req.user?.userId !== cours.authorId || req.user?.role !== ROLES.ADMIN) {
+        if (req.user?.userId !== cours.authorId && req.user?.role !== ROLES.ADMIN) {
             throw new ForbiddenError("Vous n'êtes pas autorisé à supprimer ce cours");
         }
 
