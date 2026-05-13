@@ -13,11 +13,22 @@
 <style>
     .badge_item {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: flex-start;
         border-radius: var(--border-radius);
         padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .badge_item > div {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .badge_item p {
+        margin: 0;
     }
 
     .icon-one-star {

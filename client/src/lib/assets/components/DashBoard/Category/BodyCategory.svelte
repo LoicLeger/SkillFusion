@@ -17,5 +17,7 @@
     .category_item {
         display: flex;
         padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 </style>

@@ -31,26 +31,32 @@
         display: flex;
         flex-direction: column;
         padding: 10px;
-        padding-left: 0px;
         gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .cours_item--info {
         display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
     }
     .is_public {
-        margin: auto 10px;
+        margin: 0;
     }
     .cours_item--body {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        padding-left: 10px;
+        padding-left: 0;
+        width: 100%;
     }
     p {
-        margin: 0px;
+        margin: 0;
     }
     .div_category {
-        max-width: max-content;
+        max-width: 100%;
+        width: 100%;
     }
 </style>

@@ -16,22 +16,32 @@
 <style>
     .article_dashboard {
         display: flex;
+        flex-direction: column;
+        width: 100%;
         background-color: var(--background-color);
+        gap: 12px;
+        box-sizing: border-box;
     }
 
     .article_dashboard--div_button {
-        margin-left: auto;
-        margin-right: 10px;
-        margin-top: auto;
-        margin-bottom: auto;
-        align-items: center;
         display: flex;
-        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
         gap: 10px;
+        width: 100%;
+        margin: 0;
     }
 
     @media (min-width: 768px) {
-    }
-    @media (min-width: 1024px) {
+        .article_dashboard {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .article_dashboard--div_button {
+            width: auto;
+            margin-left: auto;
+            margin-right: 10px;
+        }
     }
 </style>
