@@ -150,9 +150,11 @@
         color: #1d4e89;
     }
 
-    .buttonReturn {
+    .buttonReturn{
+        text-decoration: none;
         border: none;
-        cursor: pointer;
+        cursor:pointer;
+        background-color: white;
     }
 
     p {

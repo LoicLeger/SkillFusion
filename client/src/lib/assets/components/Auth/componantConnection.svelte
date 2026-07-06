@@ -79,8 +79,10 @@
         margin-bottom: 0px;
     }
     .buttonReturn{
+        text-decoration: none;
         border: none;
         cursor:pointer;
+        background-color: white;
     }
 
     p {

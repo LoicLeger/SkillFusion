@@ -146,6 +146,7 @@
             justify-content: center;
             background-color: var(--card__image__color);
         }
+        
         .card__body {
             overflow: unset;
             padding: 10px;
