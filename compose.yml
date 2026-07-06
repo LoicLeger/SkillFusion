@@ -3,9 +3,6 @@ volumes:
 
 networks:
   skillfusion_network:
-  proxy-network:
-    external: true
-
 
 services:
 
@@ -27,30 +24,26 @@ services:
   api:
     build:
       context: ./api
-# Permet de dire a Docker de s'arreter a l'étape Développement du DockerFile 
       target: production
     container_name: skillfusion_api
     depends_on:
       - db
     env_file:
       - ./api/.env
-    expose:
-      - "3000"
+    ports:
+      - "127.0.0.1:3001:3000"
     networks:
       - skillfusion_network
-      - proxy-network
 
   client:
     build:
       context: ./client
-# Permet de dire a Docker de s'arreter a l'étape Développement du DockerFile 
       target: production
       args:
-        VITE_API_URL: https://skillfusion.devponcet07.fr
-
+        VITE_API_URL: https://skillfusion.loicleger.fr
     container_name: skillfusion_client
-    expose:
-      - "3000"
+    ports:
+      - "127.0.0.1:3000:3000"
     depends_on:
       - api
       - db
@@ -58,5 +51,4 @@ services:
       - ./client/.env
     networks:
       - skillfusion_network
-      - proxy-network
     command: sh -c "node build/index.js"
