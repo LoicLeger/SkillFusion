@@ -144,7 +144,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--card__image__color);
+            background-color: white;
         }
         .card__body {
             overflow: unset;
