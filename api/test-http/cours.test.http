@@ -2,15 +2,12 @@
 
 ### all cours
 GET {{BASE_URL}}/api/cours
-Content-Type: application/json
 
 ### cours avec id
 GET {{BASE_URL}}/api/cours/1
-Content-Type: application/json
 
 ### supprimer un cours
 DELETE {{BASE_URL}}/api/cours/1
-Content-Type: application/json
 
 ### Transférer ses cours à l'admin
 PATCH {{BASE_URL}}/api/cours/mine/transfer

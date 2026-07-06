@@ -7,9 +7,9 @@
         "schema": "./prisma/schema.prisma"
     },
     "scripts": {
-        "start": "npx prisma migrate reset --force && npx tsx src/models/seeding.ts && tsx app.ts",
-        "test:unit": "tsx --test ./**/*.unit.test.ts",
-        "test:spec": "tsx --test --env-file=./test/config/.env.test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
+        "start": "npx prisma migrate deploy && tsx app.ts",
+        "test:unit": "tsx --env-file=.env --test ./**/*.unit.test.ts",
+        "test:spec": "tsx --test --env-file=./test/config/.env.test --import ./test/config/global-setup.ts  ./**/*.spec.test.ts",
         "test": "npm run test:unit && npm run test:spec",
         "dev": "tsx --watch --env-file=.env app.ts",
         "lint": "prettier --check . && eslint .",

@@ -26,8 +26,8 @@ export default {
 
         'connect-src': [
           'self',
-          'https://api:3000',
-          ...(isDev ? ['http://localhost:3000'] : []),
+          'https://skillfusion.devponcet07.fr',
+          ...(isDev ? ['http://localhost:3000','https://api:3000',] : []),
           'https://formspree.io'
         ]
       }

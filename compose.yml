@@ -17,9 +17,6 @@ services:
       POSTGRES_USER: usersf
       POSTGRES_PASSWORD: usersf
       POSTGRES_DB: usersf
-
-    ports:
-      - "5433:5432"
     volumes:
       - ./database/:/docker-entrypoint-initdb.d
       - db_volume:/var/lib/postgresql
@@ -35,17 +32,13 @@ services:
     container_name: skillfusion_api
     depends_on:
       - db
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./api:/app
-      - /app/node_modules
+    env_file:
+      - ./api/.env
     expose:
       - "3000"
     networks:
       - skillfusion_network
       - proxy-network
-    command: sh -c "npm install && npm run dev"
 
   client:
     build:
@@ -53,7 +46,8 @@ services:
 # Permet de dire a Docker de s'arreter a l'étape Développement du DockerFile 
       target: production
       args:
-        VITE_API_URL: https://api:3000
+        VITE_API_URL: https://skillfusion.devponcet07.fr
+
     container_name: skillfusion_client
     expose:
       - "3000"
@@ -62,8 +56,6 @@ services:
       - db
     env_file:
       - ./client/.env
-    environment:
-      - CHOKIDAR_USEPOLLING=true
     networks:
       - skillfusion_network
       - proxy-network

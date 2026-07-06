@@ -110,8 +110,11 @@ export default {
     },
     // Requête pour créer un cours
     createCours: async (req: AuthenticatedRequest, res: Response) => {
+        //création d'un varaible pour le slug (ex: "premier cours" -> "premier-cours") 
         req.body.slug = req.body.title.replaceAll(' ', '-');
+        // creation de la variable authorId avec l'id de l'user
         req.body.authorId = req.user!.userId;
+        //creation du shcéma de validation des données
         const createCoursBodySchema = z.object({
             title: z.string().min(1),
             littleSummary: z.string().optional(),
@@ -122,13 +125,14 @@ export default {
             categoryId: z.number().int(),
             slug: z.string().min(1),
         });
+        //validation des donnée avec le schéma
         const data = await createCoursBodySchema.parseAsync(req.body);
-
+        //recherche dans la base de donnée si un cours avec ce nom existe deja
         const alreadyExistingCours = await prisma.cours.findFirst({ where: { title: data.title } });
         if (alreadyExistingCours) {
             throw new ConflictError(`Title name already taken : ${data.title}`);
         }
-
+        //creation de la ressource en base de données
         const createdCours = await prisma.cours.create({
             data: {
                 title: data.title,
@@ -142,7 +146,7 @@ export default {
                 categoryId: data.categoryId,
             },
         });
-
+        //creation de la premiere page du cours
         await prisma.coursContent.create({
             data: {
                 coursId: createdCours.id,
@@ -150,6 +154,7 @@ export default {
                 numberPage: 1,
             },
         });
+        //response 
         res.status(201).json(createdCours);
     },
     //Recuperer un cours par son id

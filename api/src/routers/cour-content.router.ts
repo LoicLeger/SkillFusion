@@ -13,6 +13,7 @@ router.get(
 );
 router.get(
     '/cours-contents/:id',
+    verifyToken,
     checkRoles([ROLES.STUDENT, ROLES.INSTRUCTOR, ROLES.ADMIN]),
     courContent.getOneCourContent
 );
