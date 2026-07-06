@@ -1,5 +1,4 @@
 import argon2 from 'argon2';
-
 import { prisma } from './client_seeding';
 
 async function seed() {
@@ -30,6 +29,33 @@ async function seed() {
                 pseudo: 'admin',
                 password: await argon2.hash('test'),
                 roleId: 3,
+                verified: true,
+            },
+            {
+                email: 'admin@admin.admin',
+                firstname: 'Test',
+                lastname: 'Admin',
+                pseudo: 'administrateur',
+                password: await argon2.hash('admin@1!'),
+                roleId: 3,
+                verified: true,
+            },
+            {
+                email: 'etudiant@etudiant.etudiant',
+                firstname: 'Etu',
+                lastname: 'diant',
+                pseudo: 'etudiant',
+                password: await argon2.hash('etudiant@1!'),
+                roleId: 1,
+                verified: true,
+            },
+            {
+                email: 'formateur@formateur.formateur',
+                firstname: 'Form',
+                lastname: 'ateur',
+                pseudo: 'Formateur',
+                password: await argon2.hash('formateur@1!'),
+                roleId: 2,
                 verified: true,
             },
             {
