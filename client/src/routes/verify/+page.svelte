@@ -16,7 +16,7 @@
         try {
             // Appel API pour vérifier le token avec la base de données
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/verify-email?token=${token}`
+                `${import.meta.env.VITE_API_URL || 'http://:3000'}/auth/verify-email?token=${token}`
             );
 
             if (response.ok) {

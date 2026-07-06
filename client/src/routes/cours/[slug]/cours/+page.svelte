@@ -139,7 +139,7 @@
     }
     async function endCours() {
         const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: true };
-        await api('api/cours-active/' + cours?.id, 'PATCH', data);
+        await api('api/cours-started/' + cours?.id, 'PATCH', data);
         goto('/cours/' + page.params.slug);
     }
 

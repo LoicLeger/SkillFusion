@@ -1,0 +1,46 @@
+@startuml UC02 - S'inscrire à un cours
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+
+actor       "Apprenant"             as U
+participant "Frontend\n(SvelteKit)" as FE #E8F4FD
+participant "Backend\n(Express)"    as BE #E8F5E9
+database    "PostgreSQL\n(Prisma)"  as DB #FFF3E0
+
+U  -> FE : Accède à /cours/[slug]
+FE -> BE : GET /api/cours/:id
+BE -> DB : SELECT cours WHERE slug = ?
+DB --> BE : { statut: PUBLISHED, ... }
+BE --> FE : 200 { cours }
+FE --> U  : Affiche résumé + bouton "Commencer"
+
+U -> FE : Clic "Commencer"
+
+alt Non connecté
+  FE --> U : Ouvre composant connexion/inscription
+else Connecté (accessToken en cookie)
+  FE -> BE : POST /api/cours/:id/inscription
+
+  alt Token expiré
+    BE --> FE : 401 Unauthorized
+    FE -> BE  : POST /auth/refresh
+    BE --> FE : Nouvel accessToken
+    FE -> BE  : POST /api/cours/:id/inscription (retry)
+  end
+
+  BE -> BE : Vérifie JWT + rôle STUDENT
+  BE -> DB  : SELECT inscription\nWHERE userId = ? AND coursId = ?
+
+  alt Déjà inscrit
+    DB --> BE : { progression }
+    BE --> FE : 200 { déjà inscrit, progression }
+    FE --> U  : Redirige vers dernière leçon consultée
+  else Pas encore inscrit
+    DB --> BE : null
+    BE -> DB  : INSERT INSCRIPTION\n{ userId, coursId, progression: 0 }
+    DB --> BE : OK
+    BE --> FE : 201 { inscription }
+    FE --> U  : Redirige vers /cours/[slug]/lecon/1
+  end
+end
+@enduml

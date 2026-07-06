@@ -25,7 +25,7 @@ export const clearAuth = () => {
 
 export const getAuth = () => {
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user') as string);
     authStore.user = user ?? null;
     authStore.token = token ?? null;
 };

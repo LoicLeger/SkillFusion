@@ -15,9 +15,9 @@
     onMount(async () => {
         getAuth();
         // Fetch tous les cours en cours
-        const response = await api('api/cours-active/user/' + authStore?.user?.id);
+        const response = await api('api/cours-started/user/' + authStore?.user?.id);
         coursActive = response.data;
-        const ended = await api('api/cours-active/user/' + authStore?.user?.id + '/ended');
+        const ended = await api('api/cours-started/user/' + authStore?.user?.id + '/ended');
         coursEnded = ended.data;
         const badges = await api('api/badges/user/' + authStore?.user?.id);
         userBadges = badges.data;

@@ -1,4 +1,4 @@
-import { setAuth } from './localstorage.service.svelte';
+import { authStore, getAuth, setAuth } from './localstorage.service.svelte';
 import { goto } from '$app/navigation';
 
 interface IUser {
@@ -8,6 +8,41 @@ interface IUser {
 }
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+console.log(BASE_URL)
+
+
+export default async function api(endpoint: string, method = 'GET', body?: object) {
+    getAuth()
+    const { user, token } = authStore
+    let response
+    if (user==null && token ==null){
+        response = await apiWithoutToken(endpoint,method,body!)
+    }else{
+        response = await apiWithToken(endpoint,method,body!)
+    }
+    return { data:response.data, status: response.status }
+}
+
+async function apiWithoutToken(endpoint: string, method = 'GET', body: object) {
+    const response = await fetch(`${BASE_URL}/${endpoint}`, {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body ? JSON.stringify(body) : undefined
+    });
+
+    let data = null;
+    if (response.status !== 204 && response.status !== 0) {
+        try {
+            data = await response.json();
+        } catch {
+            data = null;
+        }
+    }
+
+    return { data, status: response.status };
+}
 
 async function refreshAccessToken(): Promise<{
     user: IUser;
@@ -28,7 +63,7 @@ async function refreshAccessToken(): Promise<{
     return data;
 }
 
-export default async function api(endpoint: string, method = 'GET', body: object) {
+async function apiWithToken(endpoint: string, method = 'GET', body: object) {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
         method,
         credentials: 'include',
@@ -39,7 +74,6 @@ export default async function api(endpoint: string, method = 'GET', body: object
         body: body ? JSON.stringify(body) : undefined
     });
 
-    // Token expiré → refresh automatique
     if (response.status === 401) {
         const newToken = await refreshAccessToken();
 

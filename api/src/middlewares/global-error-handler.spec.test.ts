@@ -16,11 +16,10 @@ describe('globalErrorHandler', () => {
 
         // ACT
         const httpResponse = await authedRequester.post('/auth/register', {
-            firstname: 'John',
-            lastname: 'Doe',
             email: 'john@skillfusion.io',
+            pseudo: 'jojoDu41',
             password: 'P4$$w0rd1234!',
-            confirm: 'P4$$w0rd1234!',
+            confirmPassword: 'P4$$w0rd1234!',
         });
 
         // ASSERT

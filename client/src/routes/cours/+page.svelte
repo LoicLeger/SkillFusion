@@ -25,7 +25,7 @@
         courses = coursesResponse.data;
         user = authStore.user;
         if (user) {
-            const ended = await api('api/cours-active/user/' + user?.id + '/ended');
+            const ended = await api('api/cours-started/user/' + user?.id + '/ended');
             coursEnded = ended.data.map((ended: ICoursActived) => ended.id);
         }
     });

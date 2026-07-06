@@ -1,6 +1,6 @@
 <script>
     async function exportData() {
-        const response = await fetch('http://localhost:3000/api/users/me/export', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me/export`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }

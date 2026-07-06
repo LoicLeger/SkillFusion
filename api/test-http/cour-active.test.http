@@ -2,15 +2,15 @@
 @BASE_URL=http://localhost:3000
 
 ### cours active
-GET {{BASE_URL}}/api/cours-active
+GET {{BASE_URL}}/api/cours-started
 Content-Type: application/json
 
 ### cours active avec id
-GET {{BASE_URL}}/api/cours-active/1
+GET {{BASE_URL}}/api/cours-started/1
 Content-Type: application/json
 
 ### creer une cours active
-POST {{BASE_URL}}/api/cours-active
+POST {{BASE_URL}}/api/cours-started
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 
 ### modifier une cours active
-PATCH {{BASE_URL}}/api/cours-active/4
+PATCH {{BASE_URL}}/api/cours-started/4
 Content-Type: application/json
 
 {
@@ -32,5 +32,5 @@ Content-Type: application/json
 }
 
 ### supprimer une cours active
-DELETE {{BASE_URL}}/api/cours-active/4
+DELETE {{BASE_URL}}/api/cours-started/4
 Content-Type: application/json

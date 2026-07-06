@@ -1,0 +1,46 @@
+@startuml UC01 - Se connecter
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+
+actor       "Utilisateur"         as U
+participant "Frontend\n(SvelteKit)" as FE #E8F4FD
+participant "Backend\n(Express)"    as BE #E8F5E9
+database    "PostgreSQL\n(Prisma)"  as DB #FFF3E0
+
+U  -> FE : Accède à /auth/connexion
+U  -> FE : Saisit email + mot de passe
+FE -> BE : POST /auth/login\n{ email, password }
+BE -> BE : Validation zod
+
+alt Données invalides
+  BE --> FE : 400 { errors }
+  FE --> U  : Affiche les erreurs de saisie
+else Données valides
+  BE -> DB : SELECT utilisateur WHERE email = ?
+
+  alt Compte inexistant
+    DB --> BE : null
+    BE --> FE : 401 "Identifiants incorrects"
+    FE --> U  : Message d'erreur générique
+  else Compte trouvé
+    DB --> BE : { hash, role, statut }
+
+    alt Compte suspendu
+      BE --> FE : 403 "Compte suspendu"
+      FE --> U  : "Contactez l'administration"
+    else Compte actif
+      BE -> BE : argon2.verify(hash, password)
+
+      alt Mot de passe incorrect
+        BE --> FE : 401 "Identifiants incorrects"
+        FE --> U  : Message d'erreur générique
+      else Mot de passe correct
+        BE -> BE : Génère accessToken (15 min)
+        BE -> BE : Génère refreshToken (7 j)
+        BE --> FE : 200 { user } + cookies httpOnly
+        FE --> U  : Redirige vers /tableau-de-bord\nselon le rôle
+      end
+    end
+  end
+end
+@enduml

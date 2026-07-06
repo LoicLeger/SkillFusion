@@ -49,7 +49,7 @@ model User {
   createdCours  Cours[]        @relation("CreatedCours")
   badges        UserHasBadge[]
   enrollments   UserHasCours[]
-  activations   CoursActived[]
+  activations   CoursStarted[]
   commentaires  Comment[]
   opinions      Opinion[]
   notifications Notification[]
@@ -82,7 +82,7 @@ model Cours {
   learningObjectives CoursHasLearningObjective[]
   content            CoursContent[]
   enrollments        UserHasCours[]
-  activations        CoursActived[]
+  activations        CoursStarted[]
   comments           Comment[]
   opinions           Opinion[]
   notifications      Notification[]
@@ -178,7 +178,7 @@ model UserHasCours {
   @@map("user_has_cours")
 }
 
-model CoursActived {
+model CoursStarted {
   id      Int     @id @default(autoincrement())
   userId  Int     @map("user_id")
   coursId Int     @map("cours_id")
@@ -191,7 +191,7 @@ model CoursActived {
   cours Cours @relation(fields: [coursId], references: [id], onDelete: Cascade)
 
   @@unique([userId, coursId])
-  @@map("cours_actived")
+  @@map("cours_started")
 }
 
 model UserHasBadge {

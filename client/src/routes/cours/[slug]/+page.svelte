@@ -45,8 +45,10 @@
         getAuth();
         user = authStore.user;
         await getCours();
+        if(user){
         AlreadyHaveNoted();
         AlreadyHaveStarted();
+        }
     });
     async function getCours() {
         const response = await api('api/cours?slug=' + page.params.slug);
@@ -62,11 +64,11 @@
     }
 
     async function AlreadyHaveStarted() {
-        const responseStart = await api('api/cours-active/user/' + authStore.user?.id);
+        const responseStart = await api('api/cours-started/user/' + authStore.user?.id);
         alreadyStarted = responseStart.data.map(
             (data: { id: number; userId: number; coursId: number }) => data.coursId
         );
-        const responseEnd = await api('api/cours-active/user/' + authStore.user?.id + '/ended');
+        const responseEnd = await api('api/cours-started/user/' + authStore.user?.id + '/ended');
         let ended = responseEnd.data.map(
             (data: { id: number; userId: number; coursId: number }) => data.coursId
         );
@@ -92,7 +94,7 @@
 
     async function addCoursActiveToStudent() {
         const data = { userId: authStore?.user?.id, coursId: cours?.id, IsEnd: false };
-        await api('api/cours-active ', 'POST', data);
+        await api('api/cours-started ', 'POST', data);
     }
 
     function getStars(note: number) {

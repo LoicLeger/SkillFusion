@@ -35,7 +35,7 @@ export default {
         });
         const data = await createCommentBodySchema.parseAsync(req.body);
 
-        const enrollment = await prisma.coursActived.findFirst({
+        const enrollment = await prisma.coursStarted.findFirst({
             where: {
                 userId: req.user!.userId,
                 coursId: data.coursId,

@@ -20,7 +20,7 @@ function waitForPostgres() {
     throw new Error("PostgreSQL n'est pas prêt après 10 secondes");
 }
 
-before(() => {
+before(async () => {
     try {
         execSync(`docker rm -f skillfusion_db_test`, { stdio: 'inherit' });
     } catch {
@@ -36,12 +36,30 @@ before(() => {
 
     execSync(`npx prisma migrate deploy`, { stdio: 'inherit' });
 
+    await prisma.role.createMany({
+        data: [
+            { id: 1, name: 'admin', frName: 'Administrateur' },
+            { id: 2, name: 'instructor', frName: 'Formateur' },
+            { id: 3, name: 'student', frName: 'Étudiant' }
+        ],
+        skipDuplicates: true
+    });
+
     server = app.listen(process.env.PORT);
 });
 
 beforeEach(async (t) => {
     (t as TestContext).mock.method(console, 'info', () => {});
+
     await truncateTables();
+
+    await prisma.role.createMany({
+        data: [
+            { id: 1, name: 'admin', frName: 'Administrateur' },
+            { id: 2, name: 'instructor', frName: 'Formateur' },
+            { id: 3, name: 'student', frName: 'Étudiant' }
+        ]
+    });
 });
 
 after(async () => {

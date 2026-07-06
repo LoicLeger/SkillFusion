@@ -1,0 +1,63 @@
+volumes:
+  db_volume:
+
+networks:
+  skillfusion_network:
+
+services:
+
+# Service de base de données PostgreSQL
+  db:
+    image: postgres:18
+    container_name: skillfusion_db
+    environment:
+      POSTGRES_USER: usersf
+      POSTGRES_PASSWORD: usersf
+      POSTGRES_DB: usersf
+
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./database/:/docker-entrypoint-initdb.d
+      - db_volume:/var/lib/postgresql
+    networks:
+      - skillfusion_network
+
+# Service de l'API Node.js
+  api:
+    build:
+      context: ./api
+# Permet de dire a Docker de s'arreter a l'étape Développement du DockerFile 
+      target: development
+    container_name: skillfusion_api
+    depends_on:
+      - db
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - skillfusion_network
+    command: sh -c "npm install && npm run dev"
+
+  client:
+    build:
+      context: ./client
+# Permet de dire a Docker de s'arreter a l'étape Développement du DockerFile 
+      target: development
+    container_name: skillfusion_client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+      - db
+    env_file:
+      - ./client/.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - skillfusion_network
+    command: sh -c "npm install && npm run dev -- --host"

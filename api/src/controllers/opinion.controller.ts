@@ -52,7 +52,7 @@ export default {
             return res.status(204).end();
         }
 
-        const enrollment = await prisma.coursActived.findFirst({
+        const enrollment = await prisma.coursStarted.findFirst({
             where: {
                     userId: req.user!.userId,
                     coursId: data.coursId,

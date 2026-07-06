@@ -2,6 +2,11 @@
     import { goto } from '$app/navigation';
     import api from '$lib/services/api.service';
     import { setAuth } from '$lib/services/localstorage.service.svelte';
+    import { browser } from "$app/environment";
+
+    function nav_back() {
+    if (browser) window.history.back();
+    }
 
     let errorMessage = $state('');
 
@@ -30,6 +35,7 @@
 
 <!-- Composant de connexion -->
 <div class="connection-container">
+<button class="buttonReturn" onclick={nav_back}>{'<-retour'} </button>
     <h1>Connexion</h1>
     <span class="introduction"><p>Content de te revoir !</p></span>
     <form class="connection-form" onsubmit={onSubmitForm}>
@@ -71,6 +77,10 @@
         text-align: center;
         color: #1d4e89;
         margin-bottom: 0px;
+    }
+    .buttonReturn{
+        border: none;
+        cursor:pointer;
     }
 
     p {

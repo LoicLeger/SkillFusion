@@ -2,11 +2,17 @@
     import { goto } from '$app/navigation';
     import api from '$lib/services/api.service';
     import '../../../../app.css';
+    import { browser } from '$app/environment';
+
+    function nav_back() {
+        if (browser) window.history.back();
+    }
 
     let errorEmail = $state(false);
     let errorPseudo = $state(false);
     let errorPassword = $state(false);
     let passwordValue = $state('');
+    let mailSend = $state(false);
 
     let hasLower = $derived(/[a-z]/.test(passwordValue));
     let hasUpper = $derived(/[A-Z]/.test(passwordValue));
@@ -46,80 +52,86 @@
                 errorEmail = true;
             }
         } else {
-            goto('/connexion');
+            mailSend = true;
         }
     };
 </script>
 
 <div class="register-container">
+    <button class="buttonReturn" onclick={nav_back}>{'<-retour'} </button>
     <h1>Inscription</h1>
     <span class="introduction"><p>Rejoins SkillFusion gratuitement</p></span>
-
-    <form class="register-form" onsubmit={onSubmitForm}>
-        <label for="pseudo">Pseudo</label>
-        <input type="text" id="pseudo" name="pseudo" placeholder="Jeannot#336" required />
-        {#if errorPseudo}
-            <p class="error-message">Pseudo déjà utilisé</p>
-        {/if}
-
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="JeanPaul@nanana.com" required />
-        {#if errorEmail}
-            <p class="error-message">Email déjà utilisé</p>
-        {/if}
-
-        <label for="password">Mot de passe</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="••••••••"
-            required
-            bind:value={passwordValue}
-        />
-
-        <!-- Indicateur de règles -->
-        <div class="password-rules">
-            <div class="rule" class:rule--ok={hasLength}>
-                <span class="rule__dot"></span>
-                <span>8 caractères minimum</span>
-            </div>
-            <div class="rule" class:rule--ok={hasLower}>
-                <span class="rule__dot"></span>
-                <span>Une minuscule</span>
-            </div>
-            <div class="rule" class:rule--ok={hasUpper}>
-                <span class="rule__dot"></span>
-                <span>Une majuscule</span>
-            </div>
-            <div class="rule" class:rule--ok={hasSpecial}>
-                <span class="rule__dot"></span>
-                <span>Un caractère spécial (!@#$%.&*-+&#123;&#125;?)</span>
-            </div>
+    {#if mailSend}
+        <div class="divConfirmMessage">
+            <p>Un email de confirmation a éte envoyer a votre adresse mail avec un lien</p>
         </div>
+    {:else}
+        <form class="register-form" onsubmit={onSubmitForm}>
+            <label for="pseudo">Pseudo</label>
+            <input type="text" id="pseudo" name="pseudo" placeholder="JeanJean" required />
+            {#if errorPseudo}
+                <p class="error-message">Pseudo déjà utilisé</p>
+            {/if}
 
-        {#if errorPassword}
-            <p class="error-message">Le mot de passe ne respecte pas les règles ci-dessus.</p>
-        {/if}
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="JeanDupont@mail.fr" required />
+            {#if errorEmail}
+                <p class="error-message">Email déjà utilisé</p>
+            {/if}
 
-        <label for="confirm-password">Confirmer</label>
-        <input
-            type="password"
-            id="confirm-password"
-            name="confirm-password"
-            placeholder="••••••••"
-            required
-        />
+            <label for="password">Mot de passe</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Mot de passe"
+                required
+                bind:value={passwordValue}
+            />
 
-        <button class="btn-register" type="submit">S'inscrire</button>
+            <!-- Indicateur de règles -->
+            <div class="password-rules">
+                <div class="rule" class:rule--ok={hasLength}>
+                    <span class="rule__dot"></span>
+                    <span>8 caractères minimum</span>
+                </div>
+                <div class="rule" class:rule--ok={hasLower}>
+                    <span class="rule__dot"></span>
+                    <span>Une minuscule</span>
+                </div>
+                <div class="rule" class:rule--ok={hasUpper}>
+                    <span class="rule__dot"></span>
+                    <span>Une majuscule</span>
+                </div>
+                <div class="rule" class:rule--ok={hasSpecial}>
+                    <span class="rule__dot"></span>
+                    <span>Un caractère spécial (!@#$%.&*-+&#123;&#125;?)</span>
+                </div>
+            </div>
 
-        <div>
-            <p class="already-account">
-                Déjà inscrit ?
-                <a class="btn-login" href="/connexion">Se connecter</a>
-            </p>
-        </div>
-    </form>
+            {#if errorPassword}
+                <p class="error-message">Le mot de passe ne respecte pas les règles ci-dessus.</p>
+            {/if}
+
+            <label for="confirm-password">Confirmer</label>
+            <input
+                type="password"
+                id="confirm-password"
+                name="confirm-password"
+                placeholder="Confirmation"
+                required
+            />
+
+            <button class="btn-register" type="submit">S'inscrire</button>
+
+            <div>
+                <p class="already-account">
+                    Déjà inscrit ?
+                    <a class="btn-login" href="/connexion">Se connecter</a>
+                </p>
+            </div>
+        </form>
+    {/if}
 </div>
 
 <style>
@@ -136,6 +148,11 @@
         text-align: center;
         margin-bottom: 0px;
         color: #1d4e89;
+    }
+
+    .buttonReturn {
+        border: none;
+        cursor: pointer;
     }
 
     p {
@@ -176,6 +193,16 @@
     }
 
     .register-form {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .divConfirmMessage
+    {
         display: flex;
         flex-direction: column;
         background-color: white;

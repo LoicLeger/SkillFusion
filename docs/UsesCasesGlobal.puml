@@ -1,0 +1,88 @@
+@startuml SkillFusion - Use Cases
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #E8F4FD
+  BorderColor #2980B9
+}
+
+actor "Visitor"    as V
+actor "Student"    as S
+actor "Instructor" as I
+actor "Admin"      as A
+
+S -|> V
+I -|> S
+A -|> I
+
+rectangle "SkillFusion" {
+
+  package "Accès public" {
+    usecase "Consulter l'accueil"       as UC_HOME
+    usecase "Parcourir le catalogue"    as UC_CAT
+    usecase "Voir le détail d'un cours" as UC_DETAIL
+    usecase "Consulter les avis"        as UC_AVIS_R
+  }
+
+  package "Gestion de compte" {
+    usecase "Se connecter"      as UC_LOGIN
+    usecase "Se déconnecter"    as UC_LOGOUT
+    usecase "Modifier son profil" as UC_PROFILE
+    usecase "Supprimer son compte" as UC_DELETE
+  }
+
+  package "Espace Apprenant" {
+    usecase "S'inscrire à un cours"  as UC_ENROLL
+    usecase "Suivre une leçon"       as UC_LESSON
+    usecase "Suivre sa progression"  as UC_PROGRESS
+    usecase "Laisser un avis"        as UC_AVIS
+    usecase "Participer aux discussions" as UC_DISCUSS
+  }
+
+  package "Espace Instructeur" {
+    usecase "Créer un cours"             as UC_CREATE
+    usecase "Modifier / Supprimer un cours" as UC_EDIT
+    usecase "Publier / Dépublier"        as UC_PUBLISH
+    usecase "Consulter ses apprenants"   as UC_STUDENTS
+  }
+
+  package "Espace Admin" {
+    usecase "Valider / Refuser un cours" as UC_VALIDATE
+    usecase "Gérer les utilisateurs"     as UC_USERS
+    usecase "Gérer les catégories"       as UC_CATEG
+    usecase "Modérer les commentaires"   as UC_MODERATE
+  }
+}
+
+V --> UC_HOME
+V --> UC_CAT
+V --> UC_DETAIL
+V --> UC_AVIS_R
+
+S --> UC_LOGIN
+S --> UC_LOGOUT
+S --> UC_PROFILE
+S --> UC_DELETE
+S --> UC_ENROLL
+S --> UC_LESSON
+S --> UC_PROGRESS
+S --> UC_AVIS
+S --> UC_DISCUSS
+
+I --> UC_CREATE
+I --> UC_EDIT
+I --> UC_PUBLISH
+I --> UC_STUDENTS
+
+A --> UC_VALIDATE
+A --> UC_USERS
+A --> UC_CATEG
+A --> UC_MODERATE
+
+UC_ENROLL   ..> UC_LOGIN   : <<include>>
+UC_LESSON   ..> UC_ENROLL  : <<include>>
+UC_AVIS     ..> UC_ENROLL  : <<include>>
+UC_DISCUSS  ..> UC_ENROLL  : <<include>>
+UC_VALIDATE ..> UC_CREATE  : <<extend>>
+@enduml
