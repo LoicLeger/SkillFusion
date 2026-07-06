@@ -79,10 +79,11 @@
         margin-bottom: 0px;
     }
     .buttonReturn{
+        cursor: pointer;
+        background-color: #fff;
+        border: 1px solid lightgray;
         text-decoration: none;
-        border: none;
-        cursor:pointer;
-        background-color: white;
+        border-radius: 5px;
     }
 
     p {
