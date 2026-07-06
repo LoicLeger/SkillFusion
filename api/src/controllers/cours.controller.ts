@@ -192,9 +192,10 @@ export default {
     urlImage: z.string().optional(),
     difficulty: z.number().int().min(0).max(4),
     summary: z.string().optional(),
-    visibility: z.boolean(),
-    numberPage: z.number().int(),
+    visibility: z.boolean().optional(),
+    numberPage: z.number().int().optional(),
     categoryId: z.number().int(),
+
         });
         const {
             title,
