@@ -14,24 +14,6 @@ export function verifyToken(req: AuthenticatedRequest, res: Response, next: Next
     next();
 }
 
-// Middleware pour vérifier que le role de l'utilisateur est dans la liste des roles autorisés à accéder à la ressource
-
-// export function checkRoles(roles: number[]) {
-//   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-//     const token = extractAccessToken(req);
-//     const { userId, role } = verifyAndDecodeJWT(token);
-
-//     if (!roles.includes(role)) {
-//       throw new ForbiddenError(
-//         `Le rôle ${role} n'a pas la permission d'accéder à cette ressource`
-//       );
-//     }
-
-//     req.user = { userId, role };
-//     next();
-//   };
-// }
-
 // Middleware pour extraire le token du header Authorization
 
 export function extractAccessToken(req: Request): string {
