@@ -40,9 +40,9 @@
             </div>
         </div></a
     >
-    {#if user?.role == 'student' && props.coursEnded.includes(props.cours.id) == true}
+    <!-- {#if user?.role == 'student' && props.coursEnded.includes(props.cours.id) == true}
         <div class="coursCheck">🏆</div>
-    {/if}
+    {/if} -->
 </article>
 
 <style>

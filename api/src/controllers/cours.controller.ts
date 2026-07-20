@@ -15,7 +15,7 @@ export default {
                     category: true,
                     comments: {
                         include: {
-                            author: true,
+                            author: {omit: {password:true}}
                         },
                     },
                     author: {
@@ -187,14 +187,14 @@ export default {
         const coursId = await parseIdFromParams(req.params.id);
         const updateCoursBodyScheme = z.object({
             title: z.string().min(1),
-    slug: z.string().min(1),
-    littleSummary: z.string().optional(),
-    urlImage: z.string().optional(),
-    difficulty: z.number().int().min(0).max(4),
-    summary: z.string().optional(),
-    visibility: z.boolean().optional(),
-    numberPage: z.number().int().optional(),
-    categoryId: z.number().int(),
+            slug: z.string().min(1),
+            littleSummary: z.string().optional(),
+            urlImage: z.string().optional(),
+            difficulty: z.number().int().min(0).max(4),
+            summary: z.string().optional(),
+            visibility: z.boolean().optional(),
+            numberPage: z.number().int().optional(),
+            categoryId: z.number().int(),
 
         });
         const {

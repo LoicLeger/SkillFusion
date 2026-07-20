@@ -34,12 +34,12 @@ describe('verifyToken', () => {
     it('should allow the request if token is valid', async () => {
         // ARRANGE
         await prisma.role.createMany({
-        data:[
-            { name: 'student', frName: 'Etudiant' },
-            { name: 'instructor', frName: 'Formateur' },
-            { name: 'admin', frName: 'Administrateur' },
-        ]
-    })
+            data:[
+                { name: 'student', frName: 'Etudiant' },
+                { name: 'instructor', frName: 'Formateur' },
+                { name: 'admin', frName: 'Administrateur' },
+            ]
+        });
         const user = await prisma.user.create({
             data: {
                 email: 'john@skillfusion.io',
