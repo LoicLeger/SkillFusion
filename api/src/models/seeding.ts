@@ -27,7 +27,7 @@ async function seed() {
                 firstname: 'Test',
                 lastname: 'Admin',
                 pseudo: 'admin',
-                password: await argon2.hash('test'),
+                password: await argon2.hash('admin'),
                 roleId: 3,
                 verified: true,
             },
