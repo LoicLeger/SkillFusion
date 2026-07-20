@@ -23,7 +23,7 @@ async function seed() {
     const users = await prisma.user.createMany({
         data: [
             {
-                email: 'test@test.test',
+                email: 'admin@admin.admin',
                 firstname: 'Test',
                 lastname: 'Admin',
                 pseudo: 'admin',
