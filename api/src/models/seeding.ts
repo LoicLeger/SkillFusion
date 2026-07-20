@@ -113,15 +113,6 @@ async function seed() {
                 verified: true,
             },
             {
-                email: 'admin@admin.admin',
-                firstname: 'Test',
-                lastname: 'Admin',
-                pseudo: 'administrateur',
-                password: await argon2.hash('admin@1!'),
-                roleId: 3,
-                verified: true,
-            },
-            {
                 email: 'etudiant@etudiant.etudiant',
                 firstname: 'Etu',
                 lastname: 'diant',
