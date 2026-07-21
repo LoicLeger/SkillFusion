@@ -26,8 +26,8 @@
     <h2>Hébergement</h2>
     <p>
         <strong>Hébergeur :</strong><br />
-        Railway<br />
-        Site web : <a href="https://railway.app">railway.app</a>
+        OVH<br />
+        Site web : <a href="https://www.ovhcloud.com/fr/">OVH</a>
     </p>
 
     <h2>Propriété intellectuelle</h2>
